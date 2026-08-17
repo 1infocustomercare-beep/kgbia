@@ -1,0 +1,18 @@
+{
+  "identityId": "food-gelateria-artigiana",
+  "sector": "food",
+  "brand": "Latteria Bianca",
+  "style": "geometric-compact/grid-edge-to-edge/inner-glow-hairline/glass-panel/carousel-cards/progress-fill/gradient-wash/top-segmented-only",
+  "family": "gelateria-latte-menta",
+  "palette": "mobile",
+  "description": "Latteria Bianca: webapp su misura con 1 schermate coerenti — tipografia, palette, componenti e micro-interazioni disegnati su questo settore.",
+  "labels": [
+    "Vetrina"
+  ],
+  "captions": [
+    "Home dell'app: identità di brand, funzioni chiave e CTA principale."
+  ],
+  "features": [
+    "Vetrina"
+  ]
+}

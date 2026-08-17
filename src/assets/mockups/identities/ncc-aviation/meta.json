@@ -1,0 +1,18 @@
+{
+  "identityId": "ncc-aviation",
+  "sector": "ncc",
+  "brand": "Aurea Jet",
+  "style": "mono-technical/grid-6-editorial/hairline-rule/chamfer-tech/segmented-tabs-tables/shimmer-load/badge-system/large-title-collapsing",
+  "family": "aviation-instrument",
+  "palette": "mobile",
+  "description": "Aurea Jet: webapp su misura con 1 schermate coerenti — tipografia, palette, componenti e micro-interazioni disegnati su questo settore.",
+  "labels": [
+    "Route"
+  ],
+  "captions": [
+    "Schermata route."
+  ],
+  "features": [
+    "Route"
+  ]
+}

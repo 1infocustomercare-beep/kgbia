@@ -1,0 +1,18 @@
+{
+  "identityId": "ncc-artdeco",
+  "sector": "ncc",
+  "brand": "Vettura Regia",
+  "style": "couture-didone/grid-6-editorial/gradient-edge/ticket-notch/list-rows-pricing/pulse-live/cta-only/no-tabbar-bottom-cta",
+  "family": "art-deco-transit",
+  "palette": "mobile",
+  "description": "Vettura Regia: webapp su misura con 1 schermate coerenti — tipografia, palette, componenti e micro-interazioni disegnati su questo settore.",
+  "labels": [
+    "Packages"
+  ],
+  "captions": [
+    "Schermata packages."
+  ],
+  "features": [
+    "Packages"
+  ]
+}

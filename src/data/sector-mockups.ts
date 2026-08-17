@@ -865,7 +865,132 @@ for (const folder of discoverFolders()) {
   registeredSlugs.add(folder);
 }
 
+/* ────────────────────────────────────────────────────────────────
+ * COLLEZIONE STUDIO — identità generate e validate dai gate QA
+ * (iPhone frontale, nessun elemento tagliato, copy italiano reale).
+ * Cartelle: src/assets/mockups/identities/<identityId>/<N>-<key>.webp
+ * + meta.json con brand, settore, stile, palette, label schermate.
+ * Additivo: si aggiunge ai registri esistenti senza sostituirli.
+ * ──────────────────────────────────────────────────────────────── */
+const identityFiles = import.meta.glob(
+  "@/assets/mockups/identities/**/*.webp",
+  { eager: true, import: "default" },
+) as Record<string, string>;
+
+const identityMetaFiles = import.meta.glob(
+  "@/assets/mockups/identities/**/meta.json",
+  { eager: true, import: "default" },
+) as Record<string, {
+  identityId: string;
+  sector: string;
+  brand: string;
+  style: string;
+  family?: string;
+  palette?: string;
+  description?: string;
+  labels?: string[];
+  captions?: string[];
+  features?: string[];
+}>;
+
+const IDENTITY_SECTOR_LABELS: Record<string, { label: string; tagline: string }> = {
+  food: { label: "Ristorazione", tagline: "Menu digitale, prenotazioni e recensioni automatiche." },
+  beauty: { label: "Beauty & Wellness", tagline: "Agenda live, reminder e fidelity per saloni e spa." },
+  ncc: { label: "NCC & Mobilità", tagline: "Flotta, preventivi e itinerari in tempo reale." },
+  fitness: { label: "Fitness & Sport", tagline: "Corsi, check-in QR e programmi personalizzati." },
+  hospitality: { label: "Hospitality", tagline: "Booking diretto, check-in digitale e upsell." },
+  realestate: { label: "Immobiliare", tagline: "Vetrina unità, tour virtuali e visite prenotabili." },
+  healthcare: { label: "Sanità", tagline: "Prenotazione visite, referti e promemoria." },
+  legal: { label: "Legale & Fiscale", tagline: "Pratiche, scadenze e area clienti riservata." },
+  retail: { label: "Retail", tagline: "Catalogo, click&collect e programma fedeltà." },
+  events: { label: "Eventi & Spettacolo", tagline: "Biglietti, scalette e gestione ospiti." },
+  education: { label: "Formazione", tagline: "Corsi, calendario lezioni e iscrizioni online." },
+  petcare: { label: "Pet Care & Veterinaria", tagline: "Cartelle animali, visite e servizi pet." },
+  childcare: { label: "Nidi & Infanzia", tagline: "Diario giornaliero, foto e iscrizioni." },
+  homeservices: { label: "Servizi per la Casa", tagline: "Interventi, preventivi e squadre in campo." },
+  watersports: { label: "Charter & Sport Acquatici", tagline: "Charter, rotte e prenotazioni a bordo." },
+  golf: { label: "Golf & Leisure", tagline: "Tee time, handicap e club house." },
+  condo: { label: "Residenze & Condomini", tagline: "Servizi residenti, spese e prenotazione aree." },
+  equestrian: { label: "Equestre & Scuderie", tagline: "Box, lezioni e gestione cavalli." },
+  aiservices: { label: "Servizi IA & Automazioni", tagline: "Agenti AI, flussi e metriche di conversione." },
+  veterinary: { label: "Veterinaria", tagline: "Pet resort, visite e servizi dedicati." },
+  construction: { label: "Edilizia & Progetti", tagline: "Cantieri, capitolati e avanzamento lavori." },
+  plumber: { label: "Artigiani & Impianti", tagline: "Interventi urgenti, preventivi e assistenza." },
+};
+
+const identityDirs = (): string[] => {
+  const set = new Set<string>();
+  for (const path of Object.keys(identityFiles)) {
+    const m = path.match(/\/identities\/([^/]+)\//);
+    if (m) set.add(m[1]);
+  }
+  return Array.from(set).sort();
+};
+
+const identityScreensFor = (dir: string): Array<{ num: number; key: string; url: string }> => {
+  const out: Array<{ num: number; key: string; url: string }> = [];
+  for (const [path, url] of Object.entries(identityFiles)) {
+    if (!path.includes(`/identities/${dir}/`)) continue;
+    const fname = path.split("/").pop() ?? "";
+    const m = fname.match(/^(\d+)-([a-z0-9-]+)\.webp$/i);
+    if (!m) continue;
+    out.push({ num: parseInt(m[1], 10), key: m[2].toLowerCase(), url });
+  }
+  return out.sort((a, b) => a.num - b.num);
+};
+
+const identityMetaFor = (dir: string) => {
+  for (const [path, meta] of Object.entries(identityMetaFiles)) {
+    if (path.includes(`/identities/${dir}/meta.json`)) return meta;
+  }
+  return undefined;
+};
+
+for (const dir of identityDirs()) {
+  const files = identityScreensFor(dir);
+  if (files.length === 0) continue;
+  const meta = identityMetaFor(dir);
+  const sectorId = meta?.sector ?? dir.split("-")[0];
+
+  let group = SECTOR_MOCKUPS.find((g) => g.id === sectorId);
+  if (!group) {
+    const info = IDENTITY_SECTOR_LABELS[sectorId] ?? {
+      label: titleize(sectorId),
+      tagline: "Webapp su misura con agenti AI integrati.",
+    };
+    group = { id: sectorId, label: info.label, tagline: info.tagline, variants: [] };
+    SECTOR_MOCKUPS.push(group);
+  }
+
+  const fallbackLabels = SECTOR_SCREEN_LABELS[sectorId] ?? ["Home", "Catalogo", "Dettaglio", "Prenotazione"];
+  const screens: MockupScreen[] = files.map((f, i) => ({
+    label: meta?.labels?.[i] ?? fallbackLabels[i] ?? titleize(f.key),
+    caption: meta?.captions?.[i] ?? meta?.labels?.[i] ?? fallbackLabels[i] ?? titleize(f.key),
+    image: f.url,
+  }));
+
+  const brand = meta?.brand ?? titleize(dir);
+  const variant: SectorMockupVariant = {
+    id: `studio-${dir}`,
+    brand,
+    style: meta?.style ?? "Empire Studio",
+    palette: meta?.palette ?? "Palette dedicata",
+    description:
+      meta?.description ??
+      `${brand}: webapp su misura con ${screens.length} schermate coerenti, disegnate su questo settore.`,
+    features: meta?.features ?? screens.map((s) => s.label),
+    screen: screens[0].image,
+    screens,
+    source: "studio",
+    tier: "primary",
+  };
+
+  // Le identità Studio aprono la collezione del settore.
+  group.variants.unshift(variant);
+}
+
 /** Lookup a sector group by id. */
+
 export function getSectorGroup(id: string): SectorMockupGroup | undefined {
   return SECTOR_MOCKUPS.find((g) => g.id === id);
 }

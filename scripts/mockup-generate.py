@@ -82,7 +82,9 @@ def main() -> int:
     ap.add_argument("--screen-index", type=int, default=-1, help="genera solo la schermata N (0 = hero)")
     ap.add_argument("--workers", type=int, default=1)
     ap.add_argument("--skip-existing", action="store_true")
+    ap.add_argument("--shard", default="", help="partiziona i job: 'i/n' (es. 0/4)")
     args = ap.parse_args()
+
 
     with open(args.manifest) as f:
         manifest = json.load(f)
@@ -96,7 +98,11 @@ def main() -> int:
     if args.skip_existing:
         jobs = [j for j in jobs if not os.path.exists(
             os.path.join(args.out, f"{j['identityId']}-{j['index']}-{j['screenKey']}.png"))]
+    if args.shard:
+        idx, total = (int(x) for x in args.shard.split("/"))
+        jobs = [j for n, j in enumerate(jobs) if n % total == idx]
     if args.limit:
+
         jobs = jobs[: args.limit]
 
     print(f"job selezionati: {len(jobs)}")

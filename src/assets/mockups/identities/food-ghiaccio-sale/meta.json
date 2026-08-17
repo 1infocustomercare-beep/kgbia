@@ -1,0 +1,18 @@
+{
+  "identityId": "food-ghiaccio-sale",
+  "sector": "food",
+  "brand": "Ghiaccio e Sale",
+  "style": "mono-technical/grid-10-airy/hairline-rule/chamfer-tech/segmented-tabs-tables/shimmer-load/badge-system/large-title-collapsing",
+  "family": "ice-marble-crudo",
+  "palette": "mobile",
+  "description": "Ghiaccio e Sale: webapp su misura con 1 schermate coerenti — tipografia, palette, componenti e micro-interazioni disegnati su questo settore.",
+  "labels": [
+    "Vetrina"
+  ],
+  "captions": [
+    "Home dell'app: identità di brand, funzioni chiave e CTA principale."
+  ],
+  "features": [
+    "Vetrina"
+  ]
+}

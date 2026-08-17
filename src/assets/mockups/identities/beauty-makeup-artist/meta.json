@@ -1,0 +1,18 @@
+{
+  "identityId": "beauty-makeup-artist",
+  "sector": "beauty",
+  "brand": "Volto d'Autore",
+  "style": "airy-serif/grid-edge-to-edge/double-rule-classic/pill-soft/calendar-slots/swipe-peek/full-flood/flat-tabbar-topline",
+  "family": "makeup-set-cipria-metal",
+  "palette": "mobile",
+  "description": "Volto d'Autore: webapp su misura con 1 schermate coerenti — tipografia, palette, componenti e micro-interazioni disegnati su questo settore.",
+  "labels": [
+    "Vetrina"
+  ],
+  "captions": [
+    "Home dell'app: identità di brand, funzioni chiave e CTA principale."
+  ],
+  "features": [
+    "Vetrina"
+  ]
+}
