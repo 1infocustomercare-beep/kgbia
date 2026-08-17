@@ -8,3 +8,5 @@ export { default as GlassTextarea } from "./GlassTextarea";
 export type { GlassTextareaProps } from "./GlassTextarea";
 export { default as GlassSelect } from "./GlassSelect";
 export type { GlassSelectProps } from "./GlassSelect";
+export { default as GlassBackButton } from "./GlassBackButton";
+export type { GlassBackButtonProps } from "./GlassBackButton";

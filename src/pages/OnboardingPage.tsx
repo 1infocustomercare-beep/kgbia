@@ -11,6 +11,7 @@ import { Badge } from "@/components/ui/badge";
 import { useAuth } from "@/context/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { INDUSTRY_CONFIGS, type IndustryId } from "@/config/industry-config";
+import GlassBackButton from "@/components/glass/GlassBackButton";
 import { Check, ArrowRight, ArrowLeft, Sparkles, Search, Upload, UserPlus, QrCode, ExternalLink, Share2, Palette } from "lucide-react";
 import PrestigeTheme from "@/components/empire-home/prestige/PrestigeTheme";
 import { toast } from "sonner";
@@ -308,6 +309,9 @@ export default function OnboardingPage() {
 
           {step === 0 && (
             <motion.div key="s0" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.2 }}>
+              <div className="mb-4 flex justify-start">
+                <GlassBackButton to="/" label="Home" variant="inline" className="px-3 text-xs" />
+              </div>
               <h1 className="text-2xl sm:text-3xl font-bold text-center mb-2 font-heading">Che tipo di attività hai?</h1>
               <p className="text-center text-muted-foreground mb-4">Seleziona settore e piano per personalizzare la piattaforma</p>
 

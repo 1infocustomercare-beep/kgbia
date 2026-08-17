@@ -6,6 +6,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { getReferralSlug } from "@/hooks/useReferralCapture";
 import { toast } from "sonner";
 import { Check, ArrowRight, ArrowLeft, Sparkles } from "lucide-react";
+import GlassBackButton from "@/components/glass/GlassBackButton";
 
 const STEPS = ["Stile", "Brand", "Contatti", "Conferma"];
 
@@ -82,12 +83,9 @@ export default function BasePackagePurchase() {
       <PrestigeTheme />
       <div className="prestige-root prestige-section min-h-screen p-4 sm:p-8">
         <div className="max-w-5xl mx-auto">
-          <button
-            onClick={() => navigate("/")}
-            className="text-sm opacity-70 hover:opacity-100 mb-4 flex items-center gap-2"
-          >
-            <ArrowLeft className="w-4 h-4" /> Home
-          </button>
+          <div className="mb-4">
+            <GlassBackButton to="/" label="Home" variant="inline" className="px-4 text-xs" />
+          </div>
 
           <div className="text-center mb-6">
             <h1 className="text-3xl sm:text-4xl font-bold font-heading mb-2">
@@ -127,7 +125,7 @@ export default function BasePackagePurchase() {
                       setSectorId(s.id);
                       setVariantId("");
                     }}
-                    className={`px-3 py-1.5 rounded-full text-xs border transition-all ${
+                    className={`inline-flex items-center min-h-[40px] px-4 py-2 rounded-full text-xs border transition-all ${
                       sectorId === s.id
                         ? "bg-[hsl(var(--pr-gold))] text-[hsl(var(--pr-emerald-deep))] border-transparent"
                         : "border-white/20 hover:border-white/40"

@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import GlassBackButton from "@/components/glass/GlassBackButton";
 import PrestigeTheme from "@/components/empire-home/prestige/PrestigeTheme";
 
 export default function NoteLegali() {
@@ -7,7 +8,7 @@ export default function NoteLegali() {
       <PrestigeTheme />
       <div className="prestige-root prestige-section prestige-light min-h-screen py-16 px-4">
         <div className="max-w-3xl mx-auto prose prose-neutral">
-          <Link to="/" className="text-sm underline">← Torna alla home</Link>
+          <GlassBackButton to="/" label="Torna alla home" variant="inline" className="px-4 text-xs" />
           <h1 className="font-heading text-4xl mt-4">Note Legali</h1>
           <p className="text-xs opacity-60">Ultimo aggiornamento: {new Date().toLocaleDateString("it-IT")}</p>
 

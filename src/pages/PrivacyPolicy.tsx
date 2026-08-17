@@ -1,15 +1,14 @@
 import { ArrowLeft } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import GlassBackButton from "@/components/glass/GlassBackButton";
 
 const PrivacyPolicy = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="min-h-screen bg-background text-foreground">
-      <div className="sticky top-0 z-10 glass-strong px-5 py-4 flex items-center gap-3">
-        <button onClick={() => navigate(-1)} className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center">
-          <ArrowLeft className="w-5 h-5" />
-        </button>
+    <div className="pglass-scope pglass-app min-h-screen bg-background text-foreground">
+      <div className="pglass-stickybar sticky top-0 z-40 flex items-center gap-3 px-5 py-3">
+        <GlassBackButton variant="inline" label="Indietro" />
         <h1 className="text-lg font-display font-bold">Privacy Policy</h1>
       </div>
 
