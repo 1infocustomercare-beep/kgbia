@@ -61,10 +61,6 @@ export default function PrestigePhone({
               src={src}
               alt={alt}
               loading={loading}
-              /* LCP: l'immagine eager della hero deve avere priorità di rete alta,
-                 le altre restano a priorità normale/lazy. */
-              fetchPriority={loading === "eager" ? "high" : "auto"}
-              decoding={loading === "eager" ? "sync" : "async"}
               draggable={false}
               className="h-full w-full object-cover"
             />
