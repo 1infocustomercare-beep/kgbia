@@ -1029,8 +1029,10 @@ export default function PrestigeGlassSkin() {
           max-width: 100%;
           /* piu' opacita' e bordo interno visibile: evita zone piatte su OLED */
           background:
-            linear-gradient(160deg, hsl(var(--pr-aqua) / .10), transparent 58%),
-            hsl(196 42% 8% / .74);
+            linear-gradient(180deg, hsl(0 0% 100% / .09), transparent 22%),
+            linear-gradient(160deg, hsl(var(--pr-aqua) / .12), transparent 58%),
+            radial-gradient(120% 80% at 50% 118%, hsl(var(--pr-aqua) / .12), transparent 70%),
+            hsl(196 42% 8% / .76);
           backdrop-filter: blur(16px) saturate(160%);
           -webkit-backdrop-filter: blur(16px) saturate(160%);
           box-shadow:
