@@ -96,7 +96,7 @@ export default function PrestigePortfolio() {
             >
               Casi reali.
               <br />
-              <span className="prestige-gold-text">Decine di stili per settore.</span>
+              <span className="pglass-aqua-text">Decine di stili per settore.</span>
             </h2>
           </div>
           <p className="max-w-sm text-sm sm:text-base" style={{ color: "hsl(var(--pr-muted-on-light))" }}>
@@ -142,7 +142,7 @@ export default function PrestigePortfolio() {
               transformOrigin: "center top",
               transformStyle: "preserve-3d",
             }}
-            className="grid grid-cols-1 gap-x-5 gap-y-12 sm:grid-cols-2 lg:grid-cols-4 lg:gap-x-6"
+            className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4"
           >
             {visible.map((h) => (
               <article key={h.key} className="group pglass-soft flex w-full flex-col items-center p-5">
