@@ -559,6 +559,30 @@ export default function DemoDirectoryPage() {
 
       <div id="demo-list" className="max-w-5xl mx-auto px-4 py-2 relative z-10">
         <PrivateJetDemoCard onOpen={() => navigate("/demo/aurea-jet")} />
+        <button
+          onClick={() => navigate("/demo/aurelia-motori")}
+          className="group relative mb-6 block w-full overflow-hidden rounded-2xl border border-primary/25 text-left"
+          style={{ background: "linear-gradient(135deg, hsl(220 25% 7%), hsl(180 28% 10%))" }}
+        >
+          <img
+            src="/frames/showroom/045.jpg"
+            alt="Aurelia Motori, demo concessionaria e officina"
+            loading="lazy"
+            width={1280}
+            height={720}
+            className="absolute inset-0 h-full w-full object-cover opacity-45 transition-transform duration-700 group-hover:scale-105"
+          />
+          <div className="relative z-10 p-5 sm:p-7">
+            <span className="text-[10px] font-bold uppercase tracking-[0.28em] text-primary">Nuova demo 360°</span>
+            <h2 className="mt-2 font-heading text-2xl font-semibold text-white sm:text-4xl">Aurelia Motori</h2>
+            <p className="mt-2 max-w-md text-xs text-white/70 sm:text-sm">
+              Concessionaria &amp; officina · Showroom con rotazione 360° reale, test drive, permuta e agenda ponti.
+            </p>
+            <span className="mt-4 inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.18em] text-primary">
+              Apri demo <ArrowRight className="h-3.5 w-3.5" />
+            </span>
+          </div>
+        </button>
         {/* ═══ SEARCH ═══ */}
         <div className="relative mb-6">
           <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-foreground/80" />
