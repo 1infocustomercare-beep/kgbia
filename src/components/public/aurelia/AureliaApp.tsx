@@ -1,7 +1,9 @@
-import { useMemo, useState } from "react";
+import { createContext, useContext, useMemo, useState } from "react";
 import {
   BadgeCheck,
   BatteryCharging,
+  BatteryFull,
+  Bell,
   CalendarDays,
   Car,
   CheckCircle2,
@@ -10,14 +12,21 @@ import {
   Download,
   Fuel,
   Gauge,
+  Home,
   LayoutDashboard,
+  MessageSquare,
+  Package,
   PenLine,
   Repeat,
+  Search,
+  Send,
   Settings2,
   ShieldCheck,
+  Signal,
   Sparkles,
   TrendingUp,
   User,
+  Wifi,
   Wrench,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -25,6 +34,12 @@ import carRosso from "@/assets/demo-aurelia/car-rosso-coupe.jpg";
 import carGrigio from "@/assets/demo-aurelia/car-grigio-suv.jpg";
 import carBianco from "@/assets/demo-aurelia/car-bianco-elettrica.jpg";
 import carBlu from "@/assets/demo-aurelia/car-blu-wagon.jpg";
+
+/* ══════════ Variante di rendering (desktop / dentro iPhone) ══════════ */
+
+type Variant = "desktop" | "mobile";
+const VariantCtx = createContext<Variant>("desktop");
+const useVariant = () => useContext(VariantCtx);
 
 /* ══════════ Dati demo (nessun dato reale) ══════════ */
 
