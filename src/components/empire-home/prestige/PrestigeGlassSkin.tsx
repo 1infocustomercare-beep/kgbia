@@ -39,6 +39,45 @@ export default function PrestigeGlassSkin() {
         --pr-glass: 0 0% 100%;
       }
 
+      /* ═══════════ 1b. SOTTOPAGINE INTERNE — riquadri e bordi coerenti ═══════════ */
+      .pglass-stickybar {
+        background: hsl(var(--pr-emerald-deep) / 0.72);
+        backdrop-filter: blur(22px) saturate(150%);
+        -webkit-backdrop-filter: blur(22px) saturate(150%);
+        border-top: 1px solid hsl(0 0% 100% / 0.07);
+        border-bottom: 1px solid hsl(var(--pr-aqua) / 0.22);
+        box-shadow: 0 18px 40px -30px hsl(var(--pr-aqua) / 0.55);
+      }
+      .pglass-divider {
+        border-bottom: 1px solid hsl(0 0% 100% / 0.08);
+        position: relative;
+      }
+      .pglass-divider::after {
+        content: "";
+        position: absolute;
+        left: 0; right: 0; bottom: -1px;
+        height: 1px;
+        background: linear-gradient(90deg, transparent, hsl(var(--pr-aqua) / 0.4), transparent);
+        opacity: .55;
+      }
+      .pglass-tag {
+        display: inline-flex; align-items: center; gap: .4rem;
+        border-radius: 999px;
+        padding: .3rem .75rem;
+        font-size: 10px; font-weight: 700;
+        text-transform: uppercase; letter-spacing: .18em;
+        background: linear-gradient(160deg, hsl(0 0% 100% / 0.08), hsl(0 0% 100% / 0.02));
+        border: 1px solid hsl(0 0% 100% / 0.12);
+        color: hsl(var(--pr-text-on-dark) / 0.82);
+        backdrop-filter: blur(14px);
+        -webkit-backdrop-filter: blur(14px);
+      }
+      .pglass-tag-accent {
+        background: linear-gradient(160deg, hsl(var(--pr-aqua) / 0.20), hsl(var(--pr-aqua-deep) / 0.10));
+        border-color: hsl(var(--pr-aqua) / 0.38);
+        color: hsl(var(--pr-aqua-light));
+      }
+
       /* ═══════════ 2. FONDALI ONDEGGIANTI ═══════════ */
       .prestige-root .prestige-dark {
         background:
