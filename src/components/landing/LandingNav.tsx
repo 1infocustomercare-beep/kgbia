@@ -93,7 +93,7 @@ export default function LandingNav() {
           <a
             href="#hero"
             onClick={(e) => { e.preventDefault(); window.scrollTo({ top: 0, behavior: "smooth" }); }}
-            className="group/logo relative flex min-w-0 items-center gap-2 rounded-full px-1.5 py-1 transition-all duration-500 hover:bg-white/5 sm:gap-2.5 sm:px-2"
+            className="group/logo relative flex shrink-0 items-center gap-2 rounded-full px-1.5 py-1 transition-all duration-500 hover:bg-white/5 sm:gap-2.5 sm:px-2"
             aria-label="Empire AI — Home"
           >
             <span className="relative shrink-0">
@@ -105,19 +105,19 @@ export default function LandingNav() {
 
 
 
-          <ul className="hidden md:flex items-center gap-3">
+          <ul className="hidden min-w-0 items-center gap-1.5 md:flex">
             {NAV_LINKS.map((l) => {
               const Icon = l.icon;
               return (
                 <li key={l.href} style={{ ["--gf" as any]: l.from, ["--gt" as any]: l.to }}>
                   <button
                     onClick={() => scrollTo(l.href)}
-                    className="empire-nav-pill group/pill relative flex h-10 items-center gap-2 overflow-hidden rounded-full px-3.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[hsl(178_74%_55%/0.7)]"
+                    className="empire-nav-pill group/pill relative flex h-10 items-center gap-2 overflow-hidden rounded-full px-3 xl:px-3.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[hsl(178_74%_55%/0.7)]"
                     aria-label={l.label}
                   >
                     <span aria-hidden="true" className="empire-nav-pill-glow" />
                     <Icon aria-hidden="true" className="relative z-10 h-[16px] w-[16px] shrink-0 text-[hsl(178_70%_78%)] transition-colors duration-500 group-hover/pill:text-white" />
-                    <span className="relative z-10 hidden whitespace-nowrap text-[11.5px] font-semibold uppercase tracking-[0.09em] text-foreground/85 transition-colors duration-500 group-hover/pill:text-white lg:inline">
+                    <span className="relative z-10 hidden whitespace-nowrap text-[11.5px] font-semibold uppercase tracking-[0.09em] text-foreground/85 transition-colors duration-500 group-hover/pill:text-white xl:inline">
                       {l.label}
                     </span>
                   </button>
@@ -126,7 +126,7 @@ export default function LandingNav() {
             })}
           </ul>
 
-          <div className="hidden md:flex gap-3 items-center">
+          <div className="hidden shrink-0 items-center gap-2 md:flex">
             <PrestigeLangToggle />
             <button onClick={() => navigate("/auth")} className="rounded-full px-3 py-2 text-[12px] font-semibold uppercase tracking-[0.1em] text-foreground/80 transition-colors hover:text-foreground">Accedi</button>
             <button onClick={() => scrollTo("#contatti")} className="landing-button-primary rounded-full px-6 py-2.5 text-[12.5px] font-semibold uppercase tracking-[0.09em]">Inizia Ora</button>
