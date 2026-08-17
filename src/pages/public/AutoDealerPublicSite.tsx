@@ -1,4 +1,4 @@
-import { lazy, Suspense, useCallback, useEffect, useState } from "react";
+import { lazy, Suspense } from "react";
 import { Link } from "react-router-dom";
 import {
   ArrowRight,
@@ -6,27 +6,19 @@ import {
   Car,
   Gauge,
   MessageCircle,
-  Monitor,
   Phone,
   Repeat,
   ShieldCheck,
   Sparkles,
   Wrench,
-  X,
 } from "lucide-react";
 import BackButton from "@/components/BackButton";
 import { Button } from "@/components/ui/button";
 import { LuxeDivider, LuxeGrain, LuxePanel, LuxeStat, LuxeTag } from "@/components/public/luxe";
-import showroomShot from "@/assets/demo-aurelia/aurelia-showroom.jpg";
-import schedaShot from "@/assets/demo-aurelia/aurelia-scheda.jpg";
-import testdriveShot from "@/assets/demo-aurelia/aurelia-testdrive.jpg";
-import permutaShot from "@/assets/demo-aurelia/aurelia-permuta.jpg";
-import officinaShot from "@/assets/demo-aurelia/aurelia-officina.jpg";
-import garageShot from "@/assets/demo-aurelia/aurelia-garage.jpg";
-import crmShot from "@/assets/demo-aurelia/aurelia-crm.jpg";
-import desktopShot from "@/assets/demo-aurelia/aurelia-desktop.jpg";
 
 const HeroScrub = lazy(() => import("@/components/public/HeroScrub"));
+const AureliaApp = lazy(() => import("@/components/public/aurelia/AureliaApp"));
+
 
 const PILLARS = [
   {
