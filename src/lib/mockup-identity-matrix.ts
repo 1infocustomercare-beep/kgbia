@@ -1101,39 +1101,104 @@ export function matchSector(raw: string): SectorKey {
 }
 
 /**
- * FIRMA MATERICA per famiglia visiva: come "vive" la superficie
- * (vetro liquido, carta, lacca, cemento, velluto…) e il backdrop del device.
- * È ciò che rende ogni mockup "rivoluzionario" e non un semplice layout piatto.
+ * FIRMA MATERICA — UNA PER OGNI FAMIGLIA, MAI RIUSATA.
+ * material = come vive la superficie, light = luce dell'interfaccia,
+ * backdrop = fondale del device, staging = messa in scena/camera,
+ * motif = effetto-firma esclusivo di quello stile.
+ * Nessun default: la mappa è completa (Record esaustivo) così due mockup
+ * non possono mai condividere la stessa firma.
  */
-export type SurfaceSignature = { material: string; light: string; backdrop: string };
-
-const DEFAULT_SURFACE: SurfaceSignature = {
-  material: "superfici opache con bordi hairline e microtexture coerente all'identità",
-  light: "luce diffusa uniforme, contrasto controllato",
-  backdrop: "fondale studio a gradiente neutro coerente con la palette",
+export type SurfaceSignature = {
+  material: string;
+  light: string;
+  backdrop: string;
+  staging: string;
+  motif: string;
 };
 
-export const SURFACE_SIGNATURES: Partial<Record<IdentityFamily, SurfaceSignature>> = {
-  "neo-editorial-magazine": { material: "carta avorio con grana 3%, nessuna ombra, filetti stampati", light: "luce di finestra naturale radente", backdrop: "fondale avorio caldo a gradiente morbido" },
-  "midnight-lacquer": { material: "lacca nera profonda, pannelli semi-riflettenti, bordo luminoso 1px", light: "rim light caldo singolo, ombre profonde", backdrop: "fondale carbone con sweep morbido" },
-  "neo-brutalist-industrial": { material: "cemento e carta riso, tratti 2px pieni, zero morbidezze", light: "flash diretto duro", backdrop: "fondale cemento grigio piatto" },
-  "nocturne-jazz-lounge": { material: "VETRO LIQUIDO: pannelli traslucidi con backdrop-blur pesante, bordo bianco 12%, glow interno, highlight speculare sul bordo superiore", light: "bokeh blu notturno dietro il vetro, riflessi champagne", backdrop: "fondale midnight con bokeh sfocato" },
-  "glass-tower-metropolitan": { material: "VETRO ARCHITETTONICO: pannelli trasparenti sovrapposti, riflesso diagonale, profondità a strati", light: "blue hour con riflessi a specchio", backdrop: "fondale grafite con skyline sfocato" },
-  "aviation-instrument": { material: "vetro strumento antiriflesso, reticoli incisi, tacche graduate", light: "retroilluminazione fredda da cockpit", backdrop: "fondale blu notte con vignettatura" },
-  "porcelain-couture": { material: "porcellana satinata, bordi hairline rosati, ombre pastose", light: "beauty dish morbidissimo", backdrop: "fondale cipria a gradiente" },
-  "chrome-y2k-gloss": { material: "cromo liquido specchiante, pillole 3D, riflessi iridescenti", light: "gel lighting magenta/ciano", backdrop: "fondale nero lucido con riflesso" },
-  "vitrine-jewel-box": { material: "velluto nero e filetti oro, scintillio puntiforme", light: "luce puntiforme singola da vetrina", backdrop: "fondale nero velluto" },
-  "chancery-oxblood": { material: "pelle e legno di noce, sigillo in ceralacca in rilievo, filetti oro incisi", light: "lampada da studio calda laterale", backdrop: "fondale marrone scuro profondo" },
-  "acid-performance": { material: "gomma tecnica opaca e blocchi pieni, spigoli netti", light: "neon duro da palestra", backdrop: "fondale antracite con alone acido" },
-  "monastic-recovery": { material: "lino e legno chiaro, superfici latte opaline", light: "luce naturale nebbiosa", backdrop: "fondale sabbia opaco" },
-  "mediterranean-sunlit": { material: "marmo bianco e ceramica smaltata", light: "sole a picco con ombre nette di foglie", backdrop: "fondale calce luminoso" },
-  "sterile-mint-clinic": { material: "superfici cliniche opache, bordi menta chiarissimi", light: "luce clinica diffusa senza ombre", backdrop: "fondale menta pallidissimo" },
-  "velvet-curtain": { material: "velluto bordeaux con drappeggio e cordoni oro", light: "luci di scena calde radenti", backdrop: "fondale sipario in penombra" },
+export const SURFACE_SIGNATURES: Record<IdentityFamily, SurfaceSignature> = {
+  // ---------- FOOD ----------
+  "neo-editorial-magazine": { material: "carta avorio con grana 3%, filetti stampati, zero ombre", light: "luce di finestra radente da sinistra", backdrop: "avorio caldo a gradiente morbido", staging: "device centrato, ombra corta a terra, respiro ampio", motif: "gabbia editoriale con numeri di pagina e capolettera serif" },
+  "midnight-lacquer": { material: "lacca nera profonda semi-riflettente, bordo luminoso 1px", light: "rim light caldo singolo, ombre profonde", backdrop: "carbone con sweep morbido", staging: "device isolato in penombra, riflesso verticale sul vetro", motif: "riflesso speculare che scivola sui pannelli come su un pianoforte" },
+  "neo-brutalist-industrial": { material: "cemento e carta riso, tratti 2px pieni, zero morbidezze", light: "flash diretto duro", backdrop: "cemento grigio piatto", staging: "device appoggiato frontalmente con ombra dura a 45°", motif: "blocchi spostati fuori griglia e timbri inchiostrati" },
+  "mediterranean-sunlit": { material: "marmo bianco e ceramica smaltata", light: "sole a picco con ombre nette di foglie", backdrop: "calce luminoso", staging: "device in luce naturale, ombra fogliare proiettata sul fondale", motif: "ombre botaniche che tagliano le card" },
+  "swiss-clinical-grid": { material: "carta bianca ad alta grammatura, inchiostro nero secco", light: "luce piatta senza direzione", backdrop: "bianco puro senza gradiente", staging: "device perfettamente ortogonale, ombra minima 2px", motif: "griglia svizzera visibile e allineamenti a filo millimetrico" },
+
+  // ---------- BEAUTY ----------
+  "porcelain-couture": { material: "porcellana satinata, hairline rosati, ombre pastose", light: "beauty dish morbidissimo", backdrop: "cipria a gradiente", staging: "device su piano lucido con riflesso morbido", motif: "bordi perlati che catturano un unico bagliore" },
+  "chrome-y2k-gloss": { material: "cromo liquido specchiante, pillole 3D iridescenti", light: "gel lighting magenta/ciano", backdrop: "nero lucido con riflesso", staging: "device sospeso con riflesso a specchio sotto", motif: "blob cromati che deformano lo sfondo come mercurio" },
+  "botanical-apothecary": { material: "vetro ambrato, etichette gommate, legno grezzo", light: "luce calda da serra, pulviscolo visibile", backdrop: "verde salvia profondo", staging: "device tra ombre di foglie fuori fuoco", motif: "etichette apothecary con cornici incise e sigilli botanici" },
+  "graphite-atelier": { material: "grafite spazzolata e carta nera, tratti a matita", light: "luce laterale bassa a contrasto alto", backdrop: "antracite uniforme", staging: "device in taglio di luce netto, resto in ombra", motif: "tratteggi a matita e misure d'atelier annotate a mano" },
+  "pastel-riso-print": { material: "stampa risograph con mis-registro 1px e overprint", light: "luce piatta da scanner", backdrop: "pesca pastello granuloso", staging: "device fotografato come oggetto di stampa, ombra finta serigrafata", motif: "sovrastampa a due inchiostri sfalsati" },
+
+  // ---------- NCC ----------
+  "obsidian-chauffeur": { material: "pelle nera trapuntata e metallo brunito", light: "luce notturna urbana radente", backdrop: "nero con scie di fari sfocate", staging: "device in interno auto, riflessi lunghi orizzontali", motif: "cuciture di pelle e badge metallico inciso" },
+  "aviation-instrument": { material: "vetro strumento antiriflesso, reticoli incisi, tacche graduate", light: "retroilluminazione fredda da cockpit", backdrop: "blu notte vignettato", staging: "device come strumento di bordo, luce interna prevalente", motif: "quadranti, gradazioni e rotte vettoriali sovrapposte" },
+  "ivory-concierge": { material: "avorio spesso goffrato e ottone spazzolato", light: "luce alberghiera calda diffusa", backdrop: "sabbia chiara setosa", staging: "device su marmo chiaro con riflesso tenue", motif: "monogramma inciso e filetti in ottone" },
+  "carbon-motorsport": { material: "carbonio a trama visibile, alluminio anodizzato", light: "luce da pit lane con hotspot mobili", backdrop: "nero tecnico con bagliore rosso", staging: "device con ombra stretta, contrasto altissimo", motif: "telemetria a barre e trama carbon che segue la curvatura" },
+  "art-deco-transit": { material: "ottone lucido, onice e intarsi geometrici", light: "luce a ventaglio anni '30", backdrop: "verde bottiglia profondo", staging: "device incorniciato da raggi decò sfumati", motif: "ventagli, archi e cornici simmetriche in oro" },
+
+  // ---------- FITNESS ----------
+  "acid-performance": { material: "gomma tecnica opaca e blocchi pieni, spigoli netti", light: "neon duro da palestra", backdrop: "antracite con alone acido", staging: "device frontale con controluce acido dietro", motif: "barre di carico e cronometri sovradimensionati" },
+  "monastic-recovery": { material: "lino e legno chiaro, superfici latte opaline", light: "luce naturale nebbiosa", backdrop: "sabbia opaco", staging: "device su tessuto, ombra lunghissima e morbida", motif: "cerchi di respirazione concentrici quasi impercettibili" },
+  "tactical-hud": { material: "vetro corazzato scuro con reticolo HUD e stencil", light: "backlight verde tattico", backdrop: "verde militare desaturato", staging: "device come visore, vignettatura marcata", motif: "crosshair, coordinate e marker di target" },
+  "sunrise-gradient-flow": { material: "vetro caldo con gradienti fluidi corallo-oro", light: "alba morbida da destra", backdrop: "gradiente pesca-lavanda", staging: "device immerso in bagliore d'alba, bordi luminosi", motif: "onde di gradiente che attraversano le card" },
+  "typographic-scoreboard": { material: "LED e plastica opaca, cifre condensate enormi", light: "emissione luminosa dallo schermo stesso", backdrop: "nero pece", staging: "device come tabellone, luce solo dallo schermo", motif: "punteggi giganti con puntinatura LED" },
+
+  // ---------- HOSPITALITY ----------
+  "coastal-linen": { material: "lino grezzo e legno sbiancato dal sale", light: "luce marina alta e limpida", backdrop: "azzurro pallido lavato", staging: "device su lino, ombra irregolare del tessuto", motif: "trame di tessuto e onde disegnate a filetto" },
+  "alpine-timber": { material: "legno di larice e feltro grigio", light: "luce fredda di neve riflessa", backdrop: "grigio pietra con nebbia", staging: "device su tavola in legno, ombra fredda", motif: "profili di vetta e giunzioni in legno" },
+  "grand-hotel-classic": { material: "marmo venato, oro brunito e boiserie", light: "lampadario caldo, riflessi puntiformi", backdrop: "bordeaux profondo", staging: "device su marmo con riflesso nitido", motif: "cornici classiche e stemma dorato" },
+  "desert-adobe": { material: "argilla adobe e intonaco ruvido", light: "sole del deserto al tramonto", backdrop: "terracotta calda", staging: "device con ombra netta color ruggine", motif: "archi in terra cruda e bordi smussati a mano" },
+  "nocturne-jazz-lounge": { material: "VETRO LIQUIDO: pannelli traslucidi, blur pesante, bordo bianco 12%, highlight speculare superiore", light: "bokeh blu notturno dietro il vetro, riflessi champagne", backdrop: "midnight con bokeh sfocato", staging: "device sospeso su fondale bokeh, glow interno visibile", motif: "lastre di vetro che si sovrappongono come luci di scena" },
+
+  // ---------- REAL ESTATE ----------
+  "blueprint-architectural": { material: "carta da lucido blu e tratti tecnici bianchi", light: "luce da tavolo luminoso", backdrop: "blu blueprint uniforme", staging: "device su tavolo tecnico, ombra piatta", motif: "quote, sezioni e retini architettonici" },
+  "gallery-white-cube": { material: "gesso bianco opaco, cornici a filo muro", light: "faretti da galleria dall'alto", backdrop: "bianco galleria con ombra a terra", staging: "device come opera esposta, luce dall'alto", motif: "didascalie di galleria e vuoti generosi" },
+  "terracotta-tuscan": { material: "cotto toscano, gesso e ferro battuto", light: "luce dorata di collina al tardo pomeriggio", backdrop: "ocra caldo", staging: "device su cotto, ombra calda allungata", motif: "archi toscani e bordi consumati" },
+  "glass-tower-metropolitan": { material: "VETRO ARCHITETTONICO: lastre trasparenti sovrapposte, riflesso diagonale, profondità a strati", light: "blue hour con riflessi a specchio", backdrop: "grafite con skyline sfocato", staging: "device con riflesso di grattacieli sul vetro", motif: "riflessi diagonali che tagliano l'intera interfaccia" },
+  "cadastral-map-mono": { material: "carta catastale beige con inchiostro seppia", light: "luce d'archivio fredda e piatta", backdrop: "beige archivio", staging: "device come documento su tavolo d'archivio", motif: "particelle catastali, retini e timbri di protocollo" },
+
+  // ---------- HEALTHCARE ----------
+  "sterile-mint-clinic": { material: "superfici cliniche opache, bordi menta chiarissimi", light: "luce clinica diffusa senza ombre", backdrop: "menta pallidissimo", staging: "device igienico e neutro, ombra quasi assente", motif: "icone mediche a linea sottile e spazi ariosi" },
+  "soft-neumorphic-care": { material: "neumorfismo latteo: doppia ombra dentro/fuori, rilievi morbidi", light: "luce omnidirezionale morbida", backdrop: "grigio-latte uniforme", staging: "device su superficie identica al fondo, rilievo per sola ombra", motif: "pulsanti estrusi e incavi soffici" },
+  "deep-navy-diagnostic": { material: "vetro blu notte con tracciati luminosi", light: "backlight ciano diagnostico", backdrop: "navy profondo", staging: "device come monitor clinico in stanza buia", motif: "tracciati vitali e soglie evidenziate" },
+  "paper-chart-analog": { material: "cartella clinica in carta, moduli prestampati, graffette", light: "luce da scrivania calda", backdrop: "carta crema", staging: "device come cartella appoggiata, ombra di graffetta", motif: "moduli barrati a penna e caselle spuntate" },
+  "human-warm-gradient": { material: "gradienti caldi pesca-ambra su vetro morbido", light: "luce avvolgente frontale", backdrop: "ambra tenue", staging: "device con alone caldo attorno, bordi che sfumano", motif: "forme organiche arrotondate e ritratti in tondo" },
+
+  // ---------- LEGAL ----------
+  "chancery-oxblood": { material: "pelle e noce, sigillo in ceralacca in rilievo, filetti oro incisi", light: "lampada da studio calda laterale", backdrop: "marrone scuro profondo", staging: "device su scrivania in pelle, luce da lampada", motif: "sigilli, ceralacca e capolettera dorati" },
+  "marble-classical": { material: "marmo statuario levigato e bronzo", light: "luce da lucernario, ombre scultoree", backdrop: "bianco marmo venato", staging: "device su base scultorea, ombra netta e nobile", motif: "colonne, timpani e maiuscolette incise" },
+  "raw-legal-mono": { material: "carta uso mano e monospace battuto a macchina", light: "luce da ufficio neutra", backdrop: "grigio carta riciclata", staging: "device come documento, nessun effetto", motif: "numerazione di comma e righe di tabulazione" },
+  "navy-pinstripe-corporate": { material: "tessuto gessato blu e acciaio satinato", light: "luce corporate fredda e ordinata", backdrop: "navy con trama gessata", staging: "device su tessuto gessato, ombra pulita", motif: "righine verticali che ritmano le sezioni" },
+  "quiet-luxury-parchment": { material: "pergamena spessa, goffratura a secco, nessun colore acceso", light: "luce museale bassissima", backdrop: "sabbia pergamena", staging: "device quasi immerso nel fondale, ombra impercettibile", motif: "goffrature a secco visibili solo di taglio" },
+
+  // ---------- RETAIL ----------
+  "hyper-color-pop": { material: "plastica lucida saturissima e adesivi die-cut", light: "flash pop diretto", backdrop: "fucsia elettrico piatto", staging: "device con ombra colorata dura, energia da vetrina", motif: "sticker, badge sconto e forme pop ritagliate" },
+  "monochrome-boutique": { material: "carta nera opaca e bianco secco, zero accenti", light: "luce boutique puntuale", backdrop: "grigio fumo neutro", staging: "device isolato, contrasto estremo bianco/nero", motif: "solo tipografia e filetti, nessun colore" },
+  "warehouse-utility": { material: "metallo zincato, nastro adesivo e stencil industriali", light: "luce a soffitto industriale", backdrop: "grigio zinco", staging: "device su superficie metallica, riflesso graffiato", motif: "codici a barre, stencil e nastri di segnalazione" },
+  "vitrine-jewel-box": { material: "velluto nero e filetti oro, scintillio puntiforme", light: "luce puntiforme singola da vetrina", backdrop: "nero velluto", staging: "device come gioiello in teca, alone stretto", motif: "scintille puntiformi sui bordi dorati" },
+  "zine-collage": { material: "fotocopie, ritagli incollati e nastro carta", light: "luce da fotocopiatrice contrastata", backdrop: "carta grigia fotocopiata", staging: "device come pagina di zine, bordi irregolari", motif: "ritagli sovrapposti e testo ritagliato a mano" },
+
+  // ---------- EVENTS ----------
+  "neon-club-poster": { material: "tubi neon su muro scuro umido, inchiostro fluo", light: "neon magenta e ciano con bagliore diffuso", backdrop: "nero con aloni neon", staging: "device immerso nel bagliore neon, riflessi sul vetro", motif: "scritte neon e liste line-up sovrapposte" },
+  "champagne-gala": { material: "seta champagne, oro chiaro e cristallo", light: "luci scintillanti da gala", backdrop: "champagne a gradiente", staging: "device con bokeh dorato, riflessi cristallini", motif: "bollicine e filetti oro sottilissimi" },
+  "festival-ticket-stub": { material: "cartoncino biglietto con bordi perforati e strappo", light: "luce da festival calda a fine giornata", backdrop: "kraft caldo", staging: "device come biglietto strappato, ombra irregolare", motif: "perforazioni, matrici e timbri di ingresso" },
+  "kinetic-typography": { material: "lettere estruse in movimento con motion blur direzionale", light: "luce che segue il moto delle lettere", backdrop: "nero con scie tipografiche", staging: "device con testo che fuoriesce virtualmente dai bordi", motif: "parole ripetute in scala crescente" },
+  "velvet-curtain": { material: "velluto bordeaux con drappeggio e cordoni oro", light: "luci di scena calde radenti", backdrop: "sipario in penombra", staging: "device incorniciato dal drappeggio, luce da palco", motif: "pieghe di sipario e cordoni dorati" },
+
+  // ---------- EDUCATION ----------
+  "chalkboard-scholastic": { material: "lavagna verde con gesso e polvere", light: "luce d'aula da finestre alte", backdrop: "verde lavagna", staging: "device appoggiato al canaletto del gesso", motif: "tratti di gesso, frecce e schemi scritti a mano" },
+  "playful-block-primary": { material: "plastica atossica a blocchi primari, angoli morbidissimi", light: "luce allegra piatta", backdrop: "giallo primario", staging: "device tra blocchi colorati fuori fuoco", motif: "forme geometriche giocose e badge tondi" },
+  "campus-modernist": { material: "cemento a vista e vetro verde bottiglia modernista", light: "luce architettonica laterale", backdrop: "beige cemento", staging: "device su cemento, ombra architettonica netta", motif: "moduli quadrati e segnaletica da campus" },
+  "notebook-dotgrid": { material: "carta dot-grid con inchiostro blu e washi tape", light: "luce da scrivania naturale", backdrop: "bianco carta puntinata", staging: "device come quaderno aperto, ombra di pagina", motif: "puntinatura visibile, note a margine e washi tape" },
+  "cyber-academy": { material: "vetro scuro con reticolo neon viola e scanline", light: "backlight viola con leggero glitch", backdrop: "viola notte con griglia in fuga", staging: "device in ambiente cyber, griglia prospettica dietro", motif: "barre XP, scanline e badge di livello" },
 };
 
 export function getSurface(identity: MockupIdentity): SurfaceSignature {
-  return SURFACE_SIGNATURES[identity.family] ?? DEFAULT_SURFACE;
+  return SURFACE_SIGNATURES[identity.family];
 }
+
 
 /**
  * Costruisce il prompt per una singola schermata.
@@ -1150,7 +1215,8 @@ export function buildScreenPrompt(identity: MockupIdentity, screen: ScreenSpec):
       ].join("\n")
     : [
         "Render fotorealistico 8K di UN SOLO iPhone 16 Pro Max in titanio naturale, vista perfettamente FRONTALE, ZERO rotazione e ZERO inclinazione, dispositivo verticale e centrato, ombra morbida realistica sotto.",
-        "Illuminazione studio a 3 punti, micro-highlight sul bevel in titanio, Dynamic Island centrata, home indicator iOS.",
+        "Micro-highlight sul bevel in titanio, Dynamic Island centrata, home indicator iOS.",
+        `MESSA IN SCENA (esclusiva di questo stile): ${s.staging}.`,
         `Fondale: ${s.backdrop}. Nessun secondo telefono, nessun oggetto, nessun testo fuori dallo schermo.`,
         "LO SCHERMO deve mostrare la UI a tutta superficie, nitidissima e leggibile in ogni dettaglio.",
       ].join("\n");
@@ -1159,13 +1225,14 @@ export function buildScreenPrompt(identity: MockupIdentity, screen: ScreenSpec):
     canvas,
     ``,
     `BRAND: "${identity.brand}" — ${identity.tagline}`,
-    `IDENTITÀ VISIVA: ${identity.label} (famiglia ${identity.family}) — deve risultare inconfondibile e diversa da qualsiasi altro stile.`,
+    `IDENTITÀ VISIVA: ${identity.label} (famiglia ${identity.family}) — deve risultare inconfondibile e diversa al 360% da qualsiasi altro stile: nessuna base condivisa, nessun layout ripetuto.`,
     ``,
     `PALETTE (usare esattamente): bg ${identity.palette.bg}, surface ${identity.palette.surface}, testo ${identity.palette.text}, muted ${identity.palette.muted}, accento ${identity.palette.accent}, secondario ${identity.palette.accent2}.`,
     `TIPOGRAFIA: display ${identity.typography.display}; body ${identity.typography.body}; trattamento ${identity.typography.treatment}.`,
     `GEOMETRIA: raggio ${identity.geometry.radius}; bordi ${identity.geometry.border}; griglia ${identity.geometry.grid}; densità ${identity.geometry.density}.`,
     `MATERIA DELLE SUPERFICI: ${s.material}.`,
     `LUCE DELL'INTERFACCIA: ${s.light}.`,
+    `EFFETTO-FIRMA UNICO (deve essere visibile e non comparire in nessun altro stile): ${s.motif}.`,
     `CHROME: ${identity.chrome.nav}; status bar ${identity.chrome.statusBar === "light" ? "chiara su fondo scuro" : "scura su fondo chiaro"} con 9:41; segno distintivo: ${identity.chrome.signature}.`,
     `FOTOGRAFIA INTERNA: ${identity.photography}.`,
     `RITMO COMPOSITIVO: ${identity.composition}.`,
@@ -1175,8 +1242,8 @@ export function buildScreenPrompt(identity: MockupIdentity, screen: ScreenSpec):
     ``,
     `CRAFT: griglia 8pt rigorosa, allineamenti ottici perfetti, gerarchia tipografica da studio premiato, testo nitido retina, numeri credibili e coerenti, tutte le stringhe in italiano professionale reale (nessun lorem ipsum, nessun testo inglese, nessuna scritta illeggibile), target touch realistici.`,
     isDesktop
-      ? `VIETATI: cornici di dispositivo, MacBook, finestre browser, watermark, loghi Apple/Google/Meta, wireframe, template generico, ombre attorno al canvas.`
-      : `VIETATI: iPhone dentro iPhone, screenshot dentro screenshot, secondo dispositivo, watermark, loghi Apple/Google/Meta, wireframe, template generico, prospettiva inclinata.`,
+      ? `VIETATI: cornici di dispositivo, MacBook, finestre browser, watermark, loghi Apple/Google/Meta, wireframe, template generico, ombre attorno al canvas, riuso di layout visti in altri stili.`
+      : `VIETATI: iPhone dentro iPhone, screenshot dentro screenshot, secondo dispositivo, watermark, loghi Apple/Google/Meta, wireframe, template generico, prospettiva inclinata, riuso di layout/effetti visti in altri stili.`,
   ].join("\n");
 }
 
@@ -1186,13 +1253,36 @@ export function buildIdentityPrompts(identity: MockupIdentity): { screen: Screen
 }
 
 
-/** Verifica che nessuna famiglia visiva sia riusata tra settori. */
-export function assertMatrixIntegrity(): { ok: boolean; duplicates: string[]; totals: Record<string, number> } {
+/** Verifica che nessuna famiglia, materia, luce, fondale, staging o motivo sia riusato. */
+export function assertMatrixIntegrity(): {
+  ok: boolean;
+  duplicates: string[];
+  surfaceDuplicates: string[];
+  totals: Record<string, number>;
+} {
   const seen = new Map<string, number>();
   ALL_IDENTITIES.forEach((i) => seen.set(i.family, (seen.get(i.family) ?? 0) + 1));
   const duplicates = Array.from(seen.entries()).filter(([, n]) => n > 1).map(([f]) => f);
+
+  const surfaceDuplicates: string[] = [];
+  (["material", "light", "backdrop", "staging", "motif"] as const).forEach((k) => {
+    const bag = new Map<string, string[]>();
+    (Object.keys(SURFACE_SIGNATURES) as IdentityFamily[]).forEach((f) => {
+      const v = SURFACE_SIGNATURES[f][k];
+      bag.set(v, [...(bag.get(v) ?? []), f]);
+    });
+    bag.forEach((fams, v) => {
+      if (fams.length > 1) surfaceDuplicates.push(`${k}="${v}" → ${fams.join(", ")}`);
+    });
+  });
+
   const totals = Object.fromEntries(
     (Object.keys(IDENTITY_MATRIX) as SectorKey[]).map((s) => [s, IDENTITY_MATRIX[s].length]),
   );
-  return { ok: duplicates.length === 0, duplicates, totals };
+  return {
+    ok: duplicates.length === 0 && surfaceDuplicates.length === 0,
+    duplicates,
+    surfaceDuplicates,
+    totals,
+  };
 }
