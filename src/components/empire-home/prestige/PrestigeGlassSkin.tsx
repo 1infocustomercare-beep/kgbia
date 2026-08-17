@@ -654,6 +654,147 @@ export default function PrestigeGlassSkin() {
         box-shadow: 0 0 0 3px hsl(var(--pr-aqua) / 0.16), inset 0 1px 0 hsl(0 0% 100% / 0.08) !important;
       }
 
+      /* ═══════════ 8quater. STATI COMPLETI DEI CONTROLLI GLASS ═══════════
+         hover · active · disabled · loading · focus-visible · invalid
+         Validi su tutta la webapp Empire (non sui siti demo). */
+
+      /* — focus-visible unificato su tutti i controlli glass — */
+      .pglass-btn:focus-visible,
+      .pglass-btn-ghost:focus-visible,
+      .pglass-chip:focus-visible,
+      .pglass-icon-btn:focus-visible,
+      .pglass-field:focus-visible,
+      .pglass-field input:focus-visible,
+      .pglass-field textarea:focus-visible,
+      .pglass-field select:focus-visible {
+        outline: 2px solid hsl(var(--pr-aqua-light) / 0.9);
+        outline-offset: 3px;
+        box-shadow: 0 0 0 5px hsl(var(--pr-aqua) / 0.18);
+      }
+      .pglass-field input:focus-visible,
+      .pglass-field textarea:focus-visible,
+      .pglass-field select:focus-visible {
+        outline-offset: 0;
+        box-shadow: none;
+      }
+
+      /* — active / press — */
+      .pglass-btn:not(:disabled):active,
+      .pglass-btn-ghost:not(:disabled):active,
+      .pglass-chip:not(:disabled):active,
+      .pglass-icon-btn:not(:disabled):active {
+        transform: translateY(1px) scale(.975);
+        filter: brightness(.97);
+      }
+
+      /* — hover rifinito — */
+      .pglass-btn:not(:disabled):hover {
+        box-shadow: 0 22px 52px -20px hsl(var(--pr-aqua) / 0.85);
+      }
+      .pglass-chip:not(:disabled):hover {
+        background: hsl(var(--pr-aqua) / 0.12);
+      }
+
+      /* — disabled (bottoni, chip, icone, campi) — */
+      .pglass-btn:disabled,
+      .pglass-btn[aria-disabled="true"],
+      .pglass-btn-ghost:disabled,
+      .pglass-btn-ghost[aria-disabled="true"],
+      .pglass-chip:disabled,
+      .pglass-chip[aria-disabled="true"],
+      .pglass-icon-btn:disabled,
+      .pglass-icon-btn[aria-disabled="true"] {
+        cursor: not-allowed;
+        opacity: .48;
+        filter: saturate(.35);
+        transform: none !important;
+        box-shadow: none !important;
+        border-color: hsl(var(--pr-glass) / 0.18) !important;
+      }
+      .pglass-btn:disabled,
+      .pglass-btn[aria-disabled="true"] {
+        background: hsl(var(--pr-glass) / 0.12) !important;
+        color: hsl(var(--pr-text-on-dark) / 0.6) !important;
+      }
+      .pglass-field[data-disabled="true"] {
+        cursor: not-allowed;
+        opacity: .5;
+        filter: saturate(.4);
+      }
+      .pglass-field[data-disabled="true"] input,
+      .pglass-field[data-disabled="true"] textarea,
+      .pglass-field[data-disabled="true"] select { cursor: not-allowed; }
+
+      /* — loading — */
+      .pglass-btn[data-loading="true"],
+      .pglass-btn-ghost[data-loading="true"],
+      .pglass-chip[data-loading="true"],
+      .pglass-icon-btn[data-loading="true"] {
+        cursor: progress;
+        pointer-events: none;
+        opacity: .82;
+      }
+      .pglass-spinner {
+        display: inline-block;
+        width: 1em;
+        height: 1em;
+        border-radius: 999px;
+        border: 2px solid currentColor;
+        border-top-color: transparent;
+        border-right-color: transparent;
+        animation: pglassSpin .7s linear infinite;
+      }
+      @keyframes pglassSpin { to { transform: rotate(360deg); } }
+      .pglass-field[data-loading="true"] {
+        position: relative;
+        overflow: hidden;
+      }
+      .pglass-field[data-loading="true"]::after {
+        content: "";
+        position: absolute;
+        inset-inline: 0;
+        bottom: 0;
+        height: 2px;
+        background: linear-gradient(90deg, transparent, hsl(var(--pr-aqua-light) / .9), transparent);
+        animation: pglassFieldLoad 1.1s ease-in-out infinite;
+      }
+      @keyframes pglassFieldLoad {
+        0%   { transform: translateX(-100%); }
+        100% { transform: translateX(100%); }
+      }
+
+      /* — invalid / errore — */
+      .pglass-field[data-invalid="true"] {
+        border-color: hsl(0 78% 62% / .7) !important;
+        box-shadow: 0 0 0 3px hsl(0 78% 62% / .16) !important;
+      }
+      .pglass-field[data-invalid="true"]:focus-within {
+        border-color: hsl(0 78% 66% / .85) !important;
+        box-shadow: 0 0 0 4px hsl(0 78% 62% / .22) !important;
+      }
+      .pglass-field-error {
+        margin-top: .375rem;
+        font-size: 12px;
+        font-weight: 600;
+        color: hsl(0 84% 72%);
+      }
+      .pglass-field-hint {
+        margin-top: .375rem;
+        font-size: 12px;
+        color: hsl(var(--pr-text-on-dark) / .62);
+      }
+      .pglass-field-label {
+        display: block;
+        margin-bottom: .4rem;
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: .04em;
+        text-transform: uppercase;
+        color: hsl(var(--pr-text-on-dark) / .72);
+      }
+      .pglass-field[data-readonly="true"] { opacity: .78; }
+
+
       /* ═══════════ 8ter. APP SHELL GLOBALE (EmpireGlassShell) ═══════════
          Fondale + tipografia Empire su tutte le pagine della webapp.
          I siti demo NON ricevono queste classi. */
@@ -791,6 +932,51 @@ export default function PrestigeGlassSkin() {
         0%   { transform: translate3d(0, 8px, 0); }
         50%  { transform: translate3d(0, -6px, 0); }
         100% { transform: translate3d(0, 8px, 0); }
+      }
+
+      /* ═══════════ STATI UNIFORMI SU FORM E CONTROLLI NATIVI (webapp Empire) ═══════════ */
+      body.pglass-app button:not(:disabled):not([aria-disabled="true"]):hover,
+      body.pglass-app [role="button"]:not([aria-disabled="true"]):hover {
+        filter: brightness(1.06);
+      }
+      body.pglass-app button:not(:disabled):not([aria-disabled="true"]):active,
+      body.pglass-app [role="button"]:not([aria-disabled="true"]):active {
+        transform: translateY(1px) scale(.985);
+      }
+      body.pglass-app button:disabled,
+      body.pglass-app [aria-disabled="true"],
+      body.pglass-app input:disabled,
+      body.pglass-app select:disabled,
+      body.pglass-app textarea:disabled {
+        cursor: not-allowed;
+        opacity: .5;
+        filter: saturate(.4);
+        transform: none !important;
+        box-shadow: none !important;
+      }
+      body.pglass-app [aria-busy="true"] { cursor: progress; }
+      body.pglass-app input:read-only:not([type="checkbox"]):not([type="radio"]),
+      body.pglass-app textarea:read-only { opacity: .8; }
+      body.pglass-app input[aria-invalid="true"],
+      body.pglass-app select[aria-invalid="true"],
+      body.pglass-app textarea[aria-invalid="true"] {
+        border-color: hsl(0 78% 62% / .7) !important;
+        box-shadow: 0 0 0 3px hsl(0 78% 62% / .16) !important;
+      }
+      body.pglass-app input:not(:disabled):hover,
+      body.pglass-app select:not(:disabled):hover,
+      body.pglass-app textarea:not(:disabled):hover {
+        border-color: hsl(var(--pr-aqua) / .42);
+      }
+      body.pglass-app :focus-visible {
+        outline: 2px solid hsl(var(--pr-aqua-light) / .9);
+        outline-offset: 2px;
+      }
+      body.pglass-app input[type="checkbox"],
+      body.pglass-app input[type="radio"] {
+        accent-color: hsl(var(--pr-aqua));
+        min-width: 20px;
+        min-height: 20px;
       }
 
 

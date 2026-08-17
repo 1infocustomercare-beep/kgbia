@@ -4,3 +4,7 @@ export { default as GlassButton } from "./GlassButton";
 export type { GlassButtonProps, GlassButtonVariant, GlassButtonSize } from "./GlassButton";
 export { default as GlassInput } from "./GlassInput";
 export type { GlassInputProps } from "./GlassInput";
+export { default as GlassTextarea } from "./GlassTextarea";
+export type { GlassTextareaProps } from "./GlassTextarea";
+export { default as GlassSelect } from "./GlassSelect";
+export type { GlassSelectProps } from "./GlassSelect";

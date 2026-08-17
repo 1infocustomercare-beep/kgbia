@@ -374,8 +374,8 @@ export default function AuthPage() {
                   </button>
                 </div>
               </div>
-              <GlassButton onClick={handleLogin} disabled={loading} block size="lg">
-                {loading ? "Accesso..." : "Accedi"}
+              <GlassButton onClick={handleLogin} loading={loading} loadingText="Accesso..." block size="lg">
+                {"Accedi"}
               </GlassButton>
               <div className="text-center space-y-2">
                 <button type="button" onClick={() => navigate("/reset-password")} className="text-xs text-foreground/75 hover:text-foreground transition-colors">
@@ -479,8 +479,8 @@ export default function AuthPage() {
                       </div>
                     )}
                   </div>
-                  <GlassButton onClick={handleRegister} disabled={loading || (role !== "partner" && !sector)} block size="lg">
-                    {loading ? "Registrazione..." : role === "partner" ? "Registrati come Venditore" : "Crea Account"}
+                  <GlassButton onClick={handleRegister} loading={loading} loadingText="Registrazione..." disabled={role !== "partner" && !sector} block size="lg">
+                    {role === "partner" ? "Registrati come Venditore" : "Crea Account"}
                   </GlassButton>
                   <p className="text-xs text-center text-foreground/75">
                     Hai già un account?{" "}

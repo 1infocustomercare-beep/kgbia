@@ -106,8 +106,8 @@ export default function VendorSignup() {
             <label className="text-xs font-semibold block mb-1">Password *</label>
             <input type="password" className={inputCls} value={form.password} onChange={e=>setForm({...form,password:e.target.value})} />
           </div>
-          <GlassButton disabled={loading} onClick={submit} block size="lg">
-            {loading ? "Creazione..." : "Crea account venditore"}
+          <GlassButton loading={loading} loadingText="Creazione..." onClick={submit} block size="lg">
+            {"Crea account venditore"}
           </GlassButton>
           <p className="text-xs text-center opacity-60">
             Hai già un account? <a href="/auth" className="underline">Accedi</a>
