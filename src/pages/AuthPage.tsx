@@ -309,7 +309,7 @@ export default function AuthPage() {
   };
 
   return (
-    <main className="pglass-scope pglass-app min-h-screen flex items-center justify-center px-4 py-12 landing-dark force-dark auth-contrast"
+    <main className="pglass-scope pglass-app pglass-wave pglass-safe-x min-h-screen flex items-center justify-center py-12 landing-dark force-dark auth-contrast" data-glass-safe-top data-glass-safe-bottom
       style={{
         background:
           "radial-gradient(ellipse 70% 50% at 12% 0%, hsl(var(--pr-aqua) / 0.14), transparent 62%), radial-gradient(ellipse 60% 45% at 90% 10%, hsl(var(--pr-aqua-deep) / 0.18), transparent 68%), linear-gradient(180deg, hsl(var(--pr-emerald-deep)), hsl(var(--pr-emerald)) 55%, hsl(var(--pr-emerald-deep)))",

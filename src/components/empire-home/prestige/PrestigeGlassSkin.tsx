@@ -997,6 +997,102 @@ export default function PrestigeGlassSkin() {
           transition-duration: .01ms !important;
         }
       }
+
+      /* ============================================================
+         MOBILE GLASS OPTIMIZATION
+         - safe area (notch / home indicator / landscape)
+         - nessun overflow orizzontale dalle superfici vetro
+         - blur ridotto + tinta piu' densa => leggibile, mai "piatto"
+         ============================================================ */
+      body.pglass-app {
+        overflow-x: hidden;
+        overscroll-behavior-y: none;
+      }
+      body.pglass-app .pglass-stickybar,
+      body.pglass-app [data-glass-safe-top] {
+        padding-top: max(0px, env(safe-area-inset-top));
+      }
+      body.pglass-app [data-glass-safe-bottom],
+      body.pglass-app .pglass-dock {
+        padding-bottom: max(0px, env(safe-area-inset-bottom));
+      }
+      body.pglass-app .pglass-safe-x {
+        padding-left: max(1.25rem, env(safe-area-inset-left));
+        padding-right: max(1.25rem, env(safe-area-inset-right));
+      }
+
+      @media (max-width: 640px) {
+        body.pglass-app .pglass,
+        body.pglass-app .pglass-soft,
+        body.pglass-app .pglass-panel,
+        body.pglass-app .pglass-card {
+          max-width: 100%;
+          /* piu' opacita' e bordo interno visibile: evita zone piatte su OLED */
+          background:
+            linear-gradient(180deg, hsl(0 0% 100% / .09), transparent 22%),
+            linear-gradient(160deg, hsl(var(--pr-aqua) / .12), transparent 58%),
+            radial-gradient(120% 80% at 50% 118%, hsl(var(--pr-aqua) / .12), transparent 70%),
+            hsl(196 42% 8% / .76);
+          backdrop-filter: blur(16px) saturate(160%);
+          -webkit-backdrop-filter: blur(16px) saturate(160%);
+          box-shadow:
+            inset 0 1px 0 hsl(0 0% 100% / .12),
+            0 14px 34px -20px hsl(190 90% 6% / .85);
+        }
+        body.pglass-app .pglass-stickybar {
+          backdrop-filter: blur(18px) saturate(150%);
+          -webkit-backdrop-filter: blur(18px) saturate(150%);
+          background: hsl(196 44% 7% / .82);
+        }
+        /* i blob decorativi non devono generare scroll laterale */
+        body.pglass-app .pglass-wave::before,
+        body.pglass-app .pglass-glow,
+        body.pglass-app [data-glass-blob] {
+          max-width: 100vw;
+          pointer-events: none;
+        }
+        body.pglass-app .pglass-scroll-x {
+          padding-left: max(1.25rem, env(safe-area-inset-left));
+          padding-right: max(1.25rem, env(safe-area-inset-right));
+          scroll-padding-left: 1.25rem;
+        }
+      }
+
+      /* schermi molto piccoli o GPU debole: blur minimo, tinta solida */
+      @media (max-width: 380px) {
+        body.pglass-app .pglass,
+        body.pglass-app .pglass-soft,
+        body.pglass-app .pglass-chip,
+        body.pglass-app .pglass-btn {
+          backdrop-filter: blur(12px) saturate(150%);
+          -webkit-backdrop-filter: blur(12px) saturate(150%);
+        }
+      }
+
+      /* fallback: nessun supporto backdrop-filter => superfici opache coerenti */
+      @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+        body.pglass-app .pglass,
+        body.pglass-app .pglass-soft,
+        body.pglass-app .pglass-chip,
+        body.pglass-app .pglass-btn,
+        body.pglass-app .pglass-stickybar {
+          background: hsl(196 44% 9% / .96) !important;
+          border-color: hsl(var(--pr-aqua) / .28) !important;
+        }
+      }
+
+      /* utenti che riducono la trasparenza: leggibilita' prima di tutto */
+      @media (prefers-reduced-transparency: reduce) {
+        body.pglass-app .pglass,
+        body.pglass-app .pglass-soft,
+        body.pglass-app .pglass-chip,
+        body.pglass-app .pglass-btn,
+        body.pglass-app .pglass-stickybar {
+          backdrop-filter: none !important;
+          -webkit-backdrop-filter: none !important;
+          background: hsl(196 44% 9% / .97) !important;
+        }
+      }
     `}</style>
   );
 }
