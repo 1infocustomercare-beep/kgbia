@@ -620,10 +620,13 @@ export default function DemoDirectoryPage() {
             placeholder="Cerca settore..."
             className="pl-10 h-11 min-h-[44px] text-foreground placeholder:text-foreground/70 text-sm"
             style={{
-              background: "hsla(240,18%,12%,0.95)",
-              border: "1px solid hsla(190,25%,35%,0.28)",
+              background: "hsla(196,22%,12%,0.72)",
+              backdropFilter: "blur(18px) saturate(150%)",
+              WebkitBackdropFilter: "blur(18px) saturate(150%)",
+              border: "1px solid hsl(178 74% 48% / 0.24)",
               borderRadius: "0.875rem"
             }}
+
           />
         </div>
 
