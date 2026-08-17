@@ -117,26 +117,14 @@ export default function PrestigePortfolio() {
                   type="button"
                   onClick={() => setFilter(c.id)}
                   aria-pressed={on}
-                  className="flex shrink-0 items-center gap-1.5 rounded-full px-3.5 py-2 text-xs font-semibold transition-all"
-                  style={{
-                    background: on ? "hsl(var(--pr-emerald))" : "transparent",
-                    color: on ? "hsl(var(--pr-gold-light))" : "hsl(var(--pr-text-on-light))",
-                    border: `1px solid ${on ? "hsl(var(--pr-gold) / 0.45)" : "hsl(var(--pr-emerald) / 0.28)"}`,
-                  }}
+                  className="pglass-chip"
                 >
                   {c.label}
-                  <span
-                    className="rounded-full px-1.5 text-[10px] tabular-nums"
-                    style={{
-                      background: on ? "hsl(var(--pr-gold) / 0.25)" : "hsl(var(--pr-emerald) / 0.1)",
-                      color: on ? "hsl(var(--pr-gold-light))" : "hsl(var(--pr-emerald))",
-                    }}
-                  >
-                    {c.count}
-                  </span>
+                  <span className="pglass-chip-count">{c.count}</span>
                 </button>
               );
             })}
+
           </div>
         </div>
 
