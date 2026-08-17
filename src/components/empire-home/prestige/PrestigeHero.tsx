@@ -149,6 +149,28 @@ export default function PrestigeHero() {
       }}
     >
 
+      {/* FUI jelly background effect — sotto tutto, non intercetta eventi */}
+      <div aria-hidden className="pointer-events-none absolute inset-0 z-[-1] overflow-hidden">
+        {/* Gradient base: dark prestige adaptation of FUI hero */}
+        <div
+          className="absolute inset-0"
+          style={{
+            background:
+              "linear-gradient(to bottom, hsl(var(--pr-bg) / 1) 10%, hsl(var(--pr-bg) / 1) 30%, hsl(var(--pr-surface) / 1) 98%)",
+          }}
+        />
+        {/* Blue glow — same hue/position/rotation as FUI reference */}
+        <div
+          className="absolute left-0 top-0 h-80 w-[90%]"
+          style={{
+            background: "rgb(54,157,253)",
+            opacity: 0.4,
+            filter: "blur(337.4px)",
+            transform: "rotate(-30deg)",
+          }}
+        />
+      </div>
+
       {/* Warp tunnel 3D interattivo — dietro a tutto, non intercetta eventi */}
       <PrestigeHeroImmersive />
 
