@@ -12,24 +12,37 @@ import PrestigeMetrics from "@/components/empire-home/prestige/PrestigeMetrics";
 import PrestigeServices from "@/components/empire-home/prestige/PrestigeServices";
 import PrestigeHorizontalScroll from "@/components/empire-home/prestige/PrestigeHorizontalScroll";
 import PrestigeIndustries from "@/components/empire-home/prestige/PrestigeIndustries";
-import PrestigePortfolio from "@/components/empire-home/prestige/PrestigePortfolio";
-
-import PrestigeAgents from "@/components/empire-home/prestige/PrestigeAgents";
-import PrestigeFinalCTA from "@/components/empire-home/prestige/PrestigeFinalCTA";
 import PrestigeProgressBar from "@/components/empire-home/prestige/PrestigeProgressBar";
 import { PrestigeLangProvider } from "@/components/empire-home/prestige/PrestigeLang";
-import {
-  PrestigeHowItWorks,
-  PrestigePricing,
-  PrestigeFAQ,
-  PrestigeLeadForm,
-  PrestigeStickyCTA,
-} from "@/components/empire-home/prestige/PrestigeConversion";
-
-import PrestigeFooter from "@/components/empire-home/prestige/PrestigeFooter";
-import EmpireVoiceAgent from "@/components/public/EmpireVoiceAgent";
 import EmpireLogoSplash from "@/components/empire-home/EmpireLogoSplash";
 import { HomepageContentProvider, useHomepageContent } from "@/hooks/useHomepageContent";
+
+/* ---------------------------------------------------------------------------
+ * Code-splitting sotto la piega.
+ * Le sezioni oltre la prima schermata (portfolio, agents, prezzi, faq, lead,
+ * footer) e il voice agent (SDK audio pesante) vengono caricate solo quando
+ * servono: meno JS al primo paint → LCP e TBT più bassi su mobile.
+ * ------------------------------------------------------------------------- */
+const PrestigePortfolio = lazy(() => import("@/components/empire-home/prestige/PrestigePortfolio"));
+const PrestigeAgents = lazy(() => import("@/components/empire-home/prestige/PrestigeAgents"));
+const PrestigeFinalCTA = lazy(() => import("@/components/empire-home/prestige/PrestigeFinalCTA"));
+const PrestigeFooter = lazy(() => import("@/components/empire-home/prestige/PrestigeFooter"));
+const PrestigeHowItWorks = lazy(() =>
+  import("@/components/empire-home/prestige/PrestigeConversion").then((m) => ({ default: m.PrestigeHowItWorks })),
+);
+const PrestigePricing = lazy(() =>
+  import("@/components/empire-home/prestige/PrestigeConversion").then((m) => ({ default: m.PrestigePricing })),
+);
+const PrestigeFAQ = lazy(() =>
+  import("@/components/empire-home/prestige/PrestigeConversion").then((m) => ({ default: m.PrestigeFAQ })),
+);
+const PrestigeLeadForm = lazy(() =>
+  import("@/components/empire-home/prestige/PrestigeConversion").then((m) => ({ default: m.PrestigeLeadForm })),
+);
+const PrestigeStickyCTA = lazy(() =>
+  import("@/components/empire-home/prestige/PrestigeConversion").then((m) => ({ default: m.PrestigeStickyCTA })),
+);
+const EmpireVoiceAgent = lazy(() => import("@/components/public/EmpireVoiceAgent"));
 
 /** Voice agent memoised so it never re-renders with the page scroll. */
 const SafeVoiceAgent = React.memo(() => <EmpireVoiceAgent />, () => true);
