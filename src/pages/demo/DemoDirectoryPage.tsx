@@ -670,7 +670,7 @@ export default function DemoDirectoryPage() {
                         onNavigate={navigateToDemo} isFeatured={isFeatured(id)} featured={getFeatured(id)} />
                     ))}
                   </div>
-                </motion.div>
+                </div>
               );
             })}
           </div>
