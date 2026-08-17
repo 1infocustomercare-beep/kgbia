@@ -28,40 +28,47 @@ export default function PrestigePortfolio() {
   const rotateX = useTransform(scrollYProgress, [0, 0.35], [45, 0]);
   const scale = useTransform(scrollYProgress, [0, 0.35], [0.92, 1]);
 
-  // UNA CARD PER OGNI IDENTITÀ STUDIO — la home mostra tutti i mockup premium
-  // generati dal nostro studio (le varianti reference restano su /portfolio).
+  // UNA CARD PER SETTORE — la home mostra il mockup migliore (sequenza più
+  // completa) di ogni settore e rimanda al caso studio con tutti gli stili a
+  // confronto. Le varianti reference restano su /portfolio.
   const cards = useMemo(
     () =>
-      SECTOR_MOCKUPS.flatMap((g) => {
-        const primary = g.variants.filter((v) => v.tier === "primary" && v.source === "studio");
-        return primary.map((v, i) => ({
-          key: `${g.id}-${v.id}`,
+      SECTOR_MOCKUPS.map((g) => {
+        const studio = g.variants.filter((v) => v.source === "studio");
+        const pool = studio.length ? studio : g.variants;
+        const ranked = [...pool].sort(
+          (a, b) => (b.screens?.length ?? 1) - (a.screens?.length ?? 1),
+        );
+        const hero = ranked[0];
+        if (!hero) return null;
+        return {
+          key: `${g.id}-${hero.id}`,
           sectorId: g.id,
           sectorLabel: g.label,
-          tagline: v.description || g.tagline,
-          variants: primary,
-          index: i,
-          hero: v as SectorMockupVariant,
-        }));
-      }),
+          tagline: g.tagline,
+          variants: ranked,
+          index: 0,
+          hero: hero as SectorMockupVariant,
+        };
+      }).filter((c): c is NonNullable<typeof c> => c !== null),
     [],
   );
 
-  const sectors = useMemo(() => {
-    const map = new Map<string, { id: string; label: string; count: number }>();
-    cards.forEach((c) => {
-      const row = map.get(c.sectorId) ?? { id: c.sectorId, label: c.sectorLabel, count: 0 };
-      row.count += 1;
-      map.set(c.sectorId, row);
-    });
-    return [...map.values()].sort((a, b) => b.count - a.count);
-  }, [cards]);
 
-  /** Chip di filtro per settore con conteggio stili. */
+  const sectors = useMemo(
+    () =>
+      cards
+        .map((c) => ({ id: c.sectorId, label: c.sectorLabel, count: c.variants.length }))
+        .sort((a, b) => b.count - a.count),
+    [cards],
+  );
+
+  /** Chip di filtro per settore con conteggio stili disponibili. */
   const chips = useMemo(
-    () => [{ id: "all", label: "Tutti", count: cards.length }, ...sectors],
+    () => [{ id: "all", label: "Tutti i settori", count: cards.length }, ...sectors],
     [cards, sectors],
   );
+
 
   const filtered = useMemo(
     () => (filter === "all" ? cards : cards.filter((c) => c.sectorId === filter)),
@@ -89,11 +96,13 @@ export default function PrestigePortfolio() {
             >
               Casi reali.
               <br />
-              <span className="prestige-gold-text">Uno stile per settore.</span>
+              <span className="prestige-gold-text">Decine di stili per settore.</span>
             </h2>
           </div>
           <p className="max-w-sm text-sm sm:text-base" style={{ color: "hsl(var(--pr-muted-on-light))" }}>
-            Tocca un mockup per vederlo a schermo intero e navigare tutte le varianti stilistiche pensate per quel settore.
+            Apri un settore per vedere il caso studio completo: tutti gli stili a confronto, con la sequenza
+            integrale delle schermate su iPhone Pro Max.
+
           </p>
         </div>
 
@@ -157,14 +166,7 @@ export default function PrestigePortfolio() {
                           src={h.hero!.screen}
                           alt={`${h.hero!.brand} — ${h.hero!.style}`}
                           width={220}
-                          onClick={() =>
-                            setSelection({
-                              sectorId: h.sectorId,
-                              sectorLabel: h.sectorLabel,
-                              variants: h.variants,
-                              index: h.index,
-                            })
-                          }
+                          onClick={() => navigate(`/portfolio/${h.sectorId}?style=${h.hero!.id}`)}
                         />
                         <span
                           aria-hidden
@@ -174,7 +176,7 @@ export default function PrestigePortfolio() {
                             color: "hsl(var(--pr-emerald-deep))",
                           }}
                         >
-                          Apri
+                          Vedi il caso
                         </span>
                       </div>
 
@@ -215,6 +217,7 @@ export default function PrestigePortfolio() {
                         </div>
                       )}
 
+
                       <div className="mt-4 flex w-full max-w-[280px] flex-col items-center text-center">
                         <div
                           className="text-[10px] font-bold uppercase tracking-[0.24em]"
@@ -234,18 +237,22 @@ export default function PrestigePortfolio() {
                         >
                           {h.tagline}
                         </p>
-                        {h.variants.length > 1 && (
-                          <div
-                            className="mt-2 inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-semibold"
-                            style={{
-                              background: "hsl(var(--pr-gold) / 0.18)",
-                              color: "hsl(var(--pr-gold-deep))",
-                              border: "1px solid hsl(var(--pr-gold) / 0.35)",
-                            }}
-                          >
-                            {h.variants.length} stili premium
-                          </div>
-                        )}
+                        <button
+                          type="button"
+                          onClick={() => navigate(`/portfolio/${h.sectorId}?style=${h.hero!.id}`)}
+                          className="mt-2 inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-[10px] font-semibold transition-all hover:gap-2"
+                          style={{
+                            background: "hsl(var(--pr-gold) / 0.18)",
+                            color: "hsl(var(--pr-gold-deep))",
+                            border: "1px solid hsl(var(--pr-gold) / 0.35)",
+                          }}
+                        >
+                          {h.variants.length > 1
+                            ? `Confronta ${h.variants.length} stili`
+                            : "Apri il caso studio"}
+                          <ArrowUpRight size={11} />
+                        </button>
+
                       </div>
                     </article>
             ))}
@@ -268,7 +275,7 @@ export default function PrestigePortfolio() {
               {expanded ? (
                 <>Mostra meno <ChevronUp size={16} /></>
               ) : (
-                <>Vedi tutti i {filtered.length} mockup <ChevronDown size={16} /></>
+                <>Vedi tutti i {filtered.length} settori <ChevronDown size={16} /></>
               )}
             </button>
           )}

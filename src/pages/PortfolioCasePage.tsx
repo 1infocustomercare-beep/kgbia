@@ -1,0 +1,480 @@
+/**
+ * PortfolioCasePage — pagina caso studio per SINGOLO SETTORE.
+ *
+ * Struttura (ispirata a lowengeldagency.com/<progetto>, migliorata):
+ *  1. Breadcrumb + hero editoriale: settore, claim, descrizione, meta (Cliente / Anno / Piattaforma / Stili)
+ *  2. Chip filtro stile ("Tutti" + un chip per ogni variante) sticky
+ *  3. Per ogni stile: header con brand, palette, features, poi la RIGA COMPLETA
+ *     di tutte le schermate in iPhone Pro Max con etichetta sotto (confronto 1:1)
+ *  4. Click su qualsiasi schermata → lightbox fullscreen già posizionato
+ *
+ * Additivo: non modifica /portfolio (catalogo) né la home.
+ */
+
+import { useEffect, useMemo, useState } from "react";
+import { Link, useNavigate, useParams, useSearchParams } from "react-router-dom";
+import { ArrowLeft, ArrowUpRight, CalendarDays, Layers, Smartphone, Sparkles, UserRound } from "lucide-react";
+import PrestigeTheme from "@/components/empire-home/prestige/PrestigeTheme";
+import IPhoneProMaxFrame from "@/components/mockups/IPhoneProMaxFrame";
+import MockupLightbox from "@/components/mockups/MockupLightbox";
+import { SECTOR_MOCKUPS, getSectorGroup, type SectorMockupVariant } from "@/data/sector-mockups";
+
+const CURRENT_YEAR = new Date().getFullYear();
+
+export default function PortfolioCasePage() {
+  const { sectorId = "" } = useParams();
+  const navigate = useNavigate();
+  const [params, setParams] = useSearchParams();
+  const group = useMemo(() => getSectorGroup(sectorId), [sectorId]);
+
+  const variants = useMemo<SectorMockupVariant[]>(() => {
+    if (!group) return [];
+    const studio = group.variants.filter((v) => v.source === "studio");
+    const base = studio.length ? studio : group.variants;
+    // Gli stili con la sequenza completa aprono il confronto.
+    return [...base].sort((a, b) => (b.screens?.length ?? 1) - (a.screens?.length ?? 1));
+  }, [group]);
+
+
+  const styleParam = params.get("style") ?? "all";
+  const [filter, setFilter] = useState<string>(styleParam);
+  useEffect(() => setFilter(styleParam), [styleParam]);
+
+  const [lightbox, setLightbox] = useState<{ index: number } | null>(null);
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [sectorId]);
+
+  useEffect(() => {
+    if (!group) return;
+    document.title = `${group.label} · Portfolio mockup premium | Empire IA`;
+    const desc = `${variants.length} stili di webapp per ${group.label}: ${group.tagline}`;
+    let meta = document.querySelector('meta[name="description"]');
+    if (!meta) {
+      meta = document.createElement("meta");
+      meta.setAttribute("name", "description");
+      document.head.appendChild(meta);
+    }
+    meta.setAttribute("content", desc.slice(0, 158));
+  }, [group, variants.length]);
+
+  const selected = useMemo(
+    () => (filter === "all" ? variants : variants.filter((v) => v.id === filter)),
+    [variants, filter],
+  );
+  /** Stili con sequenza completa: riga dedicata con tutte le schermate. */
+  const shown = useMemo(
+    () => (filter === "all" ? selected.filter((v) => (v.screens?.length ?? 1) > 1) : selected),
+    [selected, filter],
+  );
+  /** Stili con una sola schermata: griglia compatta di confronto. */
+  const compact = useMemo(
+    () => (filter === "all" ? selected.filter((v) => (v.screens?.length ?? 1) <= 1) : []),
+    [selected, filter],
+  );
+
+
+  const setStyle = (id: string) => {
+    setFilter(id);
+    const next = new URLSearchParams(params);
+    if (id === "all") next.delete("style");
+    else next.set("style", id);
+    setParams(next, { replace: true });
+  };
+
+  if (!group || variants.length === 0) {
+    return (
+      <div className="min-h-screen" style={{ background: "hsl(var(--pr-emerald-deep))" }}>
+        <PrestigeTheme />
+        <div className="mx-auto flex max-w-2xl flex-col items-center gap-5 px-6 py-32 text-center">
+          <h1 className="prestige-display text-3xl" style={{ color: "hsl(var(--pr-gold-light))" }}>
+            Settore non trovato
+          </h1>
+          <p className="text-sm" style={{ color: "hsl(var(--pr-gold-light) / 0.7)" }}>
+            Scegli un settore dal portfolio completo.
+          </p>
+          <Link
+            to="/portfolio"
+            className="rounded-full px-6 py-3 text-sm font-semibold"
+            style={{ background: "hsl(var(--pr-gold))", color: "hsl(var(--pr-emerald-deep))" }}
+          >
+            Vai al portfolio
+          </Link>
+        </div>
+      </div>
+    );
+  }
+
+  const lead = variants[0];
+  const totalScreens = variants.reduce((n, v) => n + (v.screens?.length || 1), 0);
+  const otherSectors = SECTOR_MOCKUPS.filter(
+    (g) => g.id !== group.id && g.variants.some((v) => v.source === "studio"),
+  ).slice(0, 8);
+
+  const meta = [
+    { icon: UserRound, k: "Cliente tipo", v: lead.brand },
+    { icon: CalendarDays, k: "Anno", v: String(CURRENT_YEAR) },
+    { icon: Smartphone, k: "Piattaforma", v: "iOS · Web app" },
+    { icon: Layers, k: "Stili", v: `${variants.length} · ${totalScreens} schermate` },
+  ];
+
+  return (
+    <div className="min-h-screen" style={{ background: "hsl(var(--pr-emerald-deep))" }}>
+      <PrestigeTheme />
+
+      {/* ───────── HERO EDITORIALE ───────── */}
+      <header className="relative overflow-hidden">
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-0"
+          style={{
+            background:
+              "radial-gradient(120% 80% at 15% 0%, hsl(var(--pr-emerald) / 0.55), transparent 60%), radial-gradient(90% 70% at 90% 10%, hsl(var(--pr-gold) / 0.16), transparent 65%)",
+          }}
+        />
+        <div className="relative mx-auto max-w-7xl px-5 pb-14 pt-10 lg:px-10 lg:pt-14">
+          <div className="flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.24em]">
+            <button
+              type="button"
+              onClick={() => navigate(-1)}
+              className="flex items-center gap-1.5 transition-opacity hover:opacity-70"
+              style={{ color: "hsl(var(--pr-gold-light) / 0.75)" }}
+            >
+              <ArrowLeft size={13} /> Indietro
+            </button>
+            <span style={{ color: "hsl(var(--pr-gold-light) / 0.35)" }}>/</span>
+            <Link to="/portfolio" style={{ color: "hsl(var(--pr-gold-light) / 0.6)" }}>
+              Portfolio
+            </Link>
+            <span style={{ color: "hsl(var(--pr-gold-light) / 0.35)" }}>/</span>
+            <span style={{ color: "hsl(var(--pr-gold))" }}>{group.label}</span>
+          </div>
+
+          <div className="mt-8 grid gap-10 lg:grid-cols-[1.15fr_0.85fr] lg:items-end">
+            <div>
+              <div
+                className="prestige-eyebrow flex items-center gap-2"
+                style={{ color: "hsl(var(--pr-gold))" }}
+              >
+                <Sparkles size={12} /> Case study · {variants.length} direzioni visive
+              </div>
+              <h1
+                className="prestige-display mt-4 text-4xl font-semibold leading-[1.05] sm:text-6xl lg:text-7xl"
+                style={{ color: "hsl(var(--pr-gold-light))" }}
+              >
+                {group.label}
+              </h1>
+              <p
+                className="mt-5 max-w-2xl text-base leading-relaxed sm:text-lg"
+                style={{ color: "hsl(var(--pr-gold-light) / 0.72)" }}
+              >
+                {group.tagline}
+              </p>
+              <p
+                className="mt-3 max-w-2xl text-sm leading-relaxed"
+                style={{ color: "hsl(var(--pr-gold-light) / 0.55)" }}
+              >
+                Ogni stile qui sotto è un sistema completo: tipografia, palette, griglie, componenti e
+                micro-interazioni diverse — con la sequenza integrale delle schermate, così puoi confrontarli
+                fianco a fianco e scegliere la direzione del tuo progetto.
+              </p>
+            </div>
+
+            <dl className="grid grid-cols-2 gap-3">
+              {meta.map(({ icon: Icon, k, v }) => (
+                <div
+                  key={k}
+                  className="rounded-2xl p-4"
+                  style={{
+                    background: "hsl(var(--pr-gold-light) / 0.05)",
+                    border: "1px solid hsl(var(--pr-gold) / 0.22)",
+                  }}
+                >
+                  <dt
+                    className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-[0.2em]"
+                    style={{ color: "hsl(var(--pr-gold) / 0.85)" }}
+                  >
+                    <Icon size={12} /> {k}
+                  </dt>
+                  <dd
+                    className="mt-1.5 text-sm font-semibold"
+                    style={{ color: "hsl(var(--pr-gold-light))" }}
+                  >
+                    {v}
+                  </dd>
+                </div>
+              ))}
+            </dl>
+          </div>
+        </div>
+      </header>
+
+      {/* ───────── FILTRO STILI (sticky) ───────── */}
+      <div
+        className="sticky top-0 z-30 border-y backdrop-blur-xl"
+        style={{
+          background: "hsl(var(--pr-emerald-deep) / 0.85)",
+          borderColor: "hsl(var(--pr-gold) / 0.18)",
+        }}
+      >
+        <div className="mx-auto max-w-7xl overflow-x-auto px-5 py-3 [scrollbar-width:none] lg:px-10 [&::-webkit-scrollbar]:hidden">
+          <div className="flex w-max items-center gap-2">
+            {[{ id: "all", label: `Tutti · ${variants.length}` }, ...variants.map((v) => ({ id: v.id, label: v.brand }))].map(
+              (chip) => {
+                const on = filter === chip.id;
+                return (
+                  <button
+                    key={chip.id}
+                    type="button"
+                    onClick={() => setStyle(chip.id)}
+                    aria-pressed={on}
+                    className="shrink-0 rounded-full px-4 py-2 text-xs font-semibold transition-all"
+                    style={{
+                      background: on ? "hsl(var(--pr-gold))" : "transparent",
+                      color: on ? "hsl(var(--pr-emerald-deep))" : "hsl(var(--pr-gold-light) / 0.8)",
+                      border: `1px solid ${on ? "hsl(var(--pr-gold))" : "hsl(var(--pr-gold) / 0.28)"}`,
+                    }}
+                  >
+                    {chip.label}
+                  </button>
+                );
+              },
+            )}
+          </div>
+        </div>
+      </div>
+
+      {/* ───────── RIGHE STILE: TUTTE LE SCHERMATE A CONFRONTO ───────── */}
+      <main className="mx-auto max-w-7xl px-5 pb-24 lg:px-10">
+        {shown.map((v) => {
+          const idx = variants.findIndex((x) => x.id === v.id);
+          const screens = v.screens?.length ? v.screens : [{ label: "Home", caption: "", image: v.screen }];
+          return (
+            <section key={v.id} className="border-b py-14" style={{ borderColor: "hsl(var(--pr-gold) / 0.12)" }}>
+              <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+                <div>
+                  <div
+                    className="text-[10px] font-bold uppercase tracking-[0.26em]"
+                    style={{ color: "hsl(var(--pr-gold))" }}
+                  >
+                    {v.style}
+                  </div>
+                  <h2
+                    className="prestige-display mt-2 text-2xl sm:text-3xl"
+                    style={{ color: "hsl(var(--pr-gold-light))" }}
+                  >
+                    {v.brand}
+                  </h2>
+                  <p
+                    className="mt-2 max-w-2xl text-sm leading-relaxed"
+                    style={{ color: "hsl(var(--pr-gold-light) / 0.62)" }}
+                  >
+                    {v.description}
+                  </p>
+                </div>
+                <div className="flex flex-wrap items-center gap-2">
+                  <span
+                    className="rounded-full px-3 py-1 text-[10px] font-bold uppercase tracking-[0.18em]"
+                    style={{
+                      background: "hsl(var(--pr-gold) / 0.14)",
+                      color: "hsl(var(--pr-gold))",
+                      border: "1px solid hsl(var(--pr-gold) / 0.3)",
+                    }}
+                  >
+                    {v.palette}
+                  </span>
+                  <span
+                    className="rounded-full px-3 py-1 text-[10px] font-bold uppercase tracking-[0.18em]"
+                    style={{
+                      background: "hsl(var(--pr-gold-light) / 0.06)",
+                      color: "hsl(var(--pr-gold-light) / 0.8)",
+                      border: "1px solid hsl(var(--pr-gold-light) / 0.16)",
+                    }}
+                  >
+                    {screens.length} {screens.length === 1 ? "schermata" : "schermate"}
+                  </span>
+                </div>
+              </div>
+
+              {v.features?.length > 0 && (
+                <ul className="mt-4 flex flex-wrap gap-2">
+                  {v.features.slice(0, 6).map((f) => (
+                    <li
+                      key={f}
+                      className="rounded-lg px-2.5 py-1 text-[11px]"
+                      style={{
+                        background: "hsl(var(--pr-gold-light) / 0.04)",
+                        color: "hsl(var(--pr-gold-light) / 0.7)",
+                        border: "1px solid hsl(var(--pr-gold-light) / 0.1)",
+                      }}
+                    >
+                      {f}
+                    </li>
+                  ))}
+                </ul>
+              )}
+
+              {/* Griglia schermate: confronto integrale */}
+              <div className="mt-9 grid grid-cols-2 gap-x-4 gap-y-9 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+                {screens.map((s, si) => (
+                  <figure key={`${v.id}-${si}`} className="group flex flex-col items-center">
+                    <div
+                      className="w-full rounded-[28px] p-3 transition-all duration-500 group-hover:-translate-y-1.5"
+                      style={{
+                        background: "hsl(var(--pr-gold-light) / 0.04)",
+                        border: "1px solid hsl(var(--pr-gold) / 0.16)",
+                      }}
+                    >
+                      <IPhoneProMaxFrame
+                        src={s.image}
+                        alt={`${v.brand} — ${v.style} — ${s.label}`}
+                        width={200}
+                        className="mx-auto !w-full"
+                        style={{ width: "100%", height: "auto", aspectRatio: "9 / 19.5" }}
+                        onClick={() => setLightbox({ index: idx })}
+                      />
+                    </div>
+                    <figcaption
+                      className="mt-3 text-center text-[10px] font-bold uppercase tracking-[0.22em]"
+                      style={{ color: "hsl(var(--pr-gold-light) / 0.72)" }}
+                    >
+                      {s.label}
+                    </figcaption>
+                  </figure>
+                ))}
+              </div>
+            </section>
+          );
+        })}
+
+        {/* ───────── GRIGLIA COMPATTA: altre direzioni visive ───────── */}
+        {compact.length > 0 && (
+          <section className="border-b py-14" style={{ borderColor: "hsl(var(--pr-gold) / 0.12)" }}>
+            <div
+              className="text-[10px] font-bold uppercase tracking-[0.26em]"
+              style={{ color: "hsl(var(--pr-gold))" }}
+            >
+              Altre direzioni visive · {compact.length}
+            </div>
+            <h2
+              className="prestige-display mt-2 text-2xl sm:text-3xl"
+              style={{ color: "hsl(var(--pr-gold-light))" }}
+            >
+              Confronto rapido degli stili
+            </h2>
+            <p
+              className="mt-2 max-w-2xl text-sm"
+              style={{ color: "hsl(var(--pr-gold-light) / 0.6)" }}
+            >
+              Tocca uno stile per aprirlo a schermo intero: tipografia, palette e componenti sono
+              completamente diversi tra una direzione e l'altra.
+            </p>
+
+            <div className="mt-8 grid grid-cols-2 gap-x-4 gap-y-9 sm:grid-cols-3 lg:grid-cols-5 xl:grid-cols-6">
+              {compact.map((v) => {
+                const idx = variants.findIndex((x) => x.id === v.id);
+                return (
+                  <figure key={v.id} className="group flex flex-col items-center">
+                    <div
+                      className="w-full rounded-[26px] p-2.5 transition-all duration-500 group-hover:-translate-y-1.5"
+                      style={{
+                        background: "hsl(var(--pr-gold-light) / 0.04)",
+                        border: "1px solid hsl(var(--pr-gold) / 0.16)",
+                      }}
+                    >
+                      <IPhoneProMaxFrame
+                        src={v.screens?.[0]?.image ?? v.screen}
+                        alt={`${v.brand} — ${v.style}`}
+                        width={170}
+                        className="mx-auto !w-full"
+                        style={{ width: "100%", height: "auto", aspectRatio: "9 / 19.5" }}
+                        onClick={() => setLightbox({ index: idx })}
+                      />
+                    </div>
+                    <figcaption className="mt-3 text-center">
+                      <span
+                        className="block text-xs font-semibold"
+                        style={{ color: "hsl(var(--pr-gold-light))" }}
+                      >
+                        {v.brand}
+                      </span>
+                      <span
+                        className="mt-0.5 block text-[10px] uppercase tracking-[0.16em]"
+                        style={{ color: "hsl(var(--pr-gold) / 0.75)" }}
+                      >
+                        {v.palette}
+                      </span>
+                    </figcaption>
+                  </figure>
+                );
+              })}
+            </div>
+          </section>
+        )}
+
+
+
+        {/* ───────── ALTRI SETTORI ───────── */}
+        {otherSectors.length > 0 && (
+          <section className="py-16">
+            <h2
+              className="prestige-display text-2xl sm:text-3xl"
+              style={{ color: "hsl(var(--pr-gold-light))" }}
+            >
+              Altri settori
+            </h2>
+            <div className="mt-6 flex flex-wrap gap-2">
+              {otherSectors.map((g) => (
+                <Link
+                  key={g.id}
+                  to={`/portfolio/${g.id}`}
+                  className="flex items-center gap-1.5 rounded-full px-4 py-2 text-xs font-semibold transition-all hover:gap-2.5"
+                  style={{
+                    background: "hsl(var(--pr-gold-light) / 0.05)",
+                    color: "hsl(var(--pr-gold-light) / 0.85)",
+                    border: "1px solid hsl(var(--pr-gold) / 0.24)",
+                  }}
+                >
+                  {g.label} <ArrowUpRight size={13} />
+                </Link>
+              ))}
+            </div>
+
+            <div className="mt-10 flex flex-wrap gap-3">
+              <Link
+                to="/demo"
+                className="flex items-center gap-2 rounded-full px-6 py-3 text-sm font-semibold"
+                style={{
+                  background: "hsl(var(--pr-gold))",
+                  color: "hsl(var(--pr-emerald-deep))",
+                  boxShadow: "0 14px 40px -18px hsl(var(--pr-gold) / 0.7)",
+                }}
+              >
+                Apri i siti demo live <ArrowUpRight size={16} />
+              </Link>
+              <Link
+                to="/portfolio"
+                className="flex items-center gap-2 rounded-full px-6 py-3 text-sm font-semibold"
+                style={{
+                  color: "hsl(var(--pr-gold-light))",
+                  border: "1px solid hsl(var(--pr-gold) / 0.35)",
+                }}
+              >
+                Portfolio completo <ArrowUpRight size={16} />
+              </Link>
+            </div>
+          </section>
+        )}
+      </main>
+
+      <MockupLightbox
+        open={!!lightbox}
+        onClose={() => setLightbox(null)}
+        sectorLabel={group.label}
+        variants={variants}
+        initialIndex={lightbox?.index ?? 0}
+      />
+    </div>
+  );
+}
