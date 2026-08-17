@@ -178,7 +178,7 @@ export default function PremiumMockupGallery() {
   }, []);
 
   return (
-    <section className="min-h-screen bg-[#0a0b12] pb-28 pt-28 text-white sm:pt-32">
+    <section className="pglass-scope pglass-bg min-h-screen pb-28 pt-28 text-white sm:pt-32">
       <div className="mx-auto max-w-7xl px-5 lg:px-10">
         {/* Header */}
         <div className="mb-8">
@@ -189,7 +189,7 @@ export default function PremiumMockupGallery() {
           <h1 className="font-heading text-[2.1rem] font-black leading-[1.04] sm:text-5xl md:text-6xl">
             Un progetto per ogni settore.
             <br />
-            <span className="bg-gradient-to-r from-[#F4D58D] via-[#C9A24B] to-[#1F7A5A] bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-[#8ef3e6] via-[#2ec4b6] to-[#0d6c7e] bg-clip-text text-transparent">
               Uno stile per ogni esigenza.
             </span>
           </h1>
@@ -310,7 +310,7 @@ export default function PremiumMockupGallery() {
               return (
                 <article
                   key={`${c.sectorId}-${c.id}`}
-                  className="group cursor-pointer overflow-hidden rounded-3xl border border-white/10 bg-white/[0.025] transition duration-500 hover:-translate-y-1 hover:border-white/25 hover:bg-white/[0.05]"
+                  className="pglass group cursor-pointer overflow-hidden transition duration-500 hover:-translate-y-1"
                   onClick={() => openCard(c)}
                   role="button"
                   tabIndex={0}

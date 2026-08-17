@@ -4,8 +4,11 @@
  * I nomi delle variabili restano storici (emerald/gold/ivory) per compatibilità:
  * i VALORI sono ora Midnight Indigo, così tutta la home cambia in un colpo.
  */
+import PrestigeGlassSkin from "./PrestigeGlassSkin";
+
 export default function PrestigeTheme() {
   return (
+    <>
     <style>{`
       .prestige-root {
         --pr-emerald-deep: 240 44% 7%;
@@ -909,6 +912,7 @@ export default function PrestigeTheme() {
         text-transform: uppercase;
       }
     `}</style>
+    <PrestigeGlassSkin />
+    </>
   );
 }
-
