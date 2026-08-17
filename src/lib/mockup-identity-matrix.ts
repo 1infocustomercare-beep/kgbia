@@ -1799,17 +1799,25 @@ const AISERVICES: MockupIdentity[] = [
 
 export const IDENTITY_MATRIX: Record<SectorKey, MockupIdentity[]> = {
 
-  food: FOOD,
-  beauty: BEAUTY,
-  ncc: NCC,
-  fitness: FITNESS,
-  hospitality: HOSPITALITY,
-  realestate: REALESTATE,
-  healthcare: HEALTHCARE,
+  food: [...FOOD, ...FOOD_X],
+  beauty: [...BEAUTY, ...BEAUTY_X],
+  ncc: [...NCC, ...NCC_X],
+  fitness: [...FITNESS, ...FITNESS_X],
+  hospitality: [...HOSPITALITY, ...HOSPITALITY_X],
+  realestate: [...REALESTATE, ...REALESTATE_X],
+  healthcare: [...HEALTHCARE, ...HEALTHCARE_X],
   legal: LEGAL,
-  retail: RETAIL,
+  retail: [...RETAIL, ...RETAIL_X],
   events: EVENTS,
   education: EDUCATION,
+  petcare: PETCARE,
+  childcare: CHILDCARE,
+  homeservices: HOMESERVICES,
+  watersports: WATERSPORTS,
+  golf: GOLF,
+  condo: CONDO,
+  equestrian: EQUESTRIAN,
+  aiservices: AISERVICES,
 };
 
 export const ALL_IDENTITIES: MockupIdentity[] = Object.values(IDENTITY_MATRIX).flat();
@@ -1826,6 +1834,14 @@ export const SECTOR_LABELS: Record<SectorKey, string> = {
   retail: "Retail",
   events: "Eventi & Spettacolo",
   education: "Formazione",
+  petcare: "Pet Care & Veterinaria",
+  childcare: "Nidi & Infanzia",
+  homeservices: "Servizi per la Casa",
+  watersports: "Charter & Sport Acquatici",
+  golf: "Golf & Leisure",
+  condo: "Residenze & Condomini",
+  equestrian: "Equestre & Scuderie",
+  aiservices: "Servizi IA & Automazioni",
 };
 
 export function getIdentities(sector: SectorKey): MockupIdentity[] {
