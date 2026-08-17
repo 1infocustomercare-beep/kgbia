@@ -348,6 +348,73 @@ export default function PortfolioCasePage() {
           );
         })}
 
+        {/* ───────── GRIGLIA COMPATTA: altre direzioni visive ───────── */}
+        {compact.length > 0 && (
+          <section className="border-b py-14" style={{ borderColor: "hsl(var(--pr-gold) / 0.12)" }}>
+            <div
+              className="text-[10px] font-bold uppercase tracking-[0.26em]"
+              style={{ color: "hsl(var(--pr-gold))" }}
+            >
+              Altre direzioni visive · {compact.length}
+            </div>
+            <h2
+              className="prestige-display mt-2 text-2xl sm:text-3xl"
+              style={{ color: "hsl(var(--pr-gold-light))" }}
+            >
+              Confronto rapido degli stili
+            </h2>
+            <p
+              className="mt-2 max-w-2xl text-sm"
+              style={{ color: "hsl(var(--pr-gold-light) / 0.6)" }}
+            >
+              Tocca uno stile per aprirlo a schermo intero: tipografia, palette e componenti sono
+              completamente diversi tra una direzione e l'altra.
+            </p>
+
+            <div className="mt-8 grid grid-cols-2 gap-x-4 gap-y-9 sm:grid-cols-3 lg:grid-cols-5 xl:grid-cols-6">
+              {compact.map((v) => {
+                const idx = variants.findIndex((x) => x.id === v.id);
+                return (
+                  <figure key={v.id} className="group flex flex-col items-center">
+                    <div
+                      className="w-full rounded-[26px] p-2.5 transition-all duration-500 group-hover:-translate-y-1.5"
+                      style={{
+                        background: "hsl(var(--pr-gold-light) / 0.04)",
+                        border: "1px solid hsl(var(--pr-gold) / 0.16)",
+                      }}
+                    >
+                      <IPhoneProMaxFrame
+                        src={v.screens?.[0]?.image ?? v.screen}
+                        alt={`${v.brand} — ${v.style}`}
+                        width={170}
+                        className="mx-auto !w-full"
+                        style={{ width: "100%", height: "auto", aspectRatio: "9 / 19.5" }}
+                        onClick={() => setLightbox({ index: idx })}
+                      />
+                    </div>
+                    <figcaption className="mt-3 text-center">
+                      <span
+                        className="block text-xs font-semibold"
+                        style={{ color: "hsl(var(--pr-gold-light))" }}
+                      >
+                        {v.brand}
+                      </span>
+                      <span
+                        className="mt-0.5 block text-[10px] uppercase tracking-[0.16em]"
+                        style={{ color: "hsl(var(--pr-gold) / 0.75)" }}
+                      >
+                        {v.palette}
+                      </span>
+                    </figcaption>
+                  </figure>
+                );
+              })}
+            </div>
+          </section>
+        )}
+
+
+
         {/* ───────── ALTRI SETTORI ───────── */}
         {otherSectors.length > 0 && (
           <section className="py-16">
