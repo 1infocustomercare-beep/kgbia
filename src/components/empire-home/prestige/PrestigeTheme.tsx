@@ -237,6 +237,11 @@ export default function PrestigeTheme() {
         background:
           radial-gradient(ellipse at 50% 0%, hsl(244 60% 14%) 0%, hsl(240 44% 7%) 55%, hsl(240 50% 5%) 100%);
         overflow: hidden;
+        /* Isola il backdrop dal resto della pagina: i suoi repaint non
+           invalidano più il layout/paint dei contenuti sopra. */
+        contain: strict;
+        transform: translateZ(0);
+        backface-visibility: hidden;
       }
       .prestige-scrub-backdrop canvas {
         position: absolute;
@@ -248,8 +253,9 @@ export default function PrestigeTheme() {
       .prestige-scrub-aura {
         position: absolute;
         border-radius: 50%;
-        filter: blur(10px);
-        will-change: transform, opacity;
+        /* Nessun filter: blur() su superfici da 110vw — il gradiente radiale è
+           già morbido e il blur costava un pass GPU a tutto schermo per frame. */
+        will-change: transform;
       }
       .prestige-scrub-aura--violet {
         top: -25%; left: 50%;
@@ -321,6 +327,28 @@ export default function PrestigeTheme() {
         .prestige-scrub-aura { animation: none !important; }
         .prestige-scrub-grid { transform: none !important; }
       }
+
+      /* ── Modalità "lite": hardware modesto / save-data / reduced-motion ──
+         Riduce i layer compositi senza cambiare l'identità visiva:
+         glow statici, griglia senza parallasse, nessun grain animato. */
+      html[data-perf-tier="lite"] .prestige-scrub-aura {
+        animation: none;
+        opacity: .9;
+        transform: translate(var(--pb-tx, 0px), 0) scale(1.02);
+        will-change: auto;
+      }
+      html[data-perf-tier="lite"] .prestige-scrub-grid {
+        opacity: .1;
+        transform: none;
+        will-change: auto;
+        background-size: 96px 96px;
+      }
+      html[data-perf-tier="lite"] .prestige-noise {
+        animation: none;
+        opacity: .04;
+      }
+      /* Su puntatore coarse lo spotlight non ha input da seguire: via il layer. */
+      html[data-pointer="coarse"] .prestige-scrub-spot { display: none; }
 
 
 
