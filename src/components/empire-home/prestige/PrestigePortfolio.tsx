@@ -96,11 +96,13 @@ export default function PrestigePortfolio() {
             >
               Casi reali.
               <br />
-              <span className="prestige-gold-text">Uno stile per settore.</span>
+              <span className="prestige-gold-text">Decine di stili per settore.</span>
             </h2>
           </div>
           <p className="max-w-sm text-sm sm:text-base" style={{ color: "hsl(var(--pr-muted-on-light))" }}>
-            Tocca un mockup per vederlo a schermo intero e navigare tutte le varianti stilistiche pensate per quel settore.
+            Apri un settore per vedere il caso studio completo: tutti gli stili a confronto, con la sequenza
+            integrale delle schermate su iPhone Pro Max.
+
           </p>
         </div>
 
