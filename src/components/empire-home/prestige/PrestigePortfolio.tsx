@@ -55,21 +55,20 @@ export default function PrestigePortfolio() {
   );
 
 
-  const sectors = useMemo(() => {
-    const map = new Map<string, { id: string; label: string; count: number }>();
-    cards.forEach((c) => {
-      const row = map.get(c.sectorId) ?? { id: c.sectorId, label: c.sectorLabel, count: 0 };
-      row.count += 1;
-      map.set(c.sectorId, row);
-    });
-    return [...map.values()].sort((a, b) => b.count - a.count);
-  }, [cards]);
+  const sectors = useMemo(
+    () =>
+      cards
+        .map((c) => ({ id: c.sectorId, label: c.sectorLabel, count: c.variants.length }))
+        .sort((a, b) => b.count - a.count),
+    [cards],
+  );
 
-  /** Chip di filtro per settore con conteggio stili. */
+  /** Chip di filtro per settore con conteggio stili disponibili. */
   const chips = useMemo(
-    () => [{ id: "all", label: "Tutti", count: cards.length }, ...sectors],
+    () => [{ id: "all", label: "Tutti i settori", count: cards.length }, ...sectors],
     [cards, sectors],
   );
+
 
   const filtered = useMemo(
     () => (filter === "all" ? cards : cards.filter((c) => c.sectorId === filter)),
