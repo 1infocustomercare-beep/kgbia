@@ -253,8 +253,9 @@ export default function PrestigeTheme() {
       .prestige-scrub-aura {
         position: absolute;
         border-radius: 50%;
-        filter: blur(10px);
-        will-change: transform, opacity;
+        /* Nessun filter: blur() su superfici da 110vw — il gradiente radiale è
+           già morbido e il blur costava un pass GPU a tutto schermo per frame. */
+        will-change: transform;
       }
       .prestige-scrub-aura--violet {
         top: -25%; left: 50%;
