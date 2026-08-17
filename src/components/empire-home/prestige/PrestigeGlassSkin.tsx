@@ -590,11 +590,100 @@ export default function PrestigeGlassSkin() {
         to   { transform: translateX(3%) scaleY(1.25); }
       }
 
+      /* ═══════════ 8. MICRO-INTERAZIONI GLOBALI ═══════════ */
+      .prestige-root button,
+      .prestige-root a,
+      .prestige-root [role="button"],
+      .prestige-root input,
+      .prestige-root textarea,
+      .prestige-root select {
+        transition: transform .28s cubic-bezier(.22,1,.36,1),
+                    box-shadow .28s ease,
+                    border-color .28s ease,
+                    background-color .28s ease,
+                    color .28s ease, opacity .28s ease;
+      }
+      .prestige-root button:not(:disabled):hover,
+      .prestige-root [role="button"]:not([aria-disabled="true"]):hover {
+        transform: translateY(-1px);
+      }
+      .prestige-root button:not(:disabled):active,
+      .prestige-root [role="button"]:not([aria-disabled="true"]):active {
+        transform: translateY(0) scale(.985);
+      }
+      .prestige-root button:disabled,
+      .prestige-root [aria-disabled="true"] {
+        opacity: .55;
+        cursor: not-allowed;
+        transform: none !important;
+      }
+      /* focus ring unificato, solo tastiera */
+      .prestige-root :focus-visible {
+        outline: none;
+        box-shadow: 0 0 0 2px hsl(var(--pr-bg, 200 40% 6%)),
+                    0 0 0 4px hsl(var(--pr-aqua) / .55),
+                    0 0 24px hsl(var(--pr-aqua) / .28);
+        border-radius: inherit;
+      }
+      /* input glass: hover + focus */
+      .prestige-root input:hover,
+      .prestige-root textarea:hover { border-color: hsl(var(--pr-aqua) / .35); }
+      .prestige-root input:focus,
+      .prestige-root textarea:focus { border-color: hsl(var(--pr-aqua) / .6); }
+
+      /* card lift coerente */
+      .pglass-lift {
+        transition: transform .38s cubic-bezier(.22,1,.36,1), box-shadow .38s ease, border-color .38s ease;
+        will-change: transform;
+      }
+      .pglass-lift:hover {
+        transform: translateY(-6px);
+        border-color: hsl(var(--pr-aqua) / .38);
+        box-shadow: 0 26px 60px -28px hsl(var(--pr-aqua) / .45), inset 0 1px 0 hsl(0 0% 100% / .12);
+      }
+      .pglass-lift:active { transform: translateY(-2px) scale(.995); }
+
+      /* press feedback tattile (tap mobile) */
+      .pglass-press { transition: transform .18s cubic-bezier(.22,1,.36,1), opacity .18s ease; }
+      .pglass-press:active { transform: scale(.96); opacity: .9; }
+
+      /* ═══════════ 9. SKELETON LOADING GLASS ═══════════ */
+      .pglass-skeleton {
+        position: relative;
+        overflow: hidden;
+        border-radius: 14px;
+        background: linear-gradient(180deg, hsl(var(--pr-aqua) / .07), hsl(0 0% 100% / .04));
+        border: 1px solid hsl(0 0% 100% / .07);
+      }
+      .pglass-skeleton::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        transform: translateX(-100%);
+        background: linear-gradient(
+          90deg,
+          transparent 0%,
+          hsl(0 0% 100% / .09) 45%,
+          hsl(var(--pr-aqua) / .18) 55%,
+          transparent 100%
+        );
+        animation: pglassShimmer 1.7s ease-in-out infinite;
+      }
+      @keyframes pglassShimmer {
+        to { transform: translateX(100%); }
+      }
+
       @media (prefers-reduced-motion: reduce) {
         .prestige-root .prestige-dark,
         .prestige-root .prestige-light,
-        .pglass-wave::before { animation: none !important; }
-        .pglass, .pglass-soft, .pglass-chip, .pglass-btn { transition: none !important; }
+        .pglass-wave::before,
+        .pglass-skeleton::after { animation: none !important; }
+        .pglass, .pglass-soft, .pglass-chip, .pglass-btn,
+        .pglass-lift, .pglass-press,
+        .prestige-root button, .prestige-root a, .prestige-root [role="button"] {
+          transition: none !important;
+          transform: none !important;
+        }
       }
     `}</style>
   );
