@@ -220,7 +220,7 @@ export default function PortfolioCasePage() {
       >
         <div className="mx-auto max-w-7xl overflow-x-auto px-5 py-3 [scrollbar-width:none] lg:px-10 [&::-webkit-scrollbar]:hidden">
           <div className="flex w-max items-center gap-2">
-            {[{ id: "all", label: `Tutti · ${variants.length}` }, ...variants.map((v) => ({ id: v.id, label: v.style }))].map(
+            {[{ id: "all", label: `Tutti · ${variants.length}` }, ...variants.map((v) => ({ id: v.id, label: v.brand }))].map(
               (chip) => {
                 const on = filter === chip.id;
                 return (
