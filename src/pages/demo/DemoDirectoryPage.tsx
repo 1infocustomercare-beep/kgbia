@@ -725,15 +725,18 @@ function SectorCard({ id, index, isExpanded, onToggle, onNavigate, isFeatured, f
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: index * 0.025 }}>
       <div
-        className={`relative rounded-2xl overflow-hidden group transition-all duration-300 ${isExpanded ? "ring-1" : ""}`}
+        className={`pglass-lift relative rounded-2xl overflow-hidden group transition-all duration-300 ${isExpanded ? "ring-1" : ""}`}
         style={{
           background: isFeatured
-            ? `linear-gradient(155deg, hsla(190,22%,16%,0.95), hsla(198,20%,12%,0.93))`
-            : `linear-gradient(155deg, hsla(192,20%,15%,0.94), hsla(198,18%,11%,0.92))`,
-          border: `1px solid ${isFeatured ? `${color}40` : "hsla(190,40%,50%,0.18)"}`,
-          boxShadow: `0 4px 20px hsla(190,40%,15%,0.2), inset 0 1px 0 hsla(190,50%,70%,0.06)`,
-          ...(isExpanded ? { boxShadow: `0 8px 32px hsla(190,50%,20%,0.3), 0 0 0 1px ${color}30, inset 0 1px 0 hsla(190,50%,70%,0.08)` } : {}),
+            ? `linear-gradient(155deg, hsla(190,26%,16%,0.62), hsla(198,22%,10%,0.58))`
+            : `linear-gradient(155deg, hsla(196,22%,14%,0.55), hsla(198,20%,9%,0.52))`,
+          backdropFilter: "blur(22px) saturate(150%)",
+          WebkitBackdropFilter: "blur(22px) saturate(150%)",
+          border: `1px solid ${isFeatured ? `${color}40` : "hsl(178 74% 48% / 0.22)"}`,
+          boxShadow: `0 24px 60px -40px hsl(178 74% 48% / 0.5), inset 0 1px 0 hsl(0 0% 100% / 0.12)`,
+          ...(isExpanded ? { boxShadow: `0 30px 70px -38px hsl(178 74% 48% / 0.6), 0 0 0 1px ${color}30, inset 0 1px 0 hsl(0 0% 100% / 0.16)` } : {}),
         }}>
+
 
         {/* Top accent — featured only */}
         {isFeatured && (
