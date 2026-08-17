@@ -78,7 +78,7 @@ interface PaymentRecord {
   createdAt: string;
 }
 
-type SuperTab = "overview" | "tenants" | "fisco" | "billing" | "payments" | "subscriptions" | "mary" | "agents" | "media" | "media_library" | "feature_requests" | "brand" | "showcase" | "integrations" | "asset_cms" | "whatsapp" | "demo_accounts" | "connections" | "registrations" | "partner_network" | "content_ai" | "lead_scout" | "empire_brain" | "sales_agent" | "voice_orch" | "costs" | "account";
+type SuperTab = "overview" | "tenants" | "fisco" | "billing" | "payments" | "subscriptions" | "mary" | "agents" | "media" | "media_library" | "mockup_curation" | "feature_requests" | "brand" | "showcase" | "integrations" | "asset_cms" | "whatsapp" | "demo_accounts" | "connections" | "registrations" | "partner_network" | "content_ai" | "lead_scout" | "empire_brain" | "sales_agent" | "voice_orch" | "costs" | "account";
 
 interface SubscriptionRecord {
   id: string;
@@ -685,6 +685,7 @@ const SuperAdminDashboard = () => {
     ]},
     { label: "🎨 Contenuti", tabs: [
       { id: "media_library", label: "Media Library", icon: <ImageIcon className="w-4 h-4" /> },
+      { id: "mockup_curation", label: "Galleria Mockup", icon: <ImageIcon className="w-4 h-4" /> },
       { id: "media", label: "Media Vault", icon: <Film className="w-4 h-4" /> },
       { id: "brand" as SuperTab, label: "Brand Assets", icon: <Crown className="w-4 h-4" /> },
       { id: "showcase", label: "Settori", icon: <Eye className="w-4 h-4" /> },
@@ -1029,7 +1030,7 @@ const SuperAdminDashboard = () => {
                                   key={tab.id}
                                   whileHover={{ y: -1 }}
                                   whileTap={{ scale: 0.96 }}
-                                  onClick={() => tab.id === "agents" ? navigate("/superadmin/agents") : tab.id === "media" ? navigate("/superadmin/media") : tab.id === "media_library" ? navigate("/superadmin/media-library") : tab.id === "brand" ? navigate("/superadmin/brand-assets") : tab.id === "demo_accounts" ? navigate("/superadmin/demo-accounts") : tab.id === "connections" ? navigate("/superadmin/connections") : tab.id === "content_ai" ? navigate("/superadmin/content-ai") : tab.id === "lead_scout" ? navigate("/superadmin/leads") : tab.id === "costs" ? navigate("/superadmin/costs") : setActiveTab(tab.id)}
+                                  onClick={() => tab.id === "agents" ? navigate("/superadmin/agents") : tab.id === "media" ? navigate("/superadmin/media") : tab.id === "media_library" ? navigate("/superadmin/media-library") : tab.id === "mockup_curation" ? navigate("/superadmin/mockup-curation") : tab.id === "brand" ? navigate("/superadmin/brand-assets") : tab.id === "demo_accounts" ? navigate("/superadmin/demo-accounts") : tab.id === "connections" ? navigate("/superadmin/connections") : tab.id === "content_ai" ? navigate("/superadmin/content-ai") : tab.id === "lead_scout" ? navigate("/superadmin/leads") : tab.id === "costs" ? navigate("/superadmin/costs") : setActiveTab(tab.id)}
                                   className="relative flex flex-col items-center justify-center gap-1 px-1.5 py-2 rounded-lg text-[11px] font-semibold transition-all min-h-[52px] overflow-hidden"
                                   style={isActive ? {
                                     background: "linear-gradient(160deg, hsl(265 75% 55%), hsl(250 65% 42%))",
