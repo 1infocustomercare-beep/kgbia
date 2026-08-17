@@ -1,0 +1,18 @@
+{
+  "identityId": "ncc-neon-velocity",
+  "sector": "ncc",
+  "brand": "Velocittà",
+  "style": "geometric-compact/grid-4-dense/double-rule-classic/pill-soft/carousel-cards/progress-fill/full-flood/flat-tabbar-topline",
+  "family": "neon-velocity-grid",
+  "palette": "mobile",
+  "description": "Velocittà: webapp su misura con 1 schermate coerenti — tipografia, palette, componenti e micro-interazioni disegnati su questo settore.",
+  "labels": [
+    "Vetrina"
+  ],
+  "captions": [
+    "Home dell'app: identità di brand, funzioni chiave e CTA principale."
+  ],
+  "features": [
+    "Vetrina"
+  ]
+}

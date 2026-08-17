@@ -1,0 +1,18 @@
+{
+  "identityId": "ncc-city-elettrico",
+  "sector": "ncc",
+  "brand": "Corsa Zero",
+  "style": "numeric-first/grid-4-dense/frosted-stroke/bento-mosaic/big-metric-blocks/spring-press/full-flood/flat-tabbar-topline",
+  "family": "city-elettrico-verde-menta-soft",
+  "palette": "mobile",
+  "description": "Corsa Zero: webapp su misura con 1 schermate coerenti — tipografia, palette, componenti e micro-interazioni disegnati su questo settore.",
+  "labels": [
+    "Vetrina"
+  ],
+  "captions": [
+    "Home dell'app: identità di brand, funzioni chiave e CTA principale."
+  ],
+  "features": [
+    "Vetrina"
+  ]
+}
