@@ -39,6 +39,8 @@ export default function EmpireGlassShell() {
     if (typeof document === "undefined") return;
     const body = document.body;
     if (!enabled) return;
+    // Classe hardware su <html>: il CSS glass dosa blur e overlay di conseguenza.
+    applyPerfTier();
     body.classList.add("pglass-scope", "pglass-app");
     return () => {
       body.classList.remove("pglass-scope", "pglass-app");
