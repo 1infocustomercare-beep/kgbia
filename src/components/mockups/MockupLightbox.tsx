@@ -304,12 +304,8 @@ export default function MockupLightbox({
                   onClick={() => setIndex(i)}
                   aria-label={`Vai a ${v.style}`}
                   aria-current={i === index}
-                  className="rounded-full border px-3 py-1 text-[11px] transition"
-                  style={
-                    i === index
-                      ? { background: "white", color: "#0b0b12", borderColor: "white" }
-                      : { background: "rgba(255,255,255,0.05)", color: "rgba(255,255,255,0.75)", borderColor: "rgba(255,255,255,0.18)" }
-                  }
+                  aria-pressed={i === index}
+                  className="pglass-chip pglass-chip-dark"
                 >
                   {v.style}
                 </button>
