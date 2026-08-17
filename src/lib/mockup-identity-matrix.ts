@@ -1253,13 +1253,36 @@ export function buildIdentityPrompts(identity: MockupIdentity): { screen: Screen
 }
 
 
-/** Verifica che nessuna famiglia visiva sia riusata tra settori. */
-export function assertMatrixIntegrity(): { ok: boolean; duplicates: string[]; totals: Record<string, number> } {
+/** Verifica che nessuna famiglia, materia, luce, fondale, staging o motivo sia riusato. */
+export function assertMatrixIntegrity(): {
+  ok: boolean;
+  duplicates: string[];
+  surfaceDuplicates: string[];
+  totals: Record<string, number>;
+} {
   const seen = new Map<string, number>();
   ALL_IDENTITIES.forEach((i) => seen.set(i.family, (seen.get(i.family) ?? 0) + 1));
   const duplicates = Array.from(seen.entries()).filter(([, n]) => n > 1).map(([f]) => f);
+
+  const surfaceDuplicates: string[] = [];
+  (["material", "light", "backdrop", "staging", "motif"] as const).forEach((k) => {
+    const bag = new Map<string, string[]>();
+    (Object.keys(SURFACE_SIGNATURES) as IdentityFamily[]).forEach((f) => {
+      const v = SURFACE_SIGNATURES[f][k];
+      bag.set(v, [...(bag.get(v) ?? []), f]);
+    });
+    bag.forEach((fams, v) => {
+      if (fams.length > 1) surfaceDuplicates.push(`${k}="${v}" → ${fams.join(", ")}`);
+    });
+  });
+
   const totals = Object.fromEntries(
     (Object.keys(IDENTITY_MATRIX) as SectorKey[]).map((s) => [s, IDENTITY_MATRIX[s].length]),
   );
-  return { ok: duplicates.length === 0, duplicates, totals };
+  return {
+    ok: duplicates.length === 0 && surfaceDuplicates.length === 0,
+    duplicates,
+    surfaceDuplicates,
+    totals,
+  };
 }
