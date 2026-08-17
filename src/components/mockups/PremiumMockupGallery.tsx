@@ -17,6 +17,7 @@ import { Sparkles, Layers, Search, ArrowRight, MonitorSmartphone, X } from "luci
 import IPhoneProMaxFrame from "./IPhoneProMaxFrame";
 import MockupLightbox from "./MockupLightbox";
 import { SECTOR_MOCKUPS, type SectorMockupVariant } from "@/data/sector-mockups";
+import GlassBackButton from "@/components/glass/GlassBackButton";
 
 type Selection = {
   sectorId: string;
