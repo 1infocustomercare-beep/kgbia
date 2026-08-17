@@ -679,10 +679,12 @@ export default function PrestigeGlassSkin() {
         .pglass-wave::before,
         .pglass-skeleton::after { animation: none !important; }
         .pglass, .pglass-soft, .pglass-chip, .pglass-btn,
-        .pglass-lift, .pglass-press,
-        .prestige-root button, .prestige-root a, .prestige-root [role="button"] {
+        .pglass-lift, .pglass-press {
           transition: none !important;
           transform: none !important;
+        }
+        .prestige-root button, .prestige-root a, .prestige-root [role="button"] {
+          transition-duration: .01ms !important;
         }
       }
     `}</style>
