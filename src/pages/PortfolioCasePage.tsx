@@ -15,7 +15,6 @@ import { useEffect, useMemo, useState } from "react";
 import { Link, useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { ArrowLeft, ArrowUpRight, CalendarDays, Layers, Smartphone, Sparkles, UserRound } from "lucide-react";
 import PrestigeTheme from "@/components/empire-home/prestige/PrestigeTheme";
-import PrestigeGlassSkin from "@/components/empire-home/prestige/PrestigeGlassSkin";
 import IPhoneProMaxFrame from "@/components/mockups/IPhoneProMaxFrame";
 import MockupLightbox from "@/components/mockups/MockupLightbox";
 import { SECTOR_MOCKUPS, getSectorGroup, type SectorMockupVariant } from "@/data/sector-mockups";
@@ -88,7 +87,6 @@ export default function PortfolioCasePage() {
     return (
       <div className="pglass-scope min-h-screen" style={{ background: "hsl(var(--pr-emerald-deep))" }}>
         <PrestigeTheme />
-      <PrestigeGlassSkin />
         <div className="mx-auto flex max-w-2xl flex-col items-center gap-5 px-6 py-32 text-center">
           <h1 className="prestige-display text-3xl" style={{ color: "hsl(var(--pr-gold-light))" }}>
             Settore non trovato
@@ -124,7 +122,6 @@ export default function PortfolioCasePage() {
   return (
     <div className="pglass-scope min-h-screen" style={{ background: "hsl(var(--pr-emerald-deep))" }}>
       <PrestigeTheme />
-      <PrestigeGlassSkin />
 
       {/* ───────── HERO EDITORIALE ───────── */}
       <header className="relative overflow-hidden">

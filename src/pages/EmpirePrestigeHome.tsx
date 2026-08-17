@@ -12,7 +12,6 @@ import PrestigeServices from "@/components/empire-home/prestige/PrestigeServices
 import PrestigeHorizontalScroll from "@/components/empire-home/prestige/PrestigeHorizontalScroll";
 import PrestigeIndustries from "@/components/empire-home/prestige/PrestigeIndustries";
 import PrestigePortfolio from "@/components/empire-home/prestige/PrestigePortfolio";
-import PrestigeGlassSkin from "@/components/empire-home/prestige/PrestigeGlassSkin";
 
 import PrestigeAgents from "@/components/empire-home/prestige/PrestigeAgents";
 import PrestigeFinalCTA from "@/components/empire-home/prestige/PrestigeFinalCTA";
@@ -68,7 +67,6 @@ function EmpirePrestigeHomeInner() {
     <>
       <EmpireLogoSplash />
       <PrestigeTheme />
-      <PrestigeGlassSkin />
 
       <PrestigeProgressBar />
       <div className="prestige-root min-h-screen [overflow-x:clip]">

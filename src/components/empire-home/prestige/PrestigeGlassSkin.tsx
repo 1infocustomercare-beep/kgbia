@@ -61,6 +61,15 @@ export default function PrestigeGlassSkin() {
         to   { background-position: 100% 60%, 0% 20%, 0 0; }
       }
 
+      .pglass-bg {
+        background:
+          radial-gradient(ellipse 70% 45% at 15% 0%, hsl(var(--pr-aqua) / 0.16), transparent 62%),
+          radial-gradient(ellipse 55% 45% at 90% 95%, hsl(var(--pr-aqua-light) / 0.10), transparent 66%),
+          linear-gradient(180deg, hsl(var(--pr-emerald-deep)), hsl(var(--pr-emerald)));
+        background-size: 180% 180%, 180% 180%, 100% 100%;
+        animation: pglassDrift 28s ease-in-out infinite alternate;
+      }
+
       /* ═══════════ 3. SUPERFICI VETRO ═══════════ */
       .prestige-root .prestige-card,
       .prestige-root .prestige-card-gilt,
