@@ -14,7 +14,7 @@
  * selettori stile Partner.
  */
 
-export type IdentityFamily =
+export type KnownIdentityFamily =
   | "neo-editorial-magazine" | "midnight-lacquer" | "neo-brutalist-industrial"
   | "mediterranean-sunlit" | "swiss-clinical-grid"
   | "porcelain-couture" | "chrome-y2k-gloss" | "botanical-apothecary"
@@ -56,6 +56,9 @@ export type IdentityFamily =
   | "ocean-azure-resident" | "rose-gold-editorial-hoa" | "ice-blue-ethereal-tower"
   | "velvet-saddle-heritage" | "midnight-stable-arena" | "ivory-equestrian-classic"
   | "voice-agent-waveform" | "ai-dark-terminal-node" | "saas-gradient-mesh";
+
+/** Le famiglie sono estendibili dai moduli di espansione (unicità validata a runtime). */
+export type IdentityFamily = KnownIdentityFamily | (string & {});
 
 export type ScreenSpec = {
   key: string;
@@ -1896,7 +1899,7 @@ export type SurfaceSignature = {
   motif: string;
 };
 
-export const SURFACE_SIGNATURES: Record<IdentityFamily, SurfaceSignature> = {
+export const SURFACE_SIGNATURES: Record<string, SurfaceSignature> = {
   // ---------- FOOD ----------
   "neo-editorial-magazine": { material: "carta avorio con grana 3%, filetti stampati, zero ombre", light: "luce di finestra radente da sinistra", backdrop: "avorio caldo a gradiente morbido", staging: "device centrato, ombra corta a terra, respiro ampio", motif: "gabbia editoriale con numeri di pagina e capolettera serif" },
   "midnight-lacquer": { material: "lacca nera profonda semi-riflettente, bordo luminoso 1px", light: "rim light caldo singolo, ombre profonde", backdrop: "carbone con sweep morbido", staging: "device isolato in penombra, riflesso verticale sul vetro", motif: "riflesso speculare che scivola sui pannelli come su un pianoforte" },
@@ -2120,7 +2123,7 @@ export function assertMatrixIntegrity(): {
   const surfaceDuplicates: string[] = [];
   (["material", "light", "backdrop", "staging", "motif"] as const).forEach((k) => {
     const bag = new Map<string, string[]>();
-    (Object.keys(SURFACE_SIGNATURES) as IdentityFamily[]).forEach((f) => {
+    (Object.keys(SURFACE_SIGNATURES) as string[]).forEach((f) => {
       const v = SURFACE_SIGNATURES[f][k];
       bag.set(v, [...(bag.get(v) ?? []), f]);
     });
