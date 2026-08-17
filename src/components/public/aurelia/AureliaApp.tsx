@@ -738,43 +738,466 @@ function Crm() {
   );
 }
 
-/* ══════════ Contenitore con navigazione ══════════ */
+/* ══════════ Home app cliente ══════════ */
 
-export default function AureliaApp() {
-  const [tab, setTab] = useState<TabId>("vetrina");
-  const [vehicle, setVehicle] = useState<Vehicle>(VEHICLES[0]);
+function HomeApp({
+  vehicle,
+  onGo,
+  onOpen,
+}: {
+  vehicle: Vehicle;
+  onGo: (t: TabId) => void;
+  onOpen: (v: Vehicle) => void;
+}) {
+  const azioni: { id: TabId; label: string; icon: typeof Car }[] = [
+    { id: "vetrina", label: "Vetrina", icon: Car },
+    { id: "testdrive", label: "Test drive", icon: CalendarDays },
+    { id: "permuta", label: "Permuta IA", icon: Repeat },
+    { id: "officina", label: "Officina", icon: Wrench },
+  ];
 
   return (
-    <div className="mx-auto max-w-6xl overflow-hidden rounded-3xl border border-border/60 bg-[#08100f] shadow-[0_30px_120px_rgba(0,0,0,0.45)] backdrop-blur">
-      {/* barra app */}
-      <div className="flex items-center justify-between border-b border-border/60 bg-[#0f1c1b] px-5 py-3">
-        <span className="font-heading text-sm tracking-[0.3em]">AURELIA MOTORI</span>
-        <span className="text-[10px] uppercase tracking-[0.22em] text-muted-foreground">webapp · demo navigabile</span>
-      </div>
+    <AppShell subtitle="Buongiorno, Chiara" title="Aurelia Motori · Milano Nord">
+      <button
+        type="button"
+        onClick={() => onOpen(vehicle)}
+        className="group relative block w-full overflow-hidden rounded-3xl border border-border/60 bg-black text-left"
+      >
+        <img
+          src={vehicle.img}
+          alt={`${vehicle.name} in evidenza`}
+          loading="lazy"
+          className="h-52 w-full object-cover transition-transform duration-700 group-hover:scale-105 sm:h-72"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent" />
+        <div className="absolute inset-x-0 bottom-0 p-5">
+          <span className="rounded-full bg-primary px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.18em] text-primary-foreground">
+            In evidenza
+          </span>
+          <p className="mt-3 font-heading text-2xl font-semibold">{vehicle.name}</p>
+          <p className="text-xs text-muted-foreground">{vehicle.trim} · {eur(vehicle.price)}</p>
+        </div>
+      </button>
 
-      {/* tab */}
-      <div className="-mx-px flex gap-1 overflow-x-auto border-b border-border/60 bg-[#0b1413] px-3 py-2">
-        {TABS.map(({ id, label, icon: Icon }) => (
+      <div className="mt-5 grid grid-cols-4 gap-2">
+        {azioni.map(({ id, label, icon: Icon }) => (
           <button
             key={id}
             type="button"
-            onClick={() => setTab(id)}
-            className={`inline-flex min-h-10 shrink-0 items-center gap-2 rounded-full px-4 text-xs font-semibold transition-colors ${
-              tab === id ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:text-foreground"
-            }`}
+            onClick={() => onGo(id)}
+            className="flex min-h-[76px] flex-col items-center justify-center gap-2 rounded-2xl border border-border/60 bg-[#0d1817] px-1 text-[10px] font-semibold text-muted-foreground transition-colors hover:border-primary/50 hover:text-foreground"
           >
-            <Icon className="h-3.5 w-3.5" /> {label}
+            <Icon className="h-5 w-5 text-primary" />
+            {label}
           </button>
         ))}
       </div>
 
-      {tab === "vetrina" && <Vetrina onOpen={(v) => { setVehicle(v); setTab("scheda"); }} />}
+      <div className="mt-5 grid gap-3 sm:grid-cols-2">
+        <div className="rounded-2xl border border-primary/40 bg-primary/5 p-4">
+          <p className="text-[10px] uppercase tracking-[0.2em] text-primary">Prossimo appuntamento</p>
+          <p className="mt-2 font-heading text-lg font-semibold">Tagliando · Mer 20, 09:00</p>
+          <p className="text-xs text-muted-foreground">Ponte 2 · Aurelia Riva SW</p>
+          <button
+            type="button"
+            onClick={() => onGo("garage")}
+            className="mt-3 inline-flex items-center gap-1 text-xs font-semibold text-primary"
+          >
+            Apri garage <ChevronRight className="h-3.5 w-3.5" />
+          </button>
+        </div>
+        <div className="rounded-2xl border border-border/60 bg-[#0d1817] p-4">
+          <p className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground">Valutazione permuta</p>
+          <p className="mt-2 font-heading text-lg font-semibold">Stima pronta in 30 s</p>
+          <p className="text-xs text-muted-foreground">Targa, km e condizioni: l&apos;IA fa il resto.</p>
+          <button
+            type="button"
+            onClick={() => onGo("permuta")}
+            className="mt-3 inline-flex items-center gap-1 text-xs font-semibold text-primary"
+          >
+            Valuta ora <ChevronRight className="h-3.5 w-3.5" />
+          </button>
+        </div>
+      </div>
+
+      <p className="mt-6 text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">Arrivi della settimana</p>
+      <div className="mt-3 flex gap-3 overflow-x-auto pb-1">
+        {VEHICLES.slice(1).map((v) => (
+          <button
+            key={v.id}
+            type="button"
+            onClick={() => onOpen(v)}
+            className="w-40 shrink-0 overflow-hidden rounded-2xl border border-border/60 bg-[#0d1817] text-left"
+          >
+            <img src={v.img} alt={v.name} loading="lazy" className="h-24 w-full object-cover" />
+            <div className="p-3">
+              <p className="text-xs font-semibold">{v.name}</p>
+              <p className="mt-1 text-[11px] text-primary">{eur(v.price)}</p>
+            </div>
+          </button>
+        ))}
+      </div>
+    </AppShell>
+  );
+}
+
+/* ══════════ Consulente IA ══════════ */
+
+type Msg = { from: "bot" | "user"; text: string };
+
+const QUICK = [
+  "Avete una elettrica sotto 50.000 €?",
+  "Quanto vale la mia auto in permuta?",
+  "Posso provarla sabato?",
+  "Il tagliando è compreso?",
+];
+
+const REPLIES: Record<string, string> = {
+  "Avete una elettrica sotto 50.000 €?":
+    "Sì: Aurelia Aria E, 84 kWh, 540 km reali a 48.900 €. Km 900, garanzia 24 mesi. Ti apro la scheda?",
+  "Quanto vale la mia auto in permuta?":
+    "Dammi targa, chilometri e anno: la stima IA arriva in 30 secondi ed è bloccabile per 7 giorni.",
+  "Posso provarla sabato?":
+    "Sabato abbiamo 10:30 e 16:00 liberi con Marco Ferrero. Te lo prenoto con promemoria WhatsApp?",
+  "Il tagliando è compreso?":
+    "Sul Km 0 sì: primo tagliando incluso più 24 mesi di garanzia certificata Aurelia.",
+};
+
+function ChatIA({ onGo }: { onGo: (t: TabId) => void }) {
+  const [msgs, setMsgs] = useState<Msg[]>([
+    { from: "bot", text: "Ciao, sono Aurelia IA. Ti aiuto su vetrina, permuta, test drive e officina. Cosa cerchi?" },
+  ]);
+  const [draft, setDraft] = useState("");
+
+  const send = (text: string) => {
+    const t = text.trim();
+    if (!t) return;
+    const reply =
+      REPLIES[t] ??
+      "Ho registrato la richiesta: un consulente ti risponde in meno di 4 minuti. Intanto posso mostrarti la vetrina aggiornata.";
+    setMsgs((m) => [...m, { from: "user", text: t }, { from: "bot", text: reply }]);
+    setDraft("");
+  };
+
+  return (
+    <AppShell subtitle="Intelligenza artificiale" title="Consulente sempre attivo">
+      <div className="space-y-3 rounded-2xl border border-border/60 bg-[#0c1615] p-4">
+        {msgs.map((m, i) => (
+          <div key={`${i}-${m.text.slice(0, 8)}`} className={`flex ${m.from === "user" ? "justify-end" : "justify-start"}`}>
+            <p
+              className={`max-w-[85%] rounded-2xl px-4 py-2.5 text-sm leading-relaxed ${
+                m.from === "user"
+                  ? "bg-primary text-primary-foreground"
+                  : "border border-border/60 bg-[#0f1c1b] text-foreground"
+              }`}
+            >
+              {m.text}
+            </p>
+          </div>
+        ))}
+      </div>
+
+      <div className="mt-4 flex gap-2 overflow-x-auto pb-1">
+        {QUICK.map((q) => (
+          <button
+            key={q}
+            type="button"
+            onClick={() => send(q)}
+            className="min-h-9 shrink-0 rounded-full border border-border/60 bg-[#0d1817] px-3 text-[11px] text-muted-foreground hover:border-primary/50 hover:text-foreground"
+          >
+            {q}
+          </button>
+        ))}
+      </div>
+
+      <form
+        className="mt-4 flex gap-2"
+        onSubmit={(e) => {
+          e.preventDefault();
+          send(draft);
+        }}
+      >
+        <input
+          value={draft}
+          onChange={(e) => setDraft(e.target.value)}
+          placeholder="Scrivi al consulente…"
+          aria-label="Messaggio al consulente"
+          className="min-h-12 flex-1 rounded-xl border border-border/60 bg-[#0d1817] px-4 text-sm outline-none focus:border-primary"
+        />
+        <Button type="submit" className="min-h-12 rounded-none px-5">
+          <Send className="h-4 w-4" />
+        </Button>
+      </form>
+
+      <button
+        type="button"
+        onClick={() => onGo("vetrina")}
+        className="mt-4 inline-flex items-center gap-1 text-xs font-semibold text-primary"
+      >
+        Apri la vetrina <ChevronRight className="h-3.5 w-3.5" />
+      </button>
+    </AppShell>
+  );
+}
+
+/* ══════════ Magazzino ricambi ══════════ */
+
+const PARTS = [
+  { cod: "AR-4120", nome: "Kit pastiglie anteriori", stock: 14, prezzo: 78, bay: "Ponte 1" },
+  { cod: "AR-8802", nome: "Filtro olio V8", stock: 6, prezzo: 32, bay: "Ponte 1" },
+  { cod: "AR-2210", nome: "Cinghia distribuzione", stock: 0, prezzo: 210, bay: "Ordinato" },
+  { cod: "AR-7715", nome: "Pneumatico 245/40 R19", stock: 8, prezzo: 168, bay: "Magazzino" },
+  { cod: "AR-9004", nome: "Cavo ricarica Type 2", stock: 3, prezzo: 240, bay: "Reparto EV" },
+];
+
+function Ricambi() {
+  const [q, setQ] = useState("");
+  const [cart, setCart] = useState<string[]>([]);
+  const list = PARTS.filter(
+    (p) => p.nome.toLowerCase().includes(q.toLowerCase()) || p.cod.toLowerCase().includes(q.toLowerCase()),
+  );
+  const totale = PARTS.filter((p) => cart.includes(p.cod)).reduce((s, p) => s + p.prezzo, 0);
+
+  return (
+    <AppShell subtitle="Staff officina" title="Magazzino ricambi">
+      <div className="flex items-center gap-2 rounded-xl border border-border/60 bg-[#0d1817] px-3">
+        <Search className="h-4 w-4 text-muted-foreground" />
+        <input
+          value={q}
+          onChange={(e) => setQ(e.target.value)}
+          placeholder="Cerca codice o ricambio"
+          aria-label="Cerca ricambio"
+          className="min-h-12 flex-1 bg-transparent text-sm outline-none"
+        />
+      </div>
+
+      <div className="mt-4 space-y-2">
+        {list.map((p) => {
+          const inCart = cart.includes(p.cod);
+          return (
+            <div key={p.cod} className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-border/60 bg-[#0d1817] p-4">
+              <div>
+                <p className="text-sm font-semibold">{p.nome}</p>
+                <p className="text-[11px] text-muted-foreground">
+                  {p.cod} · {p.bay} · {eur(p.prezzo)}
+                </p>
+              </div>
+              <div className="flex items-center gap-3">
+                <span
+                  className={`rounded-full px-3 py-1 text-[11px] font-semibold ${
+                    p.stock === 0 ? "bg-red-500/15 text-red-400" : p.stock < 5 ? "bg-amber-500/15 text-amber-400" : "bg-primary/15 text-primary"
+                  }`}
+                >
+                  {p.stock === 0 ? "esaurito" : `${p.stock} pz`}
+                </span>
+                <Button
+                  size="sm"
+                  variant={inCart ? "outline" : "default"}
+                  onClick={() => setCart((c) => (inCart ? c.filter((x) => x !== p.cod) : [...c, p.cod]))}
+                  className="min-h-10 rounded-none text-[11px] uppercase tracking-[0.14em]"
+                >
+                  {inCart ? "Nell'ordine" : p.stock === 0 ? "Ordina" : "Impegna"}
+                </Button>
+              </div>
+            </div>
+          );
+        })}
+        {list.length === 0 && (
+          <p className="rounded-2xl border border-border/60 bg-[#0d1817] p-6 text-center text-sm text-muted-foreground">
+            Nessun ricambio trovato.
+          </p>
+        )}
+      </div>
+
+      <div className="mt-5 flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-primary/40 bg-primary/5 p-4">
+        <div>
+          <p className="text-[10px] uppercase tracking-[0.2em] text-primary">Ordine in corso</p>
+          <p className="mt-1 font-heading text-xl font-semibold">{cart.length} righe · {eur(totale)}</p>
+        </div>
+        <Button className="min-h-11 rounded-none uppercase tracking-[0.14em]">Invia al fornitore</Button>
+      </div>
+    </AppShell>
+  );
+}
+
+/* ══════════ Contenitore con navigazione ══════════ */
+
+function AureliaScreens({
+  tab,
+  setTab,
+  vehicle,
+  setVehicle,
+}: {
+  tab: TabId;
+  setTab: (t: TabId) => void;
+  vehicle: Vehicle;
+  setVehicle: (v: Vehicle) => void;
+}) {
+  const open = (v: Vehicle) => {
+    setVehicle(v);
+    setTab("scheda");
+  };
+  return (
+    <>
+      {tab === "home" && <HomeApp vehicle={vehicle} onGo={setTab} onOpen={open} />}
+      {tab === "vetrina" && <Vetrina onOpen={open} />}
       {tab === "scheda" && <Scheda vehicle={vehicle} onBook={() => setTab("testdrive")} />}
       {tab === "testdrive" && <TestDrive vehicle={vehicle} />}
       {tab === "permuta" && <Permuta />}
+      {tab === "chat" && <ChatIA onGo={setTab} />}
       {tab === "officina" && <Officina />}
+      {tab === "ricambi" && <Ricambi />}
       {tab === "garage" && <Garage />}
       {tab === "crm" && <Crm />}
-    </div>
+    </>
+  );
+}
+
+/** Guscio mobile 1:1 col mockup: status bar iOS, header app, bottom tab bar. */
+function AureliaMobileShell() {
+  const [tab, setTab] = useState<TabId>("home");
+  const [vehicle, setVehicle] = useState<Vehicle>(VEHICLES[0]);
+  const [more, setMore] = useState(false);
+
+  const primary = TABS.filter((t) => MOBILE_PRIMARY.includes(t.id));
+  const secondary = TABS.filter((t) => !MOBILE_PRIMARY.includes(t.id));
+
+  return (
+    <VariantCtx.Provider value="mobile">
+      <div className="aurelia-phone-scope flex h-full flex-col bg-[#08100f] text-foreground">
+        {/* status bar iOS */}
+        <div className="flex shrink-0 items-center justify-between px-6 pb-1 pt-3 text-[11px] font-semibold text-foreground">
+          <span>9:41</span>
+          <span className="flex items-center gap-1.5">
+            <Signal className="h-3 w-3" />
+            <Wifi className="h-3 w-3" />
+            <BatteryFull className="h-3.5 w-3.5" />
+          </span>
+        </div>
+
+        {/* header app */}
+        <div className="flex shrink-0 items-center justify-between border-b border-border/60 bg-[#0f1c1b] px-4 py-2.5">
+          <span className="font-heading text-[11px] tracking-[0.3em]">AURELIA MOTORI</span>
+          <span className="relative inline-flex h-8 w-8 items-center justify-center rounded-full border border-border/60">
+            <Bell className="h-3.5 w-3.5 text-muted-foreground" />
+            <span className="absolute right-1.5 top-1.5 h-1.5 w-1.5 rounded-full bg-primary" />
+          </span>
+        </div>
+
+        {/* contenuto scrollabile */}
+        <div className="relative min-h-0 flex-1 overflow-y-auto overscroll-contain">
+          <AureliaScreens tab={tab} setTab={setTab} vehicle={vehicle} setVehicle={setVehicle} />
+          <div className="h-4" />
+
+          {more && (
+            <div className="absolute inset-0 z-20 flex items-end bg-black/60 backdrop-blur-sm" onClick={() => setMore(false)}>
+              <div
+                className="w-full rounded-t-3xl border-t border-border/60 bg-[#0f1c1b] p-4"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <p className="mb-3 text-[10px] font-bold uppercase tracking-[0.24em] text-primary">Altre aree</p>
+                <div className="grid grid-cols-3 gap-2">
+                  {secondary.map(({ id, label, icon: Icon, role }) => (
+                    <button
+                      key={id}
+                      type="button"
+                      onClick={() => {
+                        setTab(id);
+                        setMore(false);
+                      }}
+                      className="flex min-h-[86px] flex-col items-center justify-center gap-1.5 rounded-2xl border border-border/60 bg-[#0d1817] px-1 text-center"
+                    >
+                      <Icon className="h-5 w-5 text-primary" />
+                      <span className="text-[10px] font-semibold leading-tight">{label}</span>
+                      <span className="text-[9px] uppercase tracking-[0.14em] text-muted-foreground">{role}</span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* bottom tab bar */}
+        <div className="grid shrink-0 grid-cols-5 border-t border-border/60 bg-[#0b1413] px-1 pb-5 pt-2">
+          {primary.map(({ id, label, icon: Icon }) => (
+            <button
+              key={id}
+              type="button"
+              onClick={() => {
+                setTab(id);
+                setMore(false);
+              }}
+              className={`flex flex-col items-center gap-1 rounded-xl py-1 text-[9px] font-semibold transition-colors ${
+                tab === id && !more ? "text-primary" : "text-muted-foreground"
+              }`}
+            >
+              <Icon className="h-[18px] w-[18px]" />
+              {label}
+            </button>
+          ))}
+          <button
+            type="button"
+            onClick={() => setMore((m) => !m)}
+            className={`flex flex-col items-center gap-1 rounded-xl py-1 text-[9px] font-semibold transition-colors ${
+              more || !MOBILE_PRIMARY.includes(tab) ? "text-primary" : "text-muted-foreground"
+            }`}
+          >
+            <LayoutDashboard className="h-[18px] w-[18px]" />
+            Altro
+          </button>
+        </div>
+      </div>
+
+      {/* forza il layout a colonna singola dentro il telefono */}
+      <style>{`
+        .aurelia-phone-scope .grid { grid-template-columns: 1fr !important; }
+        .aurelia-phone-scope .grid-cols-2 { grid-template-columns: repeat(2, minmax(0,1fr)) !important; }
+        .aurelia-phone-scope .grid-cols-3 { grid-template-columns: repeat(3, minmax(0,1fr)) !important; }
+        .aurelia-phone-scope .grid-cols-4 { grid-template-columns: repeat(4, minmax(0,1fr)) !important; }
+        .aurelia-phone-scope .grid-cols-5 { grid-template-columns: repeat(5, minmax(0,1fr)) !important; }
+        .aurelia-phone-scope form.mt-4 { flex-direction: row !important; }
+        .aurelia-phone-scope .flex.flex-col.gap-3.sm\\:flex-row { flex-direction: column !important; }
+      `}</style>
+    </VariantCtx.Provider>
+  );
+}
+
+export { AureliaMobileShell };
+
+export default function AureliaApp({ variant = "desktop" }: { variant?: Variant } = {}) {
+  const [tab, setTab] = useState<TabId>("home");
+  const [vehicle, setVehicle] = useState<Vehicle>(VEHICLES[0]);
+
+  if (variant === "mobile") return <AureliaMobileShell />;
+
+  return (
+    <VariantCtx.Provider value="desktop">
+      <div className="mx-auto max-w-6xl overflow-hidden rounded-3xl border border-border/60 bg-[#08100f] shadow-[0_30px_120px_rgba(0,0,0,0.45)] backdrop-blur">
+        {/* barra app */}
+        <div className="flex items-center justify-between border-b border-border/60 bg-[#0f1c1b] px-5 py-3">
+          <span className="font-heading text-sm tracking-[0.3em]">AURELIA MOTORI</span>
+          <span className="text-[10px] uppercase tracking-[0.22em] text-muted-foreground">webapp · demo navigabile</span>
+        </div>
+
+        {/* tab */}
+        <div className="-mx-px flex gap-1 overflow-x-auto border-b border-border/60 bg-[#0b1413] px-3 py-2">
+          {TABS.map(({ id, label, icon: Icon }) => (
+            <button
+              key={id}
+              type="button"
+              onClick={() => setTab(id)}
+              className={`inline-flex min-h-10 shrink-0 items-center gap-2 rounded-full px-4 text-xs font-semibold transition-colors ${
+                tab === id ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              <Icon className="h-3.5 w-3.5" /> {label}
+            </button>
+          ))}
+        </div>
+
+        <AureliaScreens tab={tab} setTab={setTab} vehicle={vehicle} setVehicle={setVehicle} />
+      </div>
+    </VariantCtx.Provider>
   );
 }
