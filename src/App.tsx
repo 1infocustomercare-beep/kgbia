@@ -628,6 +628,7 @@ function App() {
               )}
 
               <BrowserRouter>
+                <EmpireGlassShell />
                 <ConditionalDNABackground />
                 <RouteErrorBoundary>
                   <Suspense fallback={<PageLoader />}>
