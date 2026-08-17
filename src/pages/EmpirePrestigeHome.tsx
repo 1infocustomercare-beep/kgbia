@@ -1,4 +1,5 @@
-import React, { useEffect } from "react";
+import React, { useEffect, lazy } from "react";
+import DeferredSection, { IdleMount } from "@/components/perf/DeferredSection";
 import LandingNav from "@/components/landing/LandingNav";
 import { getLenis, destroyLenis } from "@/lib/lenis-singleton";
 
@@ -11,24 +12,37 @@ import PrestigeMetrics from "@/components/empire-home/prestige/PrestigeMetrics";
 import PrestigeServices from "@/components/empire-home/prestige/PrestigeServices";
 import PrestigeHorizontalScroll from "@/components/empire-home/prestige/PrestigeHorizontalScroll";
 import PrestigeIndustries from "@/components/empire-home/prestige/PrestigeIndustries";
-import PrestigePortfolio from "@/components/empire-home/prestige/PrestigePortfolio";
-
-import PrestigeAgents from "@/components/empire-home/prestige/PrestigeAgents";
-import PrestigeFinalCTA from "@/components/empire-home/prestige/PrestigeFinalCTA";
 import PrestigeProgressBar from "@/components/empire-home/prestige/PrestigeProgressBar";
 import { PrestigeLangProvider } from "@/components/empire-home/prestige/PrestigeLang";
-import {
-  PrestigeHowItWorks,
-  PrestigePricing,
-  PrestigeFAQ,
-  PrestigeLeadForm,
-  PrestigeStickyCTA,
-} from "@/components/empire-home/prestige/PrestigeConversion";
-
-import PrestigeFooter from "@/components/empire-home/prestige/PrestigeFooter";
-import EmpireVoiceAgent from "@/components/public/EmpireVoiceAgent";
 import EmpireLogoSplash from "@/components/empire-home/EmpireLogoSplash";
 import { HomepageContentProvider, useHomepageContent } from "@/hooks/useHomepageContent";
+
+/* ---------------------------------------------------------------------------
+ * Code-splitting sotto la piega.
+ * Le sezioni oltre la prima schermata (portfolio, agents, prezzi, faq, lead,
+ * footer) e il voice agent (SDK audio pesante) vengono caricate solo quando
+ * servono: meno JS al primo paint → LCP e TBT più bassi su mobile.
+ * ------------------------------------------------------------------------- */
+const PrestigePortfolio = lazy(() => import("@/components/empire-home/prestige/PrestigePortfolio"));
+const PrestigeAgents = lazy(() => import("@/components/empire-home/prestige/PrestigeAgents"));
+const PrestigeFinalCTA = lazy(() => import("@/components/empire-home/prestige/PrestigeFinalCTA"));
+const PrestigeFooter = lazy(() => import("@/components/empire-home/prestige/PrestigeFooter"));
+const PrestigeHowItWorks = lazy(() =>
+  import("@/components/empire-home/prestige/PrestigeConversion").then((m) => ({ default: m.PrestigeHowItWorks })),
+);
+const PrestigePricing = lazy(() =>
+  import("@/components/empire-home/prestige/PrestigeConversion").then((m) => ({ default: m.PrestigePricing })),
+);
+const PrestigeFAQ = lazy(() =>
+  import("@/components/empire-home/prestige/PrestigeConversion").then((m) => ({ default: m.PrestigeFAQ })),
+);
+const PrestigeLeadForm = lazy(() =>
+  import("@/components/empire-home/prestige/PrestigeConversion").then((m) => ({ default: m.PrestigeLeadForm })),
+);
+const PrestigeStickyCTA = lazy(() =>
+  import("@/components/empire-home/prestige/PrestigeConversion").then((m) => ({ default: m.PrestigeStickyCTA })),
+);
+const EmpireVoiceAgent = lazy(() => import("@/components/public/EmpireVoiceAgent"));
 
 /** Voice agent memoised so it never re-renders with the page scroll. */
 const SafeVoiceAgent = React.memo(() => <EmpireVoiceAgent />, () => true);
@@ -111,51 +125,59 @@ function EmpirePrestigeHomeInner() {
         </div>
 
         {/* PORTFOLIO — UNICA sezione mockup della home (case study per settore) */}
-        <div id="portfolio" data-portfolio-root>
-          <PrestigePortfolio />
-        </div>
-
-
-
-
-
-
+        <DeferredSection id="portfolio" minHeight={900}>
+          <div data-portfolio-root>
+            <PrestigePortfolio />
+          </div>
+        </DeferredSection>
 
         {/* COME FUNZIONA — 3 step con linea di progresso */}
-        <div id="how">
+        <DeferredSection id="how" minHeight={620}>
           <PrestigeHowItWorks />
-        </div>
+        </DeferredSection>
 
         {/* AI AGENTS marquee */}
-        <PrestigeAgents />
+        <DeferredSection minHeight={520}>
+          <PrestigeAgents />
+        </DeferredSection>
 
         {/* PREZZI */}
-        <div id="pricing">
+        <DeferredSection id="pricing" minHeight={860}>
           <PrestigePricing />
-        </div>
+        </DeferredSection>
 
         {/* FAQ */}
-        <div id="faq">
+        <DeferredSection id="faq" minHeight={620}>
           <PrestigeFAQ />
-        </div>
+        </DeferredSection>
 
         {/* LEAD FORM (ancora #lead per Parla con un consulente) */}
-        <div id="lead">
+        <DeferredSection id="lead" minHeight={720}>
           <PrestigeLeadForm />
-        </div>
+        </DeferredSection>
 
         {/* CTA FINALE (ancora #contatti per la navbar) */}
-        <PrestigeFinalCTA />
+        <DeferredSection minHeight={520}>
+          <PrestigeFinalCTA />
+        </DeferredSection>
         </main>
 
         {/* FOOTER */}
-        <PrestigeFooter />
+        <DeferredSection minHeight={420}>
+          <PrestigeFooter />
+        </DeferredSection>
 
-        <PrestigeStickyCTA />
+        <IdleMount delay={1800}>
+          <PrestigeStickyCTA />
+        </IdleMount>
       </div>
       {/* Voice agent MUST live outside prestige-root: ancestors with transforms/clip
           break position:fixed and would drop the FAB at the bottom of the page. */}
-      {!isPreview && <SafeVoiceAgent />}
+      {!isPreview && (
+        <IdleMount delay={2600}>
+          <SafeVoiceAgent />
+        </IdleMount>
+      )}
     </>
   );
 }
