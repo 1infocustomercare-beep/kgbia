@@ -7,6 +7,7 @@ import { SECTOR_MOCKUP_CATALOG, getSectorHeroImages, type MockupImage } from "@/
 import { SECTOR_MOCKUP_IMAGES } from "@/data/sector-mockup-images";
 import { getSectorGroup } from "@/data/sector-mockups";
 import { Input } from "@/components/ui/input";
+import { GlassCard, GlassButton, GlassInput } from "@/components/glass";
 import {
   ArrowLeft, Search, ArrowRight, ChevronDown, ChevronUp, Crown,
   ChefHat, Car, Scissors, Heart, Store, Dumbbell, Building,
