@@ -376,7 +376,7 @@ export default function AuthPage() {
               </div>
               <GlassButton onClick={handleLogin} disabled={loading} block size="lg">
                 {loading ? "Accesso..." : "Accedi"}
-              </Button>
+              </GlassButton>
               <div className="text-center space-y-2">
                 <button type="button" onClick={() => navigate("/reset-password")} className="text-xs text-foreground/75 hover:text-foreground transition-colors">
                   Password dimenticata?
@@ -481,7 +481,7 @@ export default function AuthPage() {
                   </div>
                   <GlassButton onClick={handleRegister} disabled={loading || (role !== "partner" && !sector)} block size="lg">
                     {loading ? "Registrazione..." : role === "partner" ? "Registrati come Venditore" : "Crea Account"}
-                  </Button>
+                  </GlassButton>
                   <p className="text-xs text-center text-foreground/75">
                     Hai già un account?{" "}
                     <button type="button" onClick={openLogin} className="text-primary font-semibold underline underline-offset-4 decoration-primary/50 hover:text-primary/80">Accedi</button>
