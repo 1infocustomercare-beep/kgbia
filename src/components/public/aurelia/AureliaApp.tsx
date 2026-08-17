@@ -134,7 +134,7 @@ function AppShell({ children, title, subtitle }: { children: React.ReactNode; ti
           <p className="text-[10px] font-bold uppercase tracking-[0.28em] text-primary">{subtitle}</p>
           <h3 className="mt-1 font-heading text-xl font-semibold sm:text-2xl">{title}</h3>
         </div>
-        <span className="hidden items-center gap-2 rounded-full border border-border/60 bg-card/70 px-3 py-1.5 text-[11px] text-muted-foreground sm:inline-flex">
+        <span className="hidden items-center gap-2 rounded-full border border-border/60 bg-[#0f1c1b] px-3 py-1.5 text-[11px] text-muted-foreground sm:inline-flex">
           <span className="h-1.5 w-1.5 rounded-full bg-primary" /> live
         </span>
       </div>
@@ -145,7 +145,7 @@ function AppShell({ children, title, subtitle }: { children: React.ReactNode; ti
 
 function Field({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-xl border border-border/60 bg-card/50 p-3">
+    <div className="rounded-xl border border-border/60 bg-[#0c1615] p-3">
       <p className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground">{label}</p>
       <p className="mt-1 text-sm font-semibold">{value}</p>
     </div>
@@ -172,7 +172,7 @@ function Vetrina({ onOpen }: { onOpen: (v: Vehicle) => void }) {
             className={`min-h-9 shrink-0 snap-start rounded-full border px-4 text-xs font-semibold transition-colors ${
               filter === f.id
                 ? "border-primary bg-primary text-primary-foreground"
-                : "border-border/60 bg-card/50 text-muted-foreground hover:text-foreground"
+                : "border-border/60 bg-[#0c1615] text-muted-foreground hover:text-foreground"
             }`}
           >
             {f.label}
@@ -186,7 +186,7 @@ function Vetrina({ onOpen }: { onOpen: (v: Vehicle) => void }) {
             key={v.id}
             type="button"
             onClick={() => onOpen(v)}
-            className="group overflow-hidden rounded-2xl border border-border/60 bg-card/60 text-left transition-all hover:-translate-y-1 hover:border-primary/50"
+            className="group overflow-hidden rounded-2xl border border-border/60 bg-[#0d1817] text-left transition-all hover:-translate-y-1 hover:border-primary/50"
           >
             <div className="relative aspect-[4/3] overflow-hidden bg-black">
               <img
@@ -267,7 +267,7 @@ function Scheda({ vehicle, onBook }: { vehicle: Vehicle; onBook: () => void }) {
             <Field label="Cambio" value={vehicle.gear} />
           </div>
 
-          <div className="mt-5 rounded-2xl border border-border/60 bg-card/60 p-4">
+          <div className="mt-5 rounded-2xl border border-border/60 bg-[#0d1817] p-4">
             <p className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">
               <Fuel className="h-3.5 w-3.5 text-primary" /> Simulatore finanziamento
             </p>
@@ -344,7 +344,7 @@ function TestDrive({ vehicle }: { vehicle: Vehicle }) {
 
   return (
     <AppShell subtitle="Cliente" title="Prenota il test drive">
-      <div className="rounded-2xl border border-border/60 bg-card/60 p-4">
+      <div className="rounded-2xl border border-border/60 bg-[#0d1817] p-4">
         <p className="text-xs uppercase tracking-[0.18em] text-muted-foreground">Veicolo selezionato</p>
         <p className="mt-1 font-heading text-lg font-semibold">{vehicle.name} · {vehicle.trim}</p>
       </div>
@@ -357,7 +357,7 @@ function TestDrive({ vehicle }: { vehicle: Vehicle }) {
             type="button"
             onClick={() => setDay(d)}
             className={`min-h-11 shrink-0 rounded-xl border px-5 text-sm font-semibold transition-colors ${
-              day === d ? "border-primary bg-primary text-primary-foreground" : "border-border/60 bg-card/50 text-muted-foreground"
+              day === d ? "border-primary bg-primary text-primary-foreground" : "border-border/60 bg-[#0c1615] text-muted-foreground"
             }`}
           >
             {d}
@@ -377,10 +377,10 @@ function TestDrive({ vehicle }: { vehicle: Vehicle }) {
               onClick={() => setSlot(s)}
               className={`min-h-11 rounded-xl border text-sm font-semibold transition-colors ${
                 busy
-                  ? "cursor-not-allowed border-border/40 bg-muted/30 text-muted-foreground/50 line-through"
+                  ? "cursor-not-allowed border-border/40 bg-white/5 text-muted-foreground/50 line-through"
                   : slot === s
                     ? "border-primary bg-primary text-primary-foreground"
-                    : "border-border/60 bg-card/50 hover:border-primary/50"
+                    : "border-border/60 bg-[#0c1615] hover:border-primary/50"
               }`}
             >
               {s}
@@ -431,7 +431,7 @@ function Permuta() {
               value={targa}
               onChange={(e) => setTarga(e.target.value.toUpperCase())}
               placeholder="AB 123 CD"
-              className="mt-2 min-h-12 w-full rounded-xl border border-border/60 bg-card/60 px-4 text-base font-semibold tracking-[0.2em] outline-none focus:border-primary"
+              className="mt-2 min-h-12 w-full rounded-xl border border-border/60 bg-[#0d1817] px-4 text-base font-semibold tracking-[0.2em] outline-none focus:border-primary"
             />
           </div>
           <div>
@@ -455,7 +455,7 @@ function Permuta() {
                   type="button"
                   onClick={() => setStato(s)}
                   className={`min-h-11 rounded-xl border px-2 text-xs font-semibold ${
-                    stato === s ? "border-primary bg-primary text-primary-foreground" : "border-border/60 bg-card/50 text-muted-foreground"
+                    stato === s ? "border-primary bg-primary text-primary-foreground" : "border-border/60 bg-[#0c1615] text-muted-foreground"
                   }`}
                 >
                   {s}
@@ -468,7 +468,7 @@ function Permuta() {
           </Button>
         </div>
 
-        <div className="flex flex-col justify-center rounded-2xl border border-border/60 bg-card/60 p-7 text-center">
+        <div className="flex flex-col justify-center rounded-2xl border border-border/60 bg-[#0d1817] p-7 text-center">
           {result === null ? (
             <>
               <Repeat className="mx-auto h-9 w-9 text-primary/60" />
@@ -535,7 +535,7 @@ function Officina() {
     <AppShell subtitle="Staff officina" title="Agenda ponti · oggi">
       <div className="space-y-3">
         {BAYS.map((b) => (
-          <div key={b.bay} className="rounded-2xl border border-border/60 bg-card/60 p-4">
+          <div key={b.bay} className="rounded-2xl border border-border/60 bg-[#0d1817] p-4">
             <div className="flex flex-wrap items-center justify-between gap-2">
               <div>
                 <p className="text-[10px] uppercase tracking-[0.22em] text-primary">{b.bay}</p>
@@ -554,7 +554,7 @@ function Officina() {
                 {b.state}
               </span>
             </div>
-            <div className="mt-4 h-1.5 w-full overflow-hidden rounded-full bg-muted/40">
+            <div className="mt-4 h-1.5 w-full overflow-hidden rounded-full bg-white/10">
               <div className="h-full rounded-full bg-primary" style={{ width: `${b.progress}%` }} />
             </div>
             <p className="mt-2 inline-flex items-center gap-1.5 text-[11px] text-muted-foreground">
@@ -569,7 +569,7 @@ function Officina() {
         {preventivi.map((p) => {
           const signed = firmati.includes(p.id);
           return (
-            <div key={p.id} className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-border/60 bg-card/60 p-4">
+            <div key={p.id} className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-border/60 bg-[#0d1817] p-4">
               <div>
                 <p className="font-heading text-base font-semibold">{p.cliente}</p>
                 <p className="text-xs text-muted-foreground">{p.voce} · {eur(p.tot)}</p>
@@ -604,12 +604,12 @@ function Garage() {
           <p className="mt-4 font-heading text-lg font-semibold">Garanzia attiva</p>
           <p className="text-xs text-muted-foreground">24 mesi · scade 09/2027</p>
         </div>
-        <div className="rounded-2xl border border-border/60 bg-card/60 p-5">
+        <div className="rounded-2xl border border-border/60 bg-[#0d1817] p-5">
           <Settings2 className="h-6 w-6 text-primary" />
           <p className="mt-4 font-heading text-lg font-semibold">Prossimo tagliando</p>
           <p className="text-xs text-muted-foreground">tra 3.200 km · o 14 settimane</p>
         </div>
-        <div className="rounded-2xl border border-border/60 bg-card/60 p-5">
+        <div className="rounded-2xl border border-border/60 bg-[#0d1817] p-5">
           <User className="h-6 w-6 text-primary" />
           <p className="mt-4 font-heading text-lg font-semibold">Consulente</p>
           <p className="text-xs text-muted-foreground">Marco Ferrero · risponde in 4 min</p>
@@ -619,7 +619,7 @@ function Garage() {
       <p className="mt-7 text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">Storico interventi</p>
       <div className="mt-3 overflow-hidden rounded-2xl border border-border/60">
         {storico.map((s, i) => (
-          <div key={s.data} className={`flex items-center justify-between gap-3 p-4 ${i % 2 ? "bg-card/40" : "bg-card/70"}`}>
+          <div key={s.data} className={`flex items-center justify-between gap-3 p-4 ${i % 2 ? "bg-[#0b1413]" : "bg-[#0f1c1b]"}`}>
             <div>
               <p className="text-sm font-semibold">{s.voce}</p>
               <p className="text-xs text-muted-foreground">{s.data} · {eur(s.tot)}</p>
@@ -659,7 +659,7 @@ function Crm() {
           { l: "Lead attivi", v: "96" },
           { l: "Tempo risposta", v: "4 min" },
         ].map((k) => (
-          <div key={k.l} className="rounded-2xl border border-border/60 bg-card/60 p-4">
+          <div key={k.l} className="rounded-2xl border border-border/60 bg-[#0d1817] p-4">
             <p className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground">{k.l}</p>
             <p className="mt-2 font-heading text-2xl font-semibold text-primary">{k.v}</p>
           </div>
@@ -671,12 +671,12 @@ function Crm() {
       </p>
       <div className="mt-3 space-y-2">
         {funnel.map((f) => (
-          <div key={f.label} className="rounded-xl border border-border/60 bg-card/50 p-3">
+          <div key={f.label} className="rounded-xl border border-border/60 bg-[#0c1615] p-3">
             <div className="flex justify-between text-xs">
               <span className="text-muted-foreground">{f.label}</span>
               <span className="font-semibold">{f.v.toLocaleString("it-IT")}</span>
             </div>
-            <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-muted/40">
+            <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-white/10">
               <div className="h-full rounded-full bg-primary" style={{ width: `${f.w}%` }} />
             </div>
           </div>
@@ -686,14 +686,14 @@ function Crm() {
       <p className="mt-7 text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">Lead per temperatura</p>
       <div className="mt-3 overflow-hidden rounded-2xl border border-border/60">
         {leads.map((l, i) => (
-          <div key={l.nome} className={`flex flex-wrap items-center justify-between gap-2 p-4 ${i % 2 ? "bg-card/40" : "bg-card/70"}`}>
+          <div key={l.nome} className={`flex flex-wrap items-center justify-between gap-2 p-4 ${i % 2 ? "bg-[#0b1413]" : "bg-[#0f1c1b]"}`}>
             <div>
               <p className="text-sm font-semibold">{l.nome}</p>
               <p className="text-xs text-muted-foreground">{l.auto} · {l.nota}</p>
             </div>
             <span
               className={`rounded-full px-3 py-1 text-[11px] font-semibold ${
-                l.temp === "Calda" ? "bg-primary/15 text-primary" : l.temp === "Tiepida" ? "bg-amber-500/15 text-amber-400" : "bg-muted/40 text-muted-foreground"
+                l.temp === "Calda" ? "bg-primary/15 text-primary" : l.temp === "Tiepida" ? "bg-amber-500/15 text-amber-400" : "bg-white/10 text-muted-foreground"
               }`}
             >
               {l.temp}
@@ -712,15 +712,15 @@ export default function AureliaApp() {
   const [vehicle, setVehicle] = useState<Vehicle>(VEHICLES[0]);
 
   return (
-    <div className="mx-auto max-w-6xl overflow-hidden rounded-3xl border border-border/60 bg-background/80 shadow-[0_30px_120px_rgba(0,0,0,0.45)] backdrop-blur">
+    <div className="mx-auto max-w-6xl overflow-hidden rounded-3xl border border-border/60 bg-[#08100f] shadow-[0_30px_120px_rgba(0,0,0,0.45)] backdrop-blur">
       {/* barra app */}
-      <div className="flex items-center justify-between border-b border-border/60 bg-card/70 px-5 py-3">
+      <div className="flex items-center justify-between border-b border-border/60 bg-[#0f1c1b] px-5 py-3">
         <span className="font-heading text-sm tracking-[0.3em]">AURELIA MOTORI</span>
         <span className="text-[10px] uppercase tracking-[0.22em] text-muted-foreground">webapp · demo navigabile</span>
       </div>
 
       {/* tab */}
-      <div className="-mx-px flex gap-1 overflow-x-auto border-b border-border/60 bg-card/40 px-3 py-2">
+      <div className="-mx-px flex gap-1 overflow-x-auto border-b border-border/60 bg-[#0b1413] px-3 py-2">
         {TABS.map(({ id, label, icon: Icon }) => (
           <button
             key={id}
