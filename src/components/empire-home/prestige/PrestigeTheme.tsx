@@ -328,6 +328,28 @@ export default function PrestigeTheme() {
         .prestige-scrub-grid { transform: none !important; }
       }
 
+      /* ── Modalità "lite": hardware modesto / save-data / reduced-motion ──
+         Riduce i layer compositi senza cambiare l'identità visiva:
+         glow statici, griglia senza parallasse, nessun grain animato. */
+      html[data-perf-tier="lite"] .prestige-scrub-aura {
+        animation: none;
+        opacity: .9;
+        transform: translate(var(--pb-tx, 0px), 0) scale(1.02);
+        will-change: auto;
+      }
+      html[data-perf-tier="lite"] .prestige-scrub-grid {
+        opacity: .1;
+        transform: none;
+        will-change: auto;
+        background-size: 96px 96px;
+      }
+      html[data-perf-tier="lite"] .prestige-noise {
+        animation: none;
+        opacity: .04;
+      }
+      /* Su puntatore coarse lo spotlight non ha input da seguire: via il layer. */
+      html[data-pointer="coarse"] .prestige-scrub-spot { display: none; }
+
 
 
       /* ── Premium additive layer ─────────────────────────────────── */
