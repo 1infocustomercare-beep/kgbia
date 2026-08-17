@@ -19,6 +19,7 @@ import {
 import { buildPublicSiteUrl } from "@/lib/public-site-path";
 import privateJetHangar from "@/assets/hero-cinematic/private-jet-hangar.jpg";
 import aureliaCardHero from "@/assets/demo-aurelia/aurelia-card-hero.jpg";
+import PrestigeTheme from "@/components/empire-home/prestige/PrestigeTheme";
 
 
 const ALL_INDUSTRIES = Object.keys(INDUSTRY_CONFIGS) as IndustryId[];
@@ -129,9 +130,9 @@ const HeroPhoneShowcase = ({ navigate }: { navigate: (p: string) => void }) => {
   return (
     <div className="relative z-10 mx-4 mt-5 mb-6 rounded-2xl overflow-hidden"
       style={{
-        background: "linear-gradient(160deg, hsl(220 20% 6%) 0%, hsl(240 18% 10%) 40%, hsl(265 22% 13%) 70%, hsl(220 20% 8%) 100%)",
-        boxShadow: "0 16px 60px hsla(265,50%,6%,0.7), inset 0 1px 0 hsla(265,40%,60%,0.08)",
-        border: "1px solid hsla(265,30%,30%,0.2)",
+        background: "linear-gradient(160deg, hsl(220 20% 6%) 0%, hsl(240 18% 10%) 40%, hsl(196 22% 13%) 70%, hsl(220 20% 8%) 100%)",
+        boxShadow: "0 16px 60px hsla(190,50%,6%,0.7), inset 0 1px 0 hsla(190,40%,60%,0.08)",
+        border: "1px solid hsla(190,30%,30%,0.2)",
       }}>
       {/* Subtle noise */}
       <div className="absolute inset-0 opacity-[0.03]" style={{
@@ -141,7 +142,7 @@ const HeroPhoneShowcase = ({ navigate }: { navigate: (p: string) => void }) => {
 
       {/* Ambient orbs */}
       <div className="absolute top-[-30%] right-[5%] w-[200px] h-[200px] rounded-full" style={{ background: `radial-gradient(circle, hsla(${sector.color} / 0.15), transparent 60%)`, filter: "blur(60px)", transition: "background 1s ease" }} />
-      <div className="absolute bottom-[-20%] left-[10%] w-[160px] h-[160px] rounded-full" style={{ background: "radial-gradient(circle, hsla(265,50%,40%,0.12), transparent 60%)", filter: "blur(50px)" }} />
+      <div className="absolute bottom-[-20%] left-[10%] w-[160px] h-[160px] rounded-full" style={{ background: "radial-gradient(circle, hsla(190,50%,40%,0.12), transparent 60%)", filter: "blur(50px)" }} />
 
       <div className="relative flex flex-col sm:flex-row items-center gap-4 px-5 py-8 sm:px-10 sm:py-10" style={{ zIndex: 2 }}>
         {/* Left: Text */}
@@ -183,7 +184,7 @@ const HeroPhoneShowcase = ({ navigate }: { navigate: (p: string) => void }) => {
             </button>
             <button onClick={() => { const el = document.getElementById("demo-list"); el?.scrollIntoView({ behavior: "smooth" }); }}
               className="px-5 py-2.5 rounded-xl text-xs font-bold text-white/80 flex items-center gap-1.5 transition-transform hover:scale-105"
-              style={{ background: "hsla(220,20%,16%,0.7)", border: "1px solid hsla(265,30%,45%,0.25)", backdropFilter: "blur(12px)" }}>
+              style={{ background: "hsla(220,20%,16%,0.7)", border: "1px solid hsla(190,30%,45%,0.25)", backdropFilter: "blur(12px)" }}>
               <Eye className="w-3.5 h-3.5" /> Vedi Demo
             </button>
           </div>
@@ -502,48 +503,43 @@ export default function DemoDirectoryPage() {
   const getFeatured = (id: IndustryId) => FEATURED_DEMOS.find(f => f.id === id);
 
   return (
-    <div className="min-h-screen relative overflow-hidden landing-dark force-dark" style={{ background: "linear-gradient(180deg, hsl(265 20% 5%) 0%, hsl(250 18% 7%) 30%, hsl(265 16% 6%) 60%, hsl(250 20% 5%) 100%)" }}>
+    <div className="pglass-scope prestige-root min-h-screen relative overflow-hidden landing-dark force-dark" style={{ background: "linear-gradient(180deg, hsl(196 20% 5%) 0%, hsl(196 18% 7%) 30%, hsl(196 16% 6%) 60%, hsl(196 20% 5%) 100%)" }}>
+      <PrestigeTheme />
       {/* ═══ PREMIUM BACKGROUND — fully opaque, no DNA bleed ═══ */}
-      <div className="fixed inset-0 pointer-events-none z-0">
+      <div className="fixed inset-0 pointer-events-none z-0 pglass-wave">
         {/* Rich gradient base */}
         <div className="absolute inset-0" style={{
-          background: "linear-gradient(165deg, hsl(265 20% 6%) 0%, hsl(255 18% 8%) 20%, hsl(260 16% 7%) 40%, hsl(265 20% 9%) 60%, hsl(255 18% 6%) 80%, hsl(260 20% 5%) 100%)"
+          background: "linear-gradient(165deg, hsl(196 20% 6%) 0%, hsl(196 18% 8%) 20%, hsl(196 16% 7%) 40%, hsl(196 20% 9%) 60%, hsl(196 18% 6%) 80%, hsl(196 20% 5%) 100%)"
         }} />
 
         {/* Ambient orbs — deep, rich, luxurious */}
         <div className="absolute top-[-10%] right-[-5%] w-[700px] h-[700px] rounded-full"
-          style={{ background: "radial-gradient(circle, hsla(265,45%,25%,0.12), transparent 60%)", filter: "blur(180px)" }} />
+          style={{ background: "radial-gradient(circle, hsla(190,45%,25%,0.12), transparent 60%)", filter: "blur(180px)" }} />
         <div className="absolute bottom-[-5%] left-[-10%] w-[600px] h-[600px] rounded-full"
-          style={{ background: "radial-gradient(circle, hsla(38,40%,22%,0.1), transparent 60%)", filter: "blur(160px)" }} />
+          style={{ background: "radial-gradient(circle, hsla(178,40%,22%,0.1), transparent 60%)", filter: "blur(160px)" }} />
         <div className="absolute top-[40%] left-[50%] w-[500px] h-[500px] rounded-full"
           style={{ background: "radial-gradient(circle, hsla(200,35%,20%,0.06), transparent 60%)", filter: "blur(140px)" }} />
 
         {/* Subtle geometric grid */}
         <div className="absolute inset-0 opacity-[0.018]"
           style={{
-            backgroundImage: `linear-gradient(hsla(265,40%,60%,0.08) 1px, transparent 1px), linear-gradient(90deg, hsla(265,40%,60%,0.08) 1px, transparent 1px)`,
+            backgroundImage: `linear-gradient(hsla(190,40%,60%,0.08) 1px, transparent 1px), linear-gradient(90deg, hsla(190,40%,60%,0.08) 1px, transparent 1px)`,
             backgroundSize: "80px 80px"
           }} />
 
         {/* Top accent line */}
         <div className="absolute top-0 left-0 right-0 h-px"
-          style={{ background: "linear-gradient(90deg, transparent 10%, hsla(265,50%,50%,0.15) 30%, hsla(38,45%,50%,0.12) 50%, hsla(265,50%,50%,0.1) 70%, transparent 90%)" }} />
+          style={{ background: "linear-gradient(90deg, transparent 10%, hsla(190,50%,50%,0.15) 30%, hsla(178,45%,50%,0.12) 50%, hsla(190,50%,50%,0.1) 70%, transparent 90%)" }} />
       </div>
 
-      {/* ═══ HEADER ═══ */}
-      <div className="sticky top-0 z-40 border-b"
-        style={{
-          background: "linear-gradient(180deg, hsla(265,22%,10%,0.98), hsla(255,20%,8%,0.96))",
-          backdropFilter: "blur(30px) saturate(1.6)",
-          borderColor: "hsla(265,40%,50%,0.15)",
-          boxShadow: "0 4px 20px hsla(265,40%,15%,0.3)"
-        }}>
+      {/* ═══ HEADER — barra vetro Empire ═══ */}
+      <div className="pglass-stickybar sticky top-0 z-40">
         <div className="max-w-5xl mx-auto px-4 py-3.5 flex items-center gap-3">
-          <button onClick={() => navigate("/")}
-            className="p-2 rounded-xl transition-all duration-200 hover:scale-105"
-            style={{ background: "hsla(265,30%,30%,0.12)", border: "1px solid hsla(265,30%,40%,0.1)" }}>
+          <button onClick={() => navigate("/")} aria-label="Torna alla home"
+            className="pglass-icon-btn w-11 h-11">
             <ArrowLeft className="w-4 h-4 text-foreground/85" />
           </button>
+
           <div className="flex-1 min-w-0">
             <h1 className="text-base font-bold text-foreground font-heading tracking-tight">Esplora i Settori</h1>
             <p className="text-[0.72rem] sm:text-xs text-foreground/90 tracking-wide">{ALL_INDUSTRIES.length} demo live · Preview interattive</p>
@@ -624,10 +620,13 @@ export default function DemoDirectoryPage() {
             placeholder="Cerca settore..."
             className="pl-10 h-11 min-h-[44px] text-foreground placeholder:text-foreground/70 text-sm"
             style={{
-              background: "hsla(240,18%,12%,0.95)",
-              border: "1px solid hsla(265,25%,35%,0.28)",
+              background: "hsla(196,22%,12%,0.72)",
+              backdropFilter: "blur(18px) saturate(150%)",
+              WebkitBackdropFilter: "blur(18px) saturate(150%)",
+              border: "1px solid hsl(178 74% 48% / 0.24)",
               borderRadius: "0.875rem"
             }}
+
           />
         </div>
 
@@ -660,10 +659,10 @@ export default function DemoDirectoryPage() {
                   {/* Category header */}
                   <div className="flex items-center gap-2.5 mb-3 px-1">
                     <div className="h-px flex-1 max-w-[20px]"
-                      style={{ background: "linear-gradient(90deg, hsla(265,40%,50%,0.25), transparent)" }} />
+                      style={{ background: "linear-gradient(90deg, hsla(190,40%,50%,0.25), transparent)" }} />
                     <span className="text-[0.64rem] font-bold tracking-[2.5px] uppercase text-foreground/90">{cat.label}</span>
                     <div className="h-px flex-1"
-                      style={{ background: "linear-gradient(90deg, transparent, hsla(265,30%,40%,0.08))" }} />
+                      style={{ background: "linear-gradient(90deg, transparent, hsla(190,30%,40%,0.08))" }} />
                   </div>
 
                   <div className="space-y-2">
@@ -726,15 +725,18 @@ function SectorCard({ id, index, isExpanded, onToggle, onNavigate, isFeatured, f
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: index * 0.025 }}>
       <div
-        className={`relative rounded-2xl overflow-hidden group transition-all duration-300 ${isExpanded ? "ring-1" : ""}`}
+        className={`pglass-lift relative rounded-2xl overflow-hidden group transition-all duration-300 ${isExpanded ? "ring-1" : ""}`}
         style={{
           background: isFeatured
-            ? `linear-gradient(155deg, hsla(265,22%,16%,0.95), hsla(255,20%,12%,0.93))`
-            : `linear-gradient(155deg, hsla(260,20%,15%,0.94), hsla(255,18%,11%,0.92))`,
-          border: `1px solid ${isFeatured ? `${color}40` : "hsla(265,40%,50%,0.18)"}`,
-          boxShadow: `0 4px 20px hsla(265,40%,15%,0.2), inset 0 1px 0 hsla(265,50%,70%,0.06)`,
-          ...(isExpanded ? { boxShadow: `0 8px 32px hsla(265,50%,20%,0.3), 0 0 0 1px ${color}30, inset 0 1px 0 hsla(265,50%,70%,0.08)` } : {}),
+            ? `linear-gradient(155deg, hsla(190,26%,16%,0.62), hsla(198,22%,10%,0.58))`
+            : `linear-gradient(155deg, hsla(196,22%,14%,0.55), hsla(198,20%,9%,0.52))`,
+          backdropFilter: "blur(22px) saturate(150%)",
+          WebkitBackdropFilter: "blur(22px) saturate(150%)",
+          border: `1px solid ${isFeatured ? `${color}40` : "hsl(178 74% 48% / 0.22)"}`,
+          boxShadow: `0 24px 60px -40px hsl(178 74% 48% / 0.5), inset 0 1px 0 hsl(0 0% 100% / 0.12)`,
+          ...(isExpanded ? { boxShadow: `0 30px 70px -38px hsl(178 74% 48% / 0.6), 0 0 0 1px ${color}30, inset 0 1px 0 hsl(0 0% 100% / 0.16)` } : {}),
         }}>
+
 
         {/* Top accent — featured only */}
         {isFeatured && (
@@ -766,7 +768,7 @@ function SectorCard({ id, index, isExpanded, onToggle, onNavigate, isFeatured, f
             <div className="absolute -bottom-0.5 -right-0.5 w-5 h-5 rounded-full flex items-center justify-center shadow-md"
               style={{
                 background: `linear-gradient(135deg, ${color}, ${color}cc)`,
-                border: "2px solid hsla(260,20%,12%,0.95)",
+                border: "2px solid hsla(192,20%,12%,0.95)",
               }}>
               <span className="text-white [&_svg]:!w-2.5 [&_svg]:!h-2.5">{getIcon(cfg.icon)}</span>
             </div>
