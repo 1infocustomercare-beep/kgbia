@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useEmpireScrollDirector } from "../ScrollDirector";
 import PrestigePhone from "./PrestigePhone";
-import PrestigeHeroImmersive from "./PrestigeHeroImmersive";
+// PrestigeHeroImmersive rimosso: la hero ora ha un backdrop piatto (vedi sotto)
 import { useT, PrestigeLangToggle } from "./PrestigeLang";
 import { SECTOR_MOCKUPS } from "@/data/sector-mockups";
 
@@ -149,60 +149,18 @@ export default function PrestigeHero() {
       }}
     >
 
-      {/* FUI jelly background effect — sopra il fondo della section, sotto contenuti/telefoni */}
-      <div aria-hidden className="pointer-events-none absolute inset-0 z-0 overflow-hidden">
-        {/* Gradient base: dark prestige adaptation of FUI hero */}
-        <div
-          className="absolute inset-0"
-          style={{
-            background:
-              "linear-gradient(to bottom, hsl(var(--pr-bg)) 10%, hsl(var(--pr-bg)) 30%, hsl(var(--pr-surface)) 98%)",
-          }}
-        />
-        {/* Blue glow — same hue/position/rotation as FUI reference */}
-        <div
-          className="absolute -left-[10%] -top-[15%] h-[420px] w-[90%]"
-          style={{
-            background: "rgb(54,157,253)",
-            opacity: 0.42,
-            filter: "blur(180px)",
-            transform: "rotate(-30deg)",
-            mixBlendMode: "screen",
-          }}
-        />
-        {/* Secondo glow aqua per profondità jelly */}
-        <div
-          className="absolute right-[-8%] top-[35%] h-[380px] w-[60%]"
-          style={{
-            background: "hsl(var(--pr-aqua))",
-            opacity: 0.22,
-            filter: "blur(160px)",
-            transform: "rotate(18deg)",
-            mixBlendMode: "screen",
-          }}
-        />
-      </div>
+      {/* BACKDROP HERO — pulito: un solo gradiente piatto, nessun glow/blend
+          (rimosso il mix FUI + warp tunnel + beam oro che su mobile sbiancava
+          la sezione e pesava sul rendering). */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0 z-0"
+        style={{
+          background:
+            "linear-gradient(180deg, hsl(var(--pr-bg)) 0%, hsl(var(--pr-bg)) 55%, hsl(var(--pr-surface)) 100%)",
+        }}
+      />
 
-
-      {/* Warp tunnel 3D interattivo — dietro a tutto, non intercetta eventi */}
-      <PrestigeHeroImmersive />
-
-      {/* Cinematic gold beams — parallax by scroll */}
-      <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
-        <div
-          className="prestige-hero-beam prestige-hero-beam--a"
-          style={{ transform: `translate3d(calc(var(--empire-progress, 0) * -60px), calc(var(--empire-progress, 0) * -30px), 0) rotate(-14deg)` }}
-        />
-        <div
-          className="prestige-hero-beam prestige-hero-beam--b"
-          style={{ transform: `translate3d(calc(var(--empire-progress, 0) * 40px), calc(var(--empire-progress, 0) * 20px), 0) rotate(10deg)` }}
-        />
-        {/* Aurora gold halo */}
-        <div
-          className="prestige-hero-halo"
-          style={{ transform: `translate(-50%, calc(-50% + calc(var(--empire-progress, 0) * -40px))) scale(${1 + progress * 0.15})` }}
-        />
-      </div>
 
       {/* Lang toggle: vive solo nella navbar (evita doppione sovrapposto in desktop) */}
       <div className="prestige-hero-lang-floating absolute right-3 top-[76px] z-20 scale-90 origin-top-right lg:hidden">

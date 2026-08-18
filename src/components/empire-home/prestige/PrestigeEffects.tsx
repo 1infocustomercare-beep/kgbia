@@ -17,15 +17,19 @@ export default function PrestigeEffects() {
     const isCoarse = window.matchMedia("(pointer: coarse)").matches;
 
     // ── Scroll reveal ────────────────────────────────────────────────
+    // Su mobile il reveal RESTA attivo (prima veniva bypassato su pointer
+    // coarse: le sezioni comparivano senza animazione). Si disattiva solo
+    // con prefers-reduced-motion.
     const revealTargets = document.querySelectorAll<HTMLElement>(
       "[data-section]:not([data-no-reveal])"
     );
     revealTargets.forEach((el) => el.classList.add("prestige-reveal"));
 
     const reveal = (el: Element) => el.classList.add("is-revealed");
-    if (prefersReduced || isCoarse) {
+    if (prefersReduced) {
       revealTargets.forEach(reveal);
     }
+
 
     const io = new IntersectionObserver(
       (entries) => {
