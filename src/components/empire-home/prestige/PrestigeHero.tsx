@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useEmpireScrollDirector } from "../ScrollDirector";
 import PrestigePhone from "./PrestigePhone";
-import PrestigeHeroImmersive from "./PrestigeHeroImmersive";
+// PrestigeHeroImmersive rimosso: la hero ora ha un backdrop piatto (vedi sotto)
 import { useT, PrestigeLangToggle } from "./PrestigeLang";
 import { SECTOR_MOCKUPS } from "@/data/sector-mockups";
 
