@@ -107,18 +107,44 @@ const PANELS: Phase[] = [
   },
 ];
 
+/** Breakpoint di switch fra esperienza desktop (pin orizzontale) e mobile (deck 3D). */
+function useIsNarrow() {
+  const [narrow, setNarrow] = useState(() =>
+    typeof window === "undefined" ? false : window.matchMedia("(max-width: 1023px)").matches
+  );
+  useEffect(() => {
+    const mq = window.matchMedia("(max-width: 1023px)");
+    const on = () => setNarrow(mq.matches);
+    on();
+    mq.addEventListener("change", on);
+    return () => mq.removeEventListener("change", on);
+  }, []);
+  return narrow;
+}
+
 export default function PrestigeHorizontalScroll() {
   const wrapRef = useRef<HTMLDivElement>(null);
   const reduce = useReducedMotion();
+  const isNarrow = useIsNarrow();
   const navigate = useNavigate();
 
   const { scrollYProgress } = useScroll({
     target: wrapRef,
     offset: ["start start", "end end"],
   });
-  const smooth = useSpring(scrollYProgress, { stiffness: 110, damping: 26, mass: 0.35 });
+  // Spring corto e reattivo: prima (110/26/0.35) l'inerzia faceva "scivolare"
+  // i pannelli oltre la posizione dello scroll → sensazione di desync.
+  const smooth = useSpring(scrollYProgress, {
+    stiffness: 260,
+    damping: 42,
+    mass: 0.18,
+    restDelta: 0.0005,
+  });
   const x = useTransform(smooth, [0, 1], ["0%", `-${((PANELS.length - 1) / PANELS.length) * 100}%`]);
   const bar = useTransform(smooth, [0, 1], ["4%", "100%"]);
+  const activeIdx = useTransform(smooth, (v) =>
+    Math.min(PANELS.length - 1, Math.round(v * (PANELS.length - 1)))
+  );
 
   if (reduce) {
     return (
@@ -150,6 +176,37 @@ export default function PrestigeHorizontalScroll() {
     );
   }
 
+  /* ── MOBILE / TABLET: deck cinematografico 3D scroll-driven ──────────
+     Nessun pin, nessuno scroll orizzontale (che su touch entrava in
+     conflitto col gesto verticale e sfalsava i pannelli): ogni fase entra
+     in prospettiva, si "posa" al centro e scivola sotto la successiva.
+     Solo transform + opacity → compositing GPU, zero layout per frame. */
+  if (isNarrow) {
+    return (
+      <section
+        id="prestige-horizontal"
+        data-section="prestige-horizontal"
+        data-no-reveal
+        className="prestige-section prestige-dark prestige-hscroll prestige-hdeck"
+        aria-label="Il metodo Empire in cinque fasi"
+      >
+        <Header />
+        <div className="prestige-hdeck-stage">
+          {PANELS.map((p, i) => (
+            <MobilePhase key={p.word} panel={p} index={i} total={PANELS.length} />
+          ))}
+        </div>
+        <div className="mx-auto w-full max-w-6xl px-4 pb-4 sm:px-6">
+          <button onClick={() => navigate("/demo")} className="prestige-cta w-full justify-center">
+            <span>Apri i siti demo live</span>
+            <ArrowUpRight size={14} />
+          </button>
+        </div>
+        <style>{HSCROLL_CSS}</style>
+      </section>
+    );
+  }
+
   return (
     <section
       id="prestige-horizontal"
@@ -164,7 +221,7 @@ export default function PrestigeHorizontalScroll() {
         style={{ height: `${PANELS.length * 100}svh` }}
       >
         <div className="prestige-hscroll-viewport">
-          <Header sticky />
+          <Header sticky activeIdx={activeIdx} />
 
           <motion.div
             className="prestige-hscroll-row"
@@ -196,6 +253,46 @@ export default function PrestigeHorizontalScroll() {
     </section>
   );
 }
+
+/** Fase singola su mobile: entra in 3D, si posa, esce in profondità. */
+function MobilePhase({ panel, index, total }: { panel: Phase; index: number; total: number }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ["start 96%", "end 8%"],
+  });
+
+  const stops = [0, 0.3, 0.72, 1];
+  const rotateX = useTransform(scrollYProgress, stops, [20, 0, 0, -9]);
+  const scale = useTransform(scrollYProgress, stops, [0.87, 1, 1, 0.93]);
+  const y = useTransform(scrollYProgress, stops, [56, 0, 0, -18]);
+  const opacity = useTransform(scrollYProgress, stops, [0, 1, 1, 0.32]);
+  const glow = useTransform(scrollYProgress, stops, [0, 0.55, 0.55, 0]);
+
+  return (
+    <div ref={ref} className="prestige-hdeck-slot">
+      <motion.article
+        className="prestige-hdeck-card"
+        style={{
+          rotateX,
+          scale,
+          y,
+          opacity,
+          zIndex: index + 1,
+          // @ts-expect-error CSS custom property
+          "--deck-glow": glow,
+          top: `calc(11svh + ${index * 6}px)`,
+        }}
+      >
+        <span className="prestige-hdeck-step" aria-hidden>
+          {panel.n} / {String(total).padStart(2, "0")}
+        </span>
+        <PanelCard panel={panel} />
+      </motion.article>
+    </div>
+  );
+}
+
 
 function Header({ sticky = false }: { sticky?: boolean }) {
   return (
