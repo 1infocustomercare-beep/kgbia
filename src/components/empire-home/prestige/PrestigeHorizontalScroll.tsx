@@ -311,9 +311,9 @@ function Header({
   activeIdx?: MotionValue<number>;
 }) {
   const [active, setActive] = useState(0);
-  useMotionValueEvent(activeIdx ?? new MotionValueFallback(), "change", (v) =>
-    setActive(Number(v))
-  );
+  const fallback = useMotionValue(0);
+  useMotionValueEvent(activeIdx ?? fallback, "change", (v) => setActive(Number(v)));
+
   return (
     <div className={`mx-auto w-full max-w-6xl shrink-0 px-4 sm:px-6 ${sticky ? "pb-2 pt-16 sm:pt-20" : "pt-16"}`}>
       <div className="prestige-eyebrow" style={{ color: "hsl(var(--pr-gold-light))" }}>
