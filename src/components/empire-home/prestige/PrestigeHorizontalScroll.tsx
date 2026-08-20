@@ -1,5 +1,14 @@
-import { useRef } from "react";
-import { motion, useScroll, useTransform, useSpring, useReducedMotion } from "framer-motion";
+import { useEffect, useRef, useState } from "react";
+import {
+  motion,
+  useScroll,
+  useTransform,
+  useSpring,
+  useReducedMotion,
+  useMotionValueEvent,
+  type MotionValue,
+} from "framer-motion";
+
 import {
   ArrowUpRight,
   Search,
