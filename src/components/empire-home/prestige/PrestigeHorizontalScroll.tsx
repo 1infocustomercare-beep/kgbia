@@ -303,7 +303,17 @@ function MobilePhase({ panel, index, total }: { panel: Phase; index: number; tot
 }
 
 
-function Header({ sticky = false }: { sticky?: boolean }) {
+function Header({
+  sticky = false,
+  activeIdx,
+}: {
+  sticky?: boolean;
+  activeIdx?: MotionValue<number>;
+}) {
+  const [active, setActive] = useState(0);
+  useMotionValueEvent(activeIdx ?? new MotionValueFallback(), "change", (v) =>
+    setActive(Number(v))
+  );
   return (
     <div className={`mx-auto w-full max-w-6xl shrink-0 px-4 sm:px-6 ${sticky ? "pb-2 pt-16 sm:pt-20" : "pt-16"}`}>
       <div className="prestige-eyebrow" style={{ color: "hsl(var(--pr-gold-light))" }}>
@@ -317,14 +327,17 @@ function Header({ sticky = false }: { sticky?: boolean }) {
       </p>
       {sticky && (
         <div className="prestige-hscroll-steps" aria-hidden>
-          {PANELS.map((p) => (
-            <span key={p.n}>{p.n}</span>
+          {PANELS.map((p, i) => (
+            <span key={p.n} data-active={i === active ? "true" : undefined}>
+              {p.n}
+            </span>
           ))}
         </div>
       )}
     </div>
   );
 }
+
 
 const HSCROLL_CSS = `
   .prestige-hscroll { position: relative; }
