@@ -1,5 +1,16 @@
-import { useRef } from "react";
-import { motion, useScroll, useTransform, useSpring, useReducedMotion } from "framer-motion";
+import { useEffect, useRef, useState } from "react";
+import {
+  motion,
+  useScroll,
+  useTransform,
+  useSpring,
+  useReducedMotion,
+  useMotionValueEvent,
+  useMotionValue,
+
+  type MotionValue,
+} from "framer-motion";
+
 import {
   ArrowUpRight,
   Search,
@@ -294,7 +305,17 @@ function MobilePhase({ panel, index, total }: { panel: Phase; index: number; tot
 }
 
 
-function Header({ sticky = false }: { sticky?: boolean }) {
+function Header({
+  sticky = false,
+  activeIdx,
+}: {
+  sticky?: boolean;
+  activeIdx?: MotionValue<number>;
+}) {
+  const [active, setActive] = useState(0);
+  const fallback = useMotionValue(0);
+  useMotionValueEvent(activeIdx ?? fallback, "change", (v) => setActive(Number(v)));
+
   return (
     <div className={`mx-auto w-full max-w-6xl shrink-0 px-4 sm:px-6 ${sticky ? "pb-2 pt-16 sm:pt-20" : "pt-16"}`}>
       <div className="prestige-eyebrow" style={{ color: "hsl(var(--pr-gold-light))" }}>
@@ -308,14 +329,17 @@ function Header({ sticky = false }: { sticky?: boolean }) {
       </p>
       {sticky && (
         <div className="prestige-hscroll-steps" aria-hidden>
-          {PANELS.map((p) => (
-            <span key={p.n}>{p.n}</span>
+          {PANELS.map((p, i) => (
+            <span key={p.n} data-active={i === active ? "true" : undefined}>
+              {p.n}
+            </span>
           ))}
         </div>
       )}
     </div>
   );
 }
+
 
 const HSCROLL_CSS = `
   .prestige-hscroll { position: relative; }
@@ -335,7 +359,43 @@ const HSCROLL_CSS = `
   .prestige-hscroll-steps > span {
     padding: .15rem .5rem; border-radius: 999px;
     border: 1px solid hsl(var(--pr-gold) / .35);
+    transition: background .3s ease, color .3s ease, box-shadow .3s ease, transform .3s ease;
   }
+  .prestige-hscroll-steps > span[data-active] {
+    background: hsl(var(--pr-gold) / .18);
+    box-shadow: 0 0 14px hsl(var(--pr-gold) / .45);
+    transform: translateY(-1px);
+    color: hsl(var(--pr-gold-light));
+  }
+
+  /* ── MOBILE DECK 3D ─────────────────────────────────────────────── */
+  .prestige-hdeck { padding-bottom: 1rem; }
+  .prestige-hdeck-stage {
+    perspective: 1100px;
+    perspective-origin: 50% 40%;
+    padding: 1.5rem 0 2rem;
+  }
+  .prestige-hdeck-slot { height: 118svh; }
+  .prestige-hdeck-card {
+    position: sticky;
+    margin: 0 auto;
+    width: calc(100% - 2rem);
+    max-width: 30rem;
+    transform-style: preserve-3d;
+    transform-origin: 50% 12%;
+    will-change: transform, opacity;
+    border-radius: 1.5rem;
+    box-shadow:
+      0 24px 60px -28px hsl(0 0% 0% / .85),
+      0 0 40px hsl(var(--pr-gold) / calc(var(--deck-glow, 0) * .5));
+  }
+  .prestige-hdeck-step {
+    position: absolute; top: .85rem; right: 1rem; z-index: 2;
+    font-size: .66rem; letter-spacing: .22em; font-weight: 700;
+    color: hsl(var(--pr-gold-light) / .85);
+  }
+  .prestige-hdeck-card > .prestige-bento { border-radius: 1.5rem; }
+
 
   .prestige-hscroll-track { position: relative; display: block; }
   .prestige-hscroll-viewport {
