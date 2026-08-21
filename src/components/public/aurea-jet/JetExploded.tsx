@@ -1,136 +1,164 @@
 /**
- * ═══ JET EXPLODED ═══
- * Vista esplosa in stile movimento d'orologio: scrollando, motore, sedile,
- * avionica e ala convergono sulla fusoliera fino a comporre il jet completo.
+ * ═══ JET ATELIER ═══
+ * Sezione editoriale "L'Atelier": lo scroll rivela tre materie della cabina
+ * (pelle cucita a mano, radica e cristallo, suite notte) con reveal a maschera
+ * e testo sincronizzato. Nessuna vista esplosa, nessun dettaglio tecnico da
+ * cabina di pilotaggio: solo ciò che il passeggero vive.
  * ADDITIVO — solo presentazione.
  */
 import { useEffect, useRef, useState } from "react";
-import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
-import fuselage from "@/assets/aurea-jet/part-fuselage.png";
-import engine from "@/assets/aurea-jet/part-engine.png";
-import seat from "@/assets/aurea-jet/part-seat.png";
-import avionics from "@/assets/aurea-jet/part-cockpit.png";
-import wing from "@/assets/aurea-jet/part-wing.png";
-import { JET_SCROLL } from "./jet-motion";
+import { AnimatePresence, motion, useMotionValueEvent, useReducedMotion, useScroll, useTransform } from "framer-motion";
+import leather from "@/assets/aurea-jet/atelier-leather.jpg";
+import table from "@/assets/aurea-jet/atelier-table.jpg";
+import suite from "@/assets/aurea-jet/atelier-suite.jpg";
+import { JET_EASE, JET_SCROLL } from "./jet-motion";
+
+const CHAPTERS = [
+  {
+    img: leather,
+    kicker: "Capitolo I — Seduta",
+    title: "Cucita a mano,",
+    accent: "in 41 ore.",
+    text:
+      "Ogni poltrona nasce da una singola pelle italiana full-grain, tesa a mano e impunturata con filo di seta. Si reclina in posizione lounge senza un solo scatto meccanico percepibile.",
+    specs: [
+      ["Materia", "Pelle full-grain toscana"],
+      ["Finitura", "Impuntura seta avorio"],
+    ],
+  },
+  {
+    img: table,
+    kicker: "Capitolo II — Tavola",
+    title: "Radica lucidata",
+    accent: "a specchio.",
+    text:
+      "Piani in radica di noce con dieci mani di lacca, bordi in ottone spazzolato e cristallo soffiato a bocca. La cantina di bordo è selezionata dal vostro sommelier, non dal nostro catalogo.",
+    specs: [
+      ["Materia", "Radica di noce · ottone"],
+      ["Servizio", "Chef e cantina su richiesta"],
+    ],
+  },
+  {
+    img: suite,
+    kicker: "Capitolo III — Notte",
+    title: "Una suite",
+    accent: "a 13.000 metri.",
+    text:
+      "Letto matrimoniale vero, lino a 800 fili, cashmere e luce calda regolabile a 2.400 K. Atterrate riposati: è l'unica metrica di lusso che conta davvero.",
+    specs: [
+      ["Materia", "Lino 800 fili · cashmere"],
+      ["Comfort", "Luce 2.400 K · silenzio 48 dB"],
+    ],
+  },
+] as const;
 
 export default function JetExploded() {
   const ref = useRef<HTMLElement>(null);
   const reduced = useReducedMotion();
-  const [k, setK] = useState(1);
+  const [active, setActive] = useState(0);
+  const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end end"] });
+
+  useMotionValueEvent(scrollYProgress, "change", (v) => {
+    const next = v < 0.34 ? 0 : v < 0.67 ? 1 : 2;
+    setActive((prev) => (prev === next ? prev : next));
+  });
+
+  // parallax leggero sull'immagine attiva
+  const imgY = useTransform(scrollYProgress, [0, 1], ["-3%", "3%"]);
+  const glowOpacity = useTransform(scrollYProgress, [0, 0.5, 1], [0.35, 0.6, 0.35]);
+  const chapter = CHAPTERS[active];
+
+  const [mobile, setMobile] = useState(false);
   useEffect(() => {
     const mq = window.matchMedia("(max-width: 640px)");
-    const sync = () => setK(mq.matches ? 0.8 : 1);
+    const sync = () => setMobile(mq.matches);
     sync();
     mq.addEventListener("change", sync);
     return () => mq.removeEventListener("change", sync);
   }, []);
-  const pc = (v: number) => `calc(-50% + ${(v * k).toFixed(1)}%)`;
-  const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end end"] });
-
-  const assemble = useTransform(scrollYProgress, [0.04, 0.62], [1, 0]);
-
-  const engineX = useTransform(assemble, [0, 1], [pc(8.0), pc(-46.0)]);
-  const engineY = useTransform(assemble, [0, 1], [pc(4.0), pc(-42.0)]);
-  const seatX = useTransform(assemble, [0, 1], [pc(-6.0), pc(38.0)]);
-  const seatY = useTransform(assemble, [0, 1], [pc(6.0), pc(46.0)]);
-  const avX = useTransform(assemble, [0, 1], [pc(-14.0), pc(-54.0)]);
-  const avY = useTransform(assemble, [0, 1], [pc(-2.0), pc(40.0)]);
-  const wingY = useTransform(assemble, [0, 1], [pc(2.0), pc(-46.0)]);
-  const wingX = useTransform(assemble, [0, 1], [pc(2.0), pc(44.0)]);
-  const partOpacity = useTransform(scrollYProgress, [0.6, 0.74], [1, 0]);
-  const finalOpacity = useTransform(scrollYProgress, [0.62, 0.76], [0, 1]);
-  const finalScale = useTransform(scrollYProgress, [0.62, 0.86], [0.9, 1]);
-  const fuseOpacity = useTransform(scrollYProgress, [0.58, 0.72], [1, 0]);
-  const rotate = useTransform(assemble, [0, 1], [0, -6]);
 
   return (
     <section ref={ref} className={`relative bg-background ${JET_SCROLL.explodedHeight}`}>
-      <div className="sticky top-0 flex h-[100svh] flex-col items-center justify-center overflow-hidden">
-        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_45%,hsl(var(--primary)/0.12),transparent_62%)]" />
+      <div className="sticky top-0 flex h-[100svh] w-full items-center overflow-hidden">
+        <motion.div
+          aria-hidden
+          style={reduced ? undefined : { opacity: glowOpacity }}
+          className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_28%_45%,hsl(var(--primary)/0.14),transparent_60%)]"
+        />
 
-        <div className="relative z-10 mb-6 px-6 text-center">
-          <p className="text-[10px] font-semibold uppercase tracking-[0.34em] text-primary">Dettagli ingegneristici</p>
-          <h2 className="jet-serif mt-4 text-3xl leading-[0.98] sm:text-5xl">
-            Ogni componente, <span className="italic text-primary">come un calibro.</span>
-          </h2>
-        </div>
+        <div className="mx-auto grid w-full max-w-6xl items-center gap-8 px-6 sm:grid-cols-[minmax(0,0.9fr)_minmax(0,1fr)] sm:gap-14">
+          {/* Materia — reveal a maschera */}
+          <div className="relative mx-auto w-full max-w-[360px] sm:max-w-none">
+            <div className="relative aspect-[4/5] w-full overflow-hidden rounded-[2rem] border border-primary/15 bg-black/40 shadow-[0_50px_120px_-40px_hsl(var(--primary)/0.35)]">
+              <AnimatePresence initial={false} mode="sync">
+                <motion.div
+                  key={chapter.kicker}
+                  className="absolute inset-0"
+                  initial={reduced ? undefined : { clipPath: "inset(0% 0% 100% 0%)" }}
+                  animate={reduced ? undefined : { clipPath: "inset(0% 0% 0% 0%)" }}
+                  exit={reduced ? undefined : { clipPath: "inset(100% 0% 0% 0%)" }}
+                  transition={{ duration: 0.9, ease: JET_EASE }}
+                >
+                  <motion.img
+                    src={chapter.img}
+                    alt={`${chapter.title} ${chapter.accent}`}
+                    loading="lazy"
+                    width={1280}
+                    height={1600}
+                    className="h-[112%] w-full object-cover"
+                    style={reduced || mobile ? undefined : { y: imgY }}
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-background/70 via-transparent to-background/25" />
+                </motion.div>
+              </AnimatePresence>
 
-        <div className="relative z-10 h-[52svh] w-full max-w-5xl">
-          {/* fusoliera base */}
-          <motion.img
-            src={fuselage}
-            alt="Fusoliera del jet"
-            loading="lazy"
-            className="absolute left-1/2 top-1/2 w-[min(92vw,980px)] object-contain"
-            style={{ x: "-50%", y: "-50%", ...(reduced ? {} : { opacity: fuseOpacity, rotate }) }}
-          />
-          {/* jet completo */}
-          <motion.img
-            src={wing}
-            alt="Jet privato completo"
-            loading="lazy"
-            className="absolute left-1/2 top-1/2 w-[min(88vw,860px)] object-contain drop-shadow-[0_40px_80px_hsl(var(--primary)/0.25)]"
-            style={{ x: "-50%", y: "-50%", ...(reduced ? { opacity: 1 } : { opacity: finalOpacity, scale: finalScale }) }}
-          />
-
-          <Part src={engine} alt="Motore" x={engineX} y={engineY} o={partOpacity} reduced={!!reduced} size="w-[26vw] max-w-[240px]" />
-          <Part src={seat} alt="Poltrona in pelle" x={seatX} y={seatY} o={partOpacity} reduced={!!reduced} size="w-[22vw] max-w-[200px]" />
-          <Part src={avionics} alt="Avionica" x={avX} y={avY} o={partOpacity} reduced={!!reduced} size="w-[28vw] max-w-[260px]" />
-        </div>
-
-        <div className="relative z-10 mt-6 grid w-full max-w-3xl grid-cols-3 gap-4 px-6 text-center">
-          {[
-            { k: "Propulsione", v: "2 × turbofan" },
-            { k: "Cabina", v: "Pelle cucita a mano" },
-            { k: "Avionica", v: "Fly-by-wire" },
-          ].map((s) => (
-            <div key={s.k}>
-              <p className="text-[9px] uppercase tracking-[0.24em] text-muted-foreground">{s.k}</p>
-              <p className="mt-1 text-xs font-semibold text-foreground sm:text-sm">{s.v}</p>
+              {/* indice capitoli */}
+              <div className="absolute bottom-4 left-4 right-4 flex items-center gap-2">
+                {CHAPTERS.map((c, i) => (
+                  <span
+                    key={c.kicker}
+                    className={`h-[2px] flex-1 rounded-full transition-all duration-500 ${
+                      i === active ? "bg-primary" : "bg-foreground/20"
+                    }`}
+                  />
+                ))}
+              </div>
             </div>
-          ))}
+          </div>
+
+          {/* Testo sincronizzato */}
+          <div className="relative">
+            <p className="text-[10px] font-semibold uppercase tracking-[0.34em] text-primary">L'Atelier Aurea</p>
+
+            <div className="relative mt-5 min-h-[290px] sm:min-h-[320px]">
+              <AnimatePresence initial={false} mode="wait">
+                <motion.div
+                  key={chapter.kicker}
+                  initial={reduced ? undefined : { opacity: 0, y: 20, filter: "blur(8px)" }}
+                  animate={reduced ? undefined : { opacity: 1, y: 0, filter: "blur(0px)" }}
+                  exit={reduced ? undefined : { opacity: 0, y: -16, filter: "blur(6px)" }}
+                  transition={{ duration: 0.42, ease: JET_EASE }}
+                >
+                  <p className="text-[10px] uppercase tracking-[0.28em] text-muted-foreground">{chapter.kicker}</p>
+                  <h2 className="jet-serif mt-3 text-[clamp(2rem,5.2vw,3.9rem)] leading-[0.98]">
+                    {chapter.title} <span className="italic text-primary">{chapter.accent}</span>
+                  </h2>
+                  <p className="mt-5 max-w-md text-sm leading-relaxed text-foreground/75 sm:text-base">{chapter.text}</p>
+
+                  <dl className="mt-7 grid max-w-md grid-cols-2 gap-x-6 gap-y-3 border-t border-primary/15 pt-5">
+                    {chapter.specs.map(([k, v]) => (
+                      <div key={k}>
+                        <dt className="text-[9px] uppercase tracking-[0.24em] text-muted-foreground">{k}</dt>
+                        <dd className="mt-1 text-xs font-semibold text-foreground sm:text-sm">{v}</dd>
+                      </div>
+                    ))}
+                  </dl>
+                </motion.div>
+              </AnimatePresence>
+            </div>
+          </div>
         </div>
-        <motion.div style={reduced ? undefined : { opacity: partOpacity }} className="pointer-events-none absolute inset-0 z-0">
-          <motion.img
-            src={wing}
-            alt=""
-            aria-hidden
-            loading="lazy"
-            className="absolute left-1/2 top-1/2 w-[24vw] max-w-[220px] object-contain opacity-0"
-            style={{ x: wingX, y: wingY }}
-          />
-        </motion.div>
       </div>
     </section>
-  );
-}
-
-function Part({
-  src,
-  alt,
-  x,
-  y,
-  o,
-  reduced,
-  size,
-}: {
-  src: string;
-  alt: string;
-  x: import("framer-motion").MotionValue<string>;
-  y: import("framer-motion").MotionValue<string>;
-  o: import("framer-motion").MotionValue<number>;
-  reduced: boolean;
-  size: string;
-}) {
-  return (
-    <motion.img
-      src={src}
-      alt={alt}
-      loading="lazy"
-      className={`absolute left-1/2 top-1/2 object-contain drop-shadow-[0_24px_60px_hsl(var(--background))] ${size}`}
-      style={
-        reduced ? { x: "-50%", y: "-50%", opacity: 0.9 } : { x, y, opacity: o }
-      }
-    />
   );
 }
