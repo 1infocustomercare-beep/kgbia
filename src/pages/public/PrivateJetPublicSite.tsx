@@ -134,26 +134,23 @@ export default function PrivateJetPublicSite() {
         </div>
       </section>
 
-      {/* ═══ Services — premium framed panels ═══ */}
-      <section className="relative px-5 py-20 sm:px-8 sm:py-28">
-        <div className="mx-auto max-w-6xl">
-          <div className="mb-12 flex flex-col items-start gap-5">
-            <LuxeTag><Sparkles className="h-3 w-3" /> Servizio privato</LuxeTag>
-            <h2 className="max-w-2xl font-heading text-3xl font-semibold leading-tight sm:text-5xl">
-              Un solo referente. Ogni dettaglio già previsto.
-            </h2>
-          </div>
-          <div className="grid gap-5 sm:grid-cols-3">
-            {services.map(({ icon: Icon, title, text }) => (
-              <LuxePanel key={title} glass glow className="p-7 sm:p-9">
-                <Icon className="mb-8 h-7 w-7 text-primary" />
-                <h3 className="font-heading text-2xl font-semibold">{title}</h3>
-                <p className="mt-3 text-sm leading-relaxed text-muted-foreground">{text}</p>
-              </LuxePanel>
-            ))}
-          </div>
-        </div>
-      </section>
+      {/* ═══ Film cinematografico scrubbato dallo scroll ═══ */}
+      <JetFilmScrub />
+
+      {/* ═══ Manifesto editoriale + triptych parallasse ═══ */}
+      <JetEditorial />
+
+      {/* ═══ Flotta: tre cabine ═══ */}
+      <JetFleetSelector />
+
+      {/* ═══ Destinazioni: rail orizzontale pinnato ═══ */}
+      <JetDestinationsRail />
+
+      {/* ═══ Configuratore preventivo live ═══ */}
+      <JetQuoteConsole />
+
+      {/* ═══ Servizi, sicurezza, clienti, FAQ, concierge ═══ */}
+      <JetServiceSuite />
 
       {/* ═══ Request — VIP console ═══ */}
       <section id="richiesta" className="relative px-5 pb-24 sm:px-8 sm:pb-36">
@@ -167,11 +164,45 @@ export default function PrivateJetPublicSite() {
           <p className="mx-auto max-w-xl text-muted-foreground">
             Ricevi una proposta personalizzata per rotta, passeggeri e preferenze di bordo.
           </p>
-          <Button asChild size="lg" className="mt-9 min-h-12 rounded-none px-8 uppercase tracking-[0.16em]">
-            <Link to="/auth">Parla con un flight advisor <ArrowRight className="h-4 w-4" /></Link>
-          </Button>
+          <div className="mt-9 flex flex-col items-center justify-center gap-3 sm:flex-row">
+            <Button asChild size="lg" className="min-h-12 rounded-none px-8 uppercase tracking-[0.16em]">
+              <Link to="/auth">Parla con un flight advisor <ArrowRight className="h-4 w-4" /></Link>
+            </Button>
+            <Button asChild size="lg" variant="outline" className="min-h-12 rounded-none px-8 uppercase tracking-[0.16em]">
+              <a href="#preventivo">Configura la tua rotta</a>
+            </Button>
+          </div>
         </LuxePanel>
       </section>
+
+      {/* ═══ Footer ═══ */}
+      <footer className="relative border-t border-border/50 px-5 py-14 sm:px-10">
+        <div className="mx-auto flex max-w-6xl flex-col gap-8 sm:flex-row sm:items-start sm:justify-between">
+          <div>
+            <p className="flex items-center gap-2 font-heading text-lg font-semibold uppercase tracking-[0.2em]">
+              <Plane className="h-4 w-4 text-primary" /> Aurea Jet
+            </p>
+            <p className="mt-3 max-w-xs text-xs leading-relaxed text-muted-foreground">
+              Private aviation advisory. Charter, elicotteri, yacht e gestione aeromobili con un unico referente.
+            </p>
+          </div>
+          <nav className="grid gap-2 text-xs uppercase tracking-[0.2em] text-muted-foreground">
+            <a href="#flotta" className="min-h-9">Flotta</a>
+            <a href="#servizi" className="min-h-9">Servizi</a>
+            <a href="#preventivo" className="min-h-9">Preventivo</a>
+            <a href="#richiesta" className="min-h-9">Contatti</a>
+          </nav>
+          <div className="text-xs text-muted-foreground">
+            <p>Flight desk 24/7</p>
+            <p className="mt-2 text-foreground">+39 02 000 0000</p>
+            <p className="mt-1">fly@aureajet.it</p>
+          </div>
+        </div>
+        <p className="mx-auto mt-10 max-w-6xl text-[10px] uppercase tracking-[0.22em] text-muted-foreground/70">
+          Sito dimostrativo Empire · dati, tariffe e disponibilità sono esemplificativi
+        </p>
+      </footer>
     </main>
   );
 }
+
