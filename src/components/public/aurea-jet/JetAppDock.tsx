@@ -55,30 +55,58 @@ export default function JetAppDock() {
         visible ? "translate-y-0 opacity-100" : "pointer-events-none translate-y-6 opacity-0"
       }`}
     >
-      <div className="jet-dock flex w-full max-w-[420px] items-stretch gap-0.5 rounded-[22px] p-1 sm:max-w-[480px]">
-        {TABS.map((t) => {
-          const on = active === t.id;
-          return (
-            <button
-              key={t.id}
-              type="button"
-              onClick={() => go(t.id)}
-              aria-current={on ? "true" : undefined}
-              className="relative flex min-h-[46px] flex-1 flex-col items-center justify-center gap-1 rounded-xl px-1 text-[8.5px] font-semibold uppercase tracking-[0.14em] transition-colors"
-            >
-              {on && (
-                <motion.span
-                  layoutId="jet-dock-pill"
-                  className="absolute inset-0 rounded-xl border border-primary/35 bg-primary/12"
-                  transition={{ type: "spring", stiffness: 380, damping: 32 }}
+      <div className="relative w-full max-w-[420px] sm:max-w-[480px]">
+        {/* alone champagne sotto il dock */}
+        <div
+          aria-hidden
+          className="pointer-events-none absolute -inset-x-6 -bottom-4 h-14 rounded-full opacity-70 blur-2xl"
+          style={{ background: "radial-gradient(60% 100% at 50% 50%, hsl(var(--primary) / 0.22), transparent 70%)" }}
+        />
+        <div className="jet-dock jet-sheen relative flex items-stretch gap-0.5 overflow-hidden rounded-[26px] p-1.5">
+          {/* hairline luminosa superiore */}
+          <span
+            aria-hidden
+            className="pointer-events-none absolute inset-x-6 top-0 h-px"
+            style={{ background: "linear-gradient(90deg, transparent, hsl(var(--primary) / 0.55), transparent)" }}
+          />
+          {TABS.map((t) => {
+            const on = active === t.id;
+            return (
+              <button
+                key={t.id}
+                type="button"
+                onClick={() => go(t.id)}
+                aria-current={on ? "true" : undefined}
+                className="group relative flex min-h-[50px] flex-1 flex-col items-center justify-center gap-1 rounded-[18px] px-1 text-[8.5px] font-semibold uppercase tracking-[0.16em] transition-colors"
+              >
+                {on && (
+                  <motion.span
+                    layoutId="jet-dock-pill"
+                    className="absolute inset-0 rounded-[18px] border border-primary/35"
+                    style={{
+                      background:
+                        "linear-gradient(160deg, hsl(var(--primary) / 0.24), hsl(var(--primary) / 0.06) 55%, transparent)",
+                      boxShadow:
+                        "inset 0 1px 0 hsl(var(--primary) / 0.35), 0 10px 26px -16px hsl(var(--primary) / 0.6)",
+                    }}
+                    transition={{ type: "spring", stiffness: 380, damping: 32 }}
+                  />
+                )}
+                <t.icon
+                  strokeWidth={1.3}
+                  className={`relative h-[17px] w-[17px] transition-all duration-300 ${
+                    on ? "text-primary drop-shadow-[0_0_10px_hsl(var(--primary)/0.5)]" : "text-muted-foreground group-hover:text-foreground/80"
+                  }`}
                 />
-              )}
-              <t.icon className={`relative h-[16px] w-[16px] ${on ? "text-primary" : "text-muted-foreground"}`} />
-              <span className={`relative ${on ? "text-foreground" : "text-muted-foreground"}`}>{t.label}</span>
-            </button>
-          );
-        })}
+                <span className={`relative transition-colors ${on ? "text-foreground" : "text-muted-foreground group-hover:text-foreground/70"}`}>
+                  {t.label}
+                </span>
+              </button>
+            );
+          })}
+        </div>
       </div>
+
     </nav>
   );
 }
