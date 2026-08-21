@@ -48,7 +48,7 @@ export default function JetTopNav() {
     >
       <div
         className={`flex h-16 items-center justify-between gap-3 px-4 transition-colors duration-500 sm:h-20 sm:px-8 lg:px-14 ${
-          scrolled ? "border-b border-primary/15 bg-background/75 backdrop-blur-2xl" : "border-b border-transparent"
+          scrolled ? "border-b border-primary/15 jet-dock backdrop-blur-2xl" : "border-b border-transparent"
         }`}
       >
         <a href="#top" className="ml-12 flex items-center gap-3 sm:ml-0">
@@ -95,7 +95,7 @@ export default function JetTopNav() {
             aria-label={open ? "Chiudi menu" : "Apri menu"}
             aria-expanded={open}
             onClick={() => setOpen((o) => !o)}
-            className="flex h-11 w-11 items-center justify-center rounded-xl border border-primary/25 bg-background/60 text-foreground backdrop-blur-xl lg:hidden"
+            className="flex h-11 w-11 items-center justify-center jet-dock rounded-xl text-foreground lg:hidden"
           >
             {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
           </button>
@@ -103,7 +103,7 @@ export default function JetTopNav() {
       </div>
 
       {open && (
-        <div className="border-b border-primary/15 bg-background/95 px-5 pb-6 pt-3 backdrop-blur-2xl lg:hidden">
+        <div className="border-b border-primary/15 bg-[hsl(30_10%_5%/0.96)] px-5 pb-6 pt-3 backdrop-blur-2xl lg:hidden">
           {LINKS.map((l) => (
             <a
               key={l.href}

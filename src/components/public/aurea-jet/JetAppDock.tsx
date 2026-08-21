@@ -55,7 +55,7 @@ export default function JetAppDock() {
         visible ? "translate-y-0 opacity-100" : "pointer-events-none translate-y-6 opacity-0"
       }`}
     >
-      <div className="flex w-full max-w-[520px] items-stretch gap-1 rounded-2xl border border-primary/20 bg-background/80 p-1.5 shadow-[0_24px_60px_-24px_hsl(var(--primary)/0.45)] backdrop-blur-2xl sm:max-w-[560px]">
+      <div className="jet-dock flex w-full max-w-[420px] items-stretch gap-0.5 rounded-[22px] p-1 sm:max-w-[480px]">
         {TABS.map((t) => {
           const on = active === t.id;
           return (
@@ -64,7 +64,7 @@ export default function JetAppDock() {
               type="button"
               onClick={() => go(t.id)}
               aria-current={on ? "true" : undefined}
-              className="relative flex min-h-[52px] flex-1 flex-col items-center justify-center gap-1 rounded-xl px-1 text-[9px] font-semibold uppercase tracking-[0.14em] transition-colors"
+              className="relative flex min-h-[46px] flex-1 flex-col items-center justify-center gap-1 rounded-xl px-1 text-[8.5px] font-semibold uppercase tracking-[0.14em] transition-colors"
             >
               {on && (
                 <motion.span
@@ -73,7 +73,7 @@ export default function JetAppDock() {
                   transition={{ type: "spring", stiffness: 380, damping: 32 }}
                 />
               )}
-              <t.icon className={`relative h-[18px] w-[18px] ${on ? "text-primary" : "text-muted-foreground"}`} />
+              <t.icon className={`relative h-[16px] w-[16px] ${on ? "text-primary" : "text-muted-foreground"}`} />
               <span className={`relative ${on ? "text-foreground" : "text-muted-foreground"}`}>{t.label}</span>
             </button>
           );
