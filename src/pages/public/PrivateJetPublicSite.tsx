@@ -5,7 +5,7 @@ import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion
 import { ArrowRight, CalendarDays, ChevronDown, Sparkles } from "lucide-react";
 import BackButton from "@/components/BackButton";
 import { Button } from "@/components/ui/button";
-import jetBackground from "@/assets/hero-cinematic/private-jet-hangar.jpg";
+
 import jetFlyby from "@/assets/hero-cinematic/private-jet.png";
 import { LuxeDivider, LuxeGrain, LuxePanel, LuxeStat } from "@/components/public/luxe";
 import JetFilmScrub from "@/components/public/aurea-jet/JetFilmScrub";
