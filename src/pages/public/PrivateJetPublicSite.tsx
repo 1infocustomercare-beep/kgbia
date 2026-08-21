@@ -21,6 +21,11 @@ import JetQuoteConsole from "@/components/public/aurea-jet/JetQuoteConsole";
 import JetServiceSuite from "@/components/public/aurea-jet/JetServiceSuite";
 import JetTopNav from "@/components/public/aurea-jet/JetTopNav";
 import JetConciergeFab from "@/components/public/aurea-jet/JetConciergeFab";
+import JetScatterTrio from "@/components/public/aurea-jet/JetScatterTrio";
+import JetAtmosphereSelector from "@/components/public/aurea-jet/JetAtmosphereSelector";
+import JetSignatureCards from "@/components/public/aurea-jet/JetSignatureCards";
+import JetCollectionTabs from "@/components/public/aurea-jet/JetCollectionTabs";
+import JetDailyPick from "@/components/public/aurea-jet/JetDailyPick";
 
 
 
