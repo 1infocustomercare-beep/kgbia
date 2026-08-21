@@ -20,7 +20,7 @@ export default function JetConciergeFab() {
   const [open, setOpen] = useState(false);
 
   return (
-    <div className="pointer-events-none fixed bottom-4 right-4 z-[60] flex flex-col items-end gap-3 md:bottom-7 md:right-7">
+    <div className="pointer-events-none fixed bottom-24 right-4 z-[60] flex flex-col items-end gap-3 md:bottom-7 md:right-7">
       <AnimatePresence>
         {open && (
           <motion.div
