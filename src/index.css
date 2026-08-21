@@ -3498,3 +3498,12 @@ html body input.auth-white-input.auth-white-input::placeholder {
   -webkit-text-fill-color: #0b1220 !important;
   box-shadow: 0 0 0px 1000px #ffffff inset !important;
 }
+
+/* Nastri orizzontali dei siti demo: scroll senza barra visibile */
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
