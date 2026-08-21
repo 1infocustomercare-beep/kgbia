@@ -13,6 +13,8 @@ import JetFleetSelector from "@/components/public/aurea-jet/JetFleetSelector";
 import JetDestinationsRail from "@/components/public/aurea-jet/JetDestinationsRail";
 import JetQuoteConsole from "@/components/public/aurea-jet/JetQuoteConsole";
 import JetServiceSuite from "@/components/public/aurea-jet/JetServiceSuite";
+import JetTopNav from "@/components/public/aurea-jet/JetTopNav";
+
 
 const services = [
   { icon: Plane, title: "Charter su misura", text: "Rotta, aeromobile e orari costruiti intorno alla tua agenda." },
