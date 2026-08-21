@@ -21,7 +21,7 @@ import JetScatterTrio from "@/components/public/aurea-jet/JetScatterTrio";
 import JetAtmosphereSelector from "@/components/public/aurea-jet/JetAtmosphereSelector";
 import JetWindowDive from "@/components/public/aurea-jet/JetWindowDive";
 import JetFleetGrid from "@/components/public/aurea-jet/JetFleetGrid";
-import JetExploded from "@/components/public/aurea-jet/JetExploded";
+import JetAppDock from "@/components/public/aurea-jet/JetAppDock";
 import JetCircleForm from "@/components/public/aurea-jet/JetCircleForm";
 import { getLenis, destroyLenis } from "@/lib/lenis-singleton";
 import heroClouds from "@/assets/aurea-jet/hero-clouds.jpg";
@@ -211,8 +211,8 @@ export default function PrivateJetPublicSite() {
       {/* ═══ 07 · Sequenza a tendina + contatori ═══ */}
       <JetCurtainSequence />
 
-      {/* ═══ 08 · Dettagli ingegneristici: vista esplosa che si ricompone ═══ */}
-      <JetExploded />
+      {/* ═══ 08 · (rimosso dal flusso: sezione atelier non pertinente al sito agenzia) ═══ */}
+
 
       {/* ═══ 09 · Materiali: nastro orizzontale con snap ═══ */}
       <JetPlateStrip />
@@ -281,8 +281,11 @@ export default function PrivateJetPublicSite() {
           Sito dimostrativo Empire · dati, tariffe e disponibilità sono esemplificativi
         </p>
       </footer>
-      {/* ═══ Concierge fisso (pattern del sito di riferimento) ═══ */}
+      {/* ═══ Concierge fisso + dock applicativo ═══ */}
       <JetConciergeFab />
+      <JetAppDock />
+      <div aria-hidden className="h-20 sm:h-16" />
+
     </main>
 
   );
