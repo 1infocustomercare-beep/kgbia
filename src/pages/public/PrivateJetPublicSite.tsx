@@ -2,7 +2,7 @@ import { useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
 
-import { ArrowRight, CalendarDays, ChevronDown, Plane, Sparkles } from "lucide-react";
+import { ArrowRight, CalendarDays, ChevronDown, Sparkles } from "lucide-react";
 import BackButton from "@/components/BackButton";
 import { Button } from "@/components/ui/button";
 import jetBackground from "@/assets/hero-cinematic/private-jet-hangar.jpg";
@@ -23,6 +23,8 @@ import JetWindowDive from "@/components/public/aurea-jet/JetWindowDive";
 import JetFleetGrid from "@/components/public/aurea-jet/JetFleetGrid";
 import JetAppDock from "@/components/public/aurea-jet/JetAppDock";
 import JetCircleForm from "@/components/public/aurea-jet/JetCircleForm";
+import JetFooter from "@/components/public/aurea-jet/JetFooter";
+import JetSplash from "@/components/public/aurea-jet/JetSplash";
 import { getLenis, destroyLenis } from "@/lib/lenis-singleton";
 import heroClouds from "@/assets/aurea-jet/hero-clouds.jpg";
 import { JET_SCROLL } from "@/components/public/aurea-jet/jet-motion";
@@ -45,7 +47,7 @@ export default function PrivateJetPublicSite() {
     const link = document.createElement("link");
     link.id = id;
     link.rel = "stylesheet";
-    link.href = "https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400&display=swap";
+    link.href = "https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Jost:wght@300;400;500;600&display=swap";
     document.head.appendChild(link);
   }, []);
 
@@ -86,6 +88,21 @@ export default function PrivateJetPublicSite() {
     >
       <style>{`
 .jet-serif{font-family:'Playfair Display',Georgia,serif;font-weight:500;letter-spacing:-0.01em}
+
+/* ═══ Tipografia luxury: serif editoriale per i titoli, Jost per UI e testi ═══ */
+.jet-lux{font-family:'Jost',Inter,-apple-system,sans-serif;font-weight:300;letter-spacing:0.012em}
+.jet-lux h1,.jet-lux h2,.jet-lux h3{font-family:'Playfair Display',Georgia,serif;font-weight:500;letter-spacing:-0.015em}
+.jet-lux h4,.jet-lux h5,.jet-lux h6{font-family:'Jost',Inter,sans-serif;font-weight:500;letter-spacing:0.06em}
+.jet-lux button,.jet-lux a[class*="uppercase"],.jet-lux [class*="tracking-["]{font-family:'Jost',Inter,sans-serif}
+.jet-lux p,.jet-lux li,.jet-lux span,.jet-lux label,.jet-lux input,.jet-lux textarea,.jet-lux select{font-family:'Jost',Inter,sans-serif}
+.jet-lux strong,.jet-lux b{font-weight:500}
+.jet-lux .font-heading{font-family:'Playfair Display',Georgia,serif !important;font-weight:500;letter-spacing:-0.015em}
+.jet-lux [class*="font-bold"],.jet-lux [class*="font-semibold"]{font-weight:500}
+.jet-lux [class*="text-["],.jet-lux [class*="text-xs"],.jet-lux [class*="text-\\[10px\\]"]{font-variant-numeric:tabular-nums}
+
+/* ═══ Icone coerenti: tratto sottile inciso, tinta champagne sugli accenti ═══ */
+.jet-lux svg{stroke-width:1.3}
+.jet-lux .text-primary > svg,.jet-lux svg.text-primary{filter:drop-shadow(0 0 10px hsl(40 58% 62% / 0.35))}
 
 /* ═══ Aurea Liquid Glass — livello vetro luxury coerente su tutto il sito ═══ */
 .jet-lux .jet-glass,
@@ -136,6 +153,8 @@ export default function PrivateJetPublicSite() {
 }
       `}</style>
 
+
+      <JetSplash />
 
       <BackButton to="/demo" label="Tutte le demo" variant="floating" theme="glass" className="!h-11 !w-11" />
 
@@ -305,33 +324,9 @@ export default function PrivateJetPublicSite() {
         </LuxePanel>
       </section>
 
-      {/* ═══ Footer ═══ */}
-      <footer className="relative border-t border-border/50 px-5 py-14 sm:px-10">
-        <div className="mx-auto flex max-w-6xl flex-col gap-8 sm:flex-row sm:items-start sm:justify-between">
-          <div>
-            <p className="flex items-center gap-2 font-heading text-lg font-semibold uppercase tracking-[0.2em]">
-              <Plane className="h-4 w-4 text-primary" /> Aurea Jet
-            </p>
-            <p className="mt-3 max-w-xs text-xs leading-relaxed text-muted-foreground">
-              Private aviation advisory. Charter, elicotteri, yacht e gestione aeromobili con un unico referente.
-            </p>
-          </div>
-          <nav className="grid gap-2 text-xs uppercase tracking-[0.2em] text-muted-foreground">
-            <a href="#flotta" className="min-h-9">Flotta</a>
-            <a href="#servizi" className="min-h-9">Servizi</a>
-            <a href="#preventivo" className="min-h-9">Preventivo</a>
-            <a href="#richiesta" className="min-h-9">Contatti</a>
-          </nav>
-          <div className="text-xs text-muted-foreground">
-            <p>Flight desk 24/7</p>
-            <p className="mt-2 text-foreground">+39 02 000 0000</p>
-            <p className="mt-1">fly@aureajet.it</p>
-          </div>
-        </div>
-        <p className="mx-auto mt-10 max-w-6xl text-[10px] uppercase tracking-[0.22em] text-muted-foreground/70">
-          Sito dimostrativo Empire · dati, tariffe e disponibilità sono esemplificativi
-        </p>
-      </footer>
+      {/* ═══ Footer editoriale luxury ═══ */}
+      <JetFooter />
+
       {/* ═══ Concierge fisso + dock applicativo ═══ */}
       <JetConciergeFab />
       <JetAppDock />
