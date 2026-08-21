@@ -3,13 +3,14 @@
  * Editorial variant switcher (Ruzza-style triple product selector) adapted to
  * three cabin classes: immagine grande, specifiche e note di bordo.
  */
-import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { Gauge, Users, Ruler, Timer } from "lucide-react";
 import cabinMain from "@/assets/aurea-jet/cabin-main.jpg";
 import cabinNight from "@/assets/aurea-jet/cabin-night.jpg";
 import helicopter from "@/assets/aurea-jet/helicopter.jpg";
 import { LuxePanel, LuxeTag } from "@/components/public/luxe";
+import { useJetStepper } from "./useJetStepper";
+
 
 const FLEET = [
   {
