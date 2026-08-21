@@ -137,6 +137,31 @@ export default function PrivateJetPublicSite() {
 }
 .jet-lux ::selection{background:hsl(40 58% 62% / 0.28)}
 
+/* ═══ Neutralizza gli override globali chiari (light surfaces) dentro il demo Aurea ═══ */
+.jet-lux .bg-background\/95,
+.jet-lux .bg-background\/80,
+.jet-lux .bg-background\/75,
+.jet-lux .bg-background\/60,
+.jet-lux .bg-background\/55,
+.jet-lux .bg-background\/50{
+  background-color:hsl(30 10% 7% / 0.72) !important;
+}
+.jet-lux .bg-card\/90,
+.jet-lux .bg-card\/80,
+.jet-lux .bg-card\/70,
+.jet-lux .bg-card\/60{
+  background-color:hsl(30 9% 10% / 0.8) !important;
+}
+
+/* dock/header: vetro champagne compatto, mai barra grigia piena */
+.jet-lux .jet-dock{
+  background:linear-gradient(155deg,hsl(40 40% 92% / 0.07),hsl(30 10% 6% / 0.82)) !important;
+  border:1px solid hsl(40 45% 80% / 0.16);
+  box-shadow:inset 0 1px 0 hsl(40 60% 92% / 0.14),0 22px 60px -34px hsl(30 20% 2% / 0.95);
+  -webkit-backdrop-filter:blur(22px) saturate(150%);
+  backdrop-filter:blur(22px) saturate(150%);
+}
+
 /* Mobile: vetro più leggero per performance, nessun overflow orizzontale */
 @media (max-width:640px){
   .jet-lux .jet-glass,
