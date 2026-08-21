@@ -113,8 +113,12 @@ export default function JetAtmosphereSelector() {
 
 
         <div className="mt-10 grid gap-8 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,1fr)] lg:items-start">
-          <div className="relative aspect-[4/5] overflow-hidden border border-border/60 bg-card/40 sm:aspect-[4/3]">
+          <div
+            {...swipeHandlers}
+            className="relative aspect-[4/5] cursor-grab select-none overflow-hidden border border-border/60 bg-card/40 active:cursor-grabbing sm:aspect-[4/3]"
+          >
             <LuxeCorners />
+
             <AnimatePresence mode="wait">
               <motion.img
                 key={current.id}
