@@ -50,7 +50,7 @@ export default function JetManifestoStack() {
         {/* Backdrop tri-colonna */}
         <motion.div
           aria-hidden="true"
-          className="absolute inset-0 opacity-45"
+          className="absolute inset-0 opacity-90"
           style={reduced ? { transform: "scale(1.14)" } : { y: backdropY, scale: backdropScale }}
         >
           <div className="absolute inset-0 grid grid-cols-3">
@@ -64,15 +64,15 @@ export default function JetManifestoStack() {
                   className="absolute inset-0 h-full w-full object-cover"
                   style={{ objectPosition: col.position }}
                 />
-                <div className="absolute inset-0 bg-background/30" />
+                <div className="absolute inset-0 bg-background/10" />
               </div>
             ))}
           </div>
         </motion.div>
 
         {/* Veli profondi */}
-        <div className="absolute inset-0 bg-background/[0.74]" />
-        <div className="absolute inset-0 bg-[radial-gradient(80%_62%_at_50%_48%,hsl(var(--background)/0.22),hsl(var(--background)/0.84)_72%,hsl(var(--background)/0.96)_100%)]" />
+        <div className="absolute inset-0 bg-background/[0.34]" />
+        <div className="absolute inset-0 bg-[radial-gradient(78%_60%_at_50%_48%,hsl(var(--background)/0.08),hsl(var(--background)/0.52)_70%,hsl(var(--background)/0.9)_100%)]" />
         <div className="absolute inset-0 bg-gradient-to-b from-background via-transparent to-background" />
 
         {/* Frasi in dissolvenza */}
