@@ -232,7 +232,10 @@ export default function PrivateJetPublicSite() {
           Sito dimostrativo Empire · dati, tariffe e disponibilità sono esemplificativi
         </p>
       </footer>
+      {/* ═══ Concierge fisso (pattern del sito di riferimento) ═══ */}
+      <JetConciergeFab />
     </main>
+
   );
 }
 
