@@ -7,7 +7,7 @@
  * ADDITIVE — presentational only.
  */
 import { useEffect, useRef, useState } from "react";
-import { motion, useMotionValueEvent, useReducedMotion, useScroll, useTransform } from "framer-motion";
+import { AnimatePresence, motion, useMotionValueEvent, useReducedMotion, useScroll, useTransform } from "framer-motion";
 import cabinFilm from "@/assets/aurea-jet/aurea-journey.mp4.asset.json";
 import cabinPoster from "@/assets/aurea-jet/tarmac-night.jpg";
 import { clampProgress, JET_SCROLL } from "./jet-motion";
@@ -86,24 +86,20 @@ export default function JetFilmScrub() {
 
         {/* Captions */}
         <div className="absolute inset-0 flex items-center px-5 sm:px-10 lg:px-16">
-          <div className="relative w-full max-w-xl">
-            {CAPTIONS.map((c, i) => (
-              <div
-                key={c.title}
-                className="transition-all duration-500"
-                style={{
-                  position: i === 0 ? "relative" : "absolute",
-                  inset: i === 0 ? undefined : 0,
-                  opacity: active === i ? 1 : 0,
-                   transform: `translateY(${active === i ? 0 : active > i ? -18 : 18}px)`,
-                  pointerEvents: active === i ? "auto" : "none",
-                }}
+          <div className="relative min-h-[250px] w-full max-w-xl">
+            <AnimatePresence initial={false} mode="wait">
+              <motion.div
+                key={CAPTIONS[active].title}
+                initial={reduced ? undefined : { opacity: 0, y: 18, filter: "blur(8px)" }}
+                animate={reduced ? undefined : { opacity: 1, y: 0, filter: "blur(0px)" }}
+                exit={reduced ? undefined : { opacity: 0, y: -14, filter: "blur(6px)" }}
+                transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
               >
-                <p className="mb-4 text-[10px] font-semibold uppercase tracking-[0.32em] text-primary">{c.kicker}</p>
-                <h3 className="font-heading text-[clamp(2rem,5.4vw,4.2rem)] font-semibold leading-[0.94]">{c.title}</h3>
-                <p className="mt-5 max-w-md text-sm leading-relaxed text-foreground/75 sm:text-base">{c.text}</p>
-              </div>
-            ))}
+                <p className="mb-4 text-[10px] font-semibold uppercase tracking-[0.32em] text-primary">{CAPTIONS[active].kicker}</p>
+                <h3 className="font-heading text-[clamp(2rem,5.4vw,4.2rem)] font-semibold leading-[0.94]">{CAPTIONS[active].title}</h3>
+                <p className="mt-5 max-w-md text-sm leading-relaxed text-foreground/75 sm:text-base">{CAPTIONS[active].text}</p>
+              </motion.div>
+            </AnimatePresence>
           </div>
         </div>
 
