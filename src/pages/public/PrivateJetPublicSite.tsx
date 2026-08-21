@@ -1,6 +1,7 @@
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
+
 import { ArrowRight, CalendarDays, ChevronDown, Plane, Sparkles } from "lucide-react";
 import BackButton from "@/components/BackButton";
 import { Button } from "@/components/ui/button";
@@ -26,14 +27,35 @@ import JetAtmosphereSelector from "@/components/public/aurea-jet/JetAtmosphereSe
 import JetSignatureCards from "@/components/public/aurea-jet/JetSignatureCards";
 import JetCollectionTabs from "@/components/public/aurea-jet/JetCollectionTabs";
 import JetDailyPick from "@/components/public/aurea-jet/JetDailyPick";
-
-
-
+import JetWindowDive from "@/components/public/aurea-jet/JetWindowDive";
+import JetFleetGrid from "@/components/public/aurea-jet/JetFleetGrid";
+import JetExploded from "@/components/public/aurea-jet/JetExploded";
+import JetCircleForm from "@/components/public/aurea-jet/JetCircleForm";
+import { getLenis, destroyLenis } from "@/lib/lenis-singleton";
+import heroClouds from "@/assets/aurea-jet/hero-clouds.jpg";
 
 export default function PrivateJetPublicSite() {
   const heroRef = useRef<HTMLElement>(null);
   const reducedMotion = useReducedMotion();
   const { scrollYProgress } = useScroll({ target: heroRef, offset: ["start start", "end end"] });
+
+  // Smooth scrolling cinematografico + font serif esclusivo (solo su questa demo)
+  useEffect(() => {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    getLenis();
+    return () => destroyLenis();
+  }, []);
+
+  useEffect(() => {
+    const id = "aurea-jet-serif";
+    if (document.getElementById(id)) return;
+    const link = document.createElement("link");
+    link.id = id;
+    link.rel = "stylesheet";
+    link.href = "https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400&display=swap";
+    document.head.appendChild(link);
+  }, []);
+
 
   const planeX = useTransform(scrollYProgress, [0, 0.12, 0.48, 0.72, 1], ["-74vw", "-38vw", "24vw", "86vw", "118vw"]);
   const planeY = useTransform(scrollYProgress, [0, 0.48, 1], ["30vh", "1vh", "-18vh"]);
@@ -69,18 +91,26 @@ export default function PrivateJetPublicSite() {
         ["--ring" as string]: "40 58% 62%",
       }}
     >
+      <style>{`.jet-serif{font-family:'Playfair Display',Georgia,serif;font-weight:500;letter-spacing:-0.01em}`}</style>
 
       <BackButton to="/demo" label="Tutte le demo" variant="floating" theme="glass" className="!h-11 !w-11" />
 
       <section ref={heroRef} className="relative h-[240svh] bg-background">
         <div className="sticky top-0 h-[100svh] overflow-hidden">
           <motion.img
-            src={jetBackground}
-            alt="Jet privato sulla pista al tramonto"
+            src={heroClouds}
+            alt="Jet privato che emerge dalle nuvole al tramonto"
             width={1920}
             height={1088}
-            className="absolute inset-0 h-full w-full object-cover object-[60%_center]"
+            className="absolute inset-0 h-full w-full object-cover object-[62%_center]"
             style={reducedMotion ? undefined : { scale: backdropScale, y: backdropY }}
+          />
+          <img
+            src={jetBackground}
+            alt=""
+            aria-hidden
+            loading="lazy"
+            className="absolute inset-0 h-full w-full object-cover object-[60%_center] opacity-25 mix-blend-luminosity"
           />
           <motion.div
             className="absolute inset-0 bg-background"
@@ -96,17 +126,24 @@ export default function PrivateJetPublicSite() {
             className="absolute inset-0 z-10 flex items-center px-5 sm:px-10 lg:px-16"
             style={{ opacity: reducedMotion ? 1 : introOpacity }}
           >
-            <div className="max-w-3xl pt-16">
+            <motion.div
+              className="max-w-3xl pt-16"
+              initial={{ opacity: 0, y: 46 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 1.6, ease: [0.16, 1, 0.3, 1], delay: 0.15 }}
+            >
               <p className="mb-5 flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.28em] text-primary">
-                <Sparkles className="h-4 w-4" /> Noleggio jet privato
+                <Sparkles className="h-4 w-4" /> Noleggio e vendita jet privati
               </p>
-              <h1 className="max-w-3xl font-heading text-[clamp(2.9rem,8vw,7.5rem)] font-semibold leading-[0.86]">
-                Il mondo,<br /><span className="text-primary">senza attese.</span>
+              <h1 className="jet-serif max-w-3xl text-[clamp(2.6rem,7.4vw,6.8rem)] leading-[0.9]">
+                Il tempo non si compra.<br /><span className="italic text-primary">Si domina.</span>
               </h1>
+
               <p className="mt-7 max-w-xl text-sm leading-relaxed text-foreground/75 sm:text-lg">
                 Charter executive progettati intorno al tuo tempo. Un unico flight advisor, dalla richiesta all’atterraggio.
               </p>
-            </div>
+            </motion.div>
+
           </motion.div>
 
           <motion.div
@@ -115,7 +152,7 @@ export default function PrivateJetPublicSite() {
           >
             <div className="mt-24 max-w-lg border-l border-primary/55 pl-6 text-right sm:pl-10">
               <p className="mb-4 text-[11px] font-semibold uppercase tracking-[0.3em] text-primary">Your aircraft. Your schedule.</p>
-              <h2 className="font-heading text-4xl font-semibold leading-none sm:text-6xl">Decolla quando<br />decidi tu.</h2>
+              <h2 className="jet-serif text-4xl leading-none sm:text-6xl">Decolla quando<br /><span className="italic text-primary">decidi tu.</span></h2>
               <p className="ml-auto mt-6 max-w-md text-sm leading-relaxed text-foreground/70 sm:text-base">
                 Disponibilità reale, preventivo trasparente, concierge e transfer coordinati in un’unica esperienza digitale.
               </p>
@@ -158,8 +195,12 @@ export default function PrivateJetPublicSite() {
         </div>
       </section>
 
+      {/* ═══ Storytelling sticky: jet incollato, frasi blur-in, ingresso in cabina ═══ */}
+      <JetWindowDive />
+
       {/* ═══ Film cinematografico scrubbato dallo scroll ═══ */}
       <JetFilmScrub />
+
 
       {/* ═══ Trio di foto sfalsate + manifesto (blocco d'apertura stile riferimento) ═══ */}
       <JetScatterTrio />
@@ -179,8 +220,15 @@ export default function PrivateJetPublicSite() {
       {/* ═══ Card editoriali full-bleed con prezzo (L'icona / Il classico / L'accessibile) ═══ */}
       <JetSignatureCards />
 
+      {/* ═══ Flotta: griglia glassmorphism con hover oro ═══ */}
+      <JetFleetGrid />
+
+      {/* ═══ Dettagli ingegneristici: vista esplosa che si ricompone ═══ */}
+      <JetExploded />
+
       {/* ═══ Flotta: palco sticky + pannelli scroll-linked ═══ */}
       <JetCabinStage />
+
 
       {/* ═══ Nastro con velocità legata allo scroll (stile riferimento) ═══ */}
       <ScrollMarquee
@@ -211,6 +259,9 @@ export default function PrivateJetPublicSite() {
 
       {/* ═══ Servizi, sicurezza, clienti, FAQ, concierge ═══ */}
       <JetServiceSuite />
+
+      {/* ═══ Cerchio esclusivo: rotte off-market ═══ */}
+      <JetCircleForm />
 
 
       {/* ═══ Request — VIP console ═══ */}
