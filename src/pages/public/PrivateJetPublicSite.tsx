@@ -2,7 +2,7 @@ import { useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
 
-import { ArrowRight, CalendarDays, ChevronDown, Plane, Sparkles } from "lucide-react";
+import { ArrowRight, CalendarDays, ChevronDown, Sparkles } from "lucide-react";
 import BackButton from "@/components/BackButton";
 import { Button } from "@/components/ui/button";
 import jetBackground from "@/assets/hero-cinematic/private-jet-hangar.jpg";
