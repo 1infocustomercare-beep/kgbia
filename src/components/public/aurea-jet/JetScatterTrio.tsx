@@ -8,15 +8,15 @@
  */
 import { useRef } from "react";
 import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
-import cabinMain from "@/assets/aurea-jet/cabin-main.jpg";
-import wingCoast from "@/assets/aurea-jet/wing-coast.jpg";
-import cockpit from "@/assets/aurea-jet/cockpit.jpg";
+import tarmacNight from "@/assets/aurea-jet/tarmac-night.jpg";
+import wingSunrise from "@/assets/aurea-jet/wing-sunrise.jpg";
+import loungeTerrace from "@/assets/aurea-jet/lounge-terrace.jpg";
 import { ScrollWords } from "./JetScrollKit";
 
 const SHOTS = [
-  { src: cabinMain, alt: "Cabina di un jet privato", rot: -4.5, y: 120, w: "w-[62%] sm:w-[30%]", pos: "self-start" },
-  { src: wingCoast, alt: "Ala sopra la costa al tramonto", rot: 3.2, y: 220, w: "w-[54%] sm:w-[26%]", pos: "self-center" },
-  { src: cockpit, alt: "Cockpit di un jet executive", rot: -2.4, y: 60, w: "w-[58%] sm:w-[28%]", pos: "self-end" },
+  { src: tarmacNight, alt: "Jet privato sulla pista di notte", rot: -4.5, y: 120, w: "w-[62%] sm:w-[30%]", pos: "self-start" },
+  { src: wingSunrise, alt: "Ala illuminata dall'alba sopra le Alpi", rot: 3.2, y: 220, w: "w-[54%] sm:w-[26%]", pos: "self-center" },
+  { src: loungeTerrace, alt: "Lounge privata del terminal executive", rot: -2.4, y: 60, w: "w-[58%] sm:w-[28%]", pos: "self-end" },
 ];
 
 function Shot({ src, alt, rot, y, w, pos }: (typeof SHOTS)[number]) {

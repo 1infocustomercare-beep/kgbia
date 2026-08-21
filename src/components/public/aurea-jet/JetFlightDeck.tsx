@@ -30,11 +30,6 @@ import {
   Wallet,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
-import cabinMain from "@/assets/aurea-jet/cabin-main.jpg";
-import cabinDining from "@/assets/aurea-jet/cabin-dining.jpg";
-import cabinNight from "@/assets/aurea-jet/cabin-night.jpg";
-import cockpit from "@/assets/aurea-jet/cockpit.jpg";
-import wingCoast from "@/assets/aurea-jet/wing-coast.jpg";
 import { LuxeTag } from "@/components/public/luxe";
 
 type ModuleId = "operativo" | "flotta" | "rotta" | "cabina" | "wallet" | "concierge";
@@ -57,7 +52,7 @@ const FLEET = [
     range: "3.400 km",
     speed: "820 km/h",
     hourly: 3900,
-    img: cockpit,
+    tone: "from-primary/25 via-primary/5",
   },
   {
     id: "challenger",
@@ -67,7 +62,7 @@ const FLEET = [
     range: "5.900 km",
     speed: "870 km/h",
     hourly: 6400,
-    img: cabinMain,
+    tone: "from-primary/35 via-primary/8",
   },
   {
     id: "global",
@@ -77,7 +72,7 @@ const FLEET = [
     range: "14.260 km",
     speed: "982 km/h",
     hourly: 11800,
-    img: cabinNight,
+    tone: "from-primary/50 via-primary/10",
   },
 ];
 
@@ -88,9 +83,9 @@ const LEGS = [
 ];
 
 const CATERING = [
-  { label: "Menu degustazione", detail: "Chef stellato a bordo", price: "+ 890 €", img: cabinDining },
-  { label: "Cellar selection", detail: "Krug 2008 · Sassicaia", price: "+ 1.450 €", img: cabinNight },
-  { label: "Wellness set", detail: "Kit sonno, luce circadiana", price: "incluso", img: cabinMain },
+  { label: "Menu degustazione", detail: "Chef stellato a bordo", price: "+ 890 €", icon: Utensils },
+  { label: "Cellar selection", detail: "Krug 2008 · Sassicaia", price: "+ 1.450 €", icon: Wallet },
+  { label: "Wellness set", detail: "Kit sonno, luce circadiana", price: "incluso", icon: Sparkles },
 ];
 
 export default function JetFlightDeck() {
@@ -267,14 +262,10 @@ export default function JetFlightDeck() {
                               on ? "border-primary/70" : "border-border/60 hover:border-primary/40",
                             )}
                           >
-                            <div className="relative h-32 overflow-hidden">
-                              <img
-                                src={f.img}
-                                alt={f.name}
-                                loading="lazy"
-                                className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
-                              />
-                              <div className="absolute inset-0 bg-gradient-to-t from-card via-card/30 to-transparent" />
+                            <div className={cn("relative h-32 overflow-hidden bg-gradient-to-br to-transparent", f.tone)}>
+                              <div className="absolute inset-0 opacity-25 [background-image:linear-gradient(hsl(var(--primary)/0.5)_1px,transparent_1px),linear-gradient(90deg,hsl(var(--primary)/0.5)_1px,transparent_1px)] [background-size:22px_22px]" />
+                              <Plane className="absolute bottom-3 right-3 h-14 w-14 text-primary/70 transition-transform duration-700 group-hover:-translate-y-1 group-hover:scale-110" />
+                              <div className="absolute inset-0 bg-gradient-to-t from-card via-transparent to-transparent" />
                             </div>
                             <div className="space-y-1.5 p-4">
                               <p className="text-[9px] uppercase tracking-[0.24em] text-primary">{f.class}</p>
@@ -305,7 +296,7 @@ export default function JetFlightDeck() {
                   <div className="grid gap-4 lg:grid-cols-[1.2fr_1fr]">
                     <Card title="Rotta AU-114" hint="LIN → FCO → OLB">
                       <div className="relative h-56 overflow-hidden border border-border/50">
-                        <img src={wingCoast} alt="" className="h-full w-full object-cover opacity-45" loading="lazy" />
+                        <div className="h-full w-full bg-[radial-gradient(circle_at_20%_80%,hsl(var(--primary)/0.22),transparent_58%),radial-gradient(circle_at_80%_20%,hsl(var(--primary)/0.14),transparent_55%)]" />
                         <svg viewBox="0 0 400 200" className="absolute inset-0 h-full w-full">
                           <path
                             d="M40 160 C 140 40, 260 40, 360 100"
@@ -357,16 +348,15 @@ export default function JetFlightDeck() {
 
                 {module === "cabina" && (
                   <div className="grid gap-3 sm:grid-cols-3">
-                    {CATERING.map((c) => (
+                    {CATERING.map((c) => {
+                      const CIcon = c.icon;
+                      return (
                       <article key={c.label} className="group overflow-hidden border border-border/60">
-                        <div className="relative h-36 overflow-hidden">
-                          <img
-                            src={c.img}
-                            alt={c.label}
-                            loading="lazy"
-                            className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
-                          />
+                        <div className="relative flex h-36 items-center justify-center overflow-hidden bg-gradient-to-br from-primary/18 to-transparent">
+                          <div className="absolute inset-0 opacity-20 [background-image:linear-gradient(hsl(var(--primary)/0.5)_1px,transparent_1px),linear-gradient(90deg,hsl(var(--primary)/0.5)_1px,transparent_1px)] [background-size:20px_20px]" />
+                          <CIcon className="h-10 w-10 text-primary/80 transition-transform duration-700 group-hover:scale-110" />
                         </div>
+
                         <div className="space-y-2 p-4">
                           <p className="font-heading text-base font-semibold leading-tight">{c.label}</p>
                           <p className="text-[11px] text-foreground/55">{c.detail}</p>
@@ -375,7 +365,9 @@ export default function JetFlightDeck() {
                           </p>
                         </div>
                       </article>
-                    ))}
+                      );
+                    })}
+
                   </div>
                 )}
 

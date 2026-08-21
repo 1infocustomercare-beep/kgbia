@@ -9,24 +9,16 @@ import jetBackground from "@/assets/hero-cinematic/private-jet-hangar.jpg";
 import jetFlyby from "@/assets/hero-cinematic/private-jet.png";
 import { LuxeDivider, LuxeGrain, LuxePanel, LuxeStat } from "@/components/public/luxe";
 import JetFilmScrub from "@/components/public/aurea-jet/JetFilmScrub";
-import JetManifestoStack from "@/components/public/aurea-jet/JetManifestoStack";
-import JetFilmPortal from "@/components/public/aurea-jet/JetFilmPortal";
-import JetEditorial from "@/components/public/aurea-jet/JetEditorial";
-import JetCabinStage from "@/components/public/aurea-jet/JetCabinStage";
 import JetFlightDeck from "@/components/public/aurea-jet/JetFlightDeck";
 import JetCurtainSequence from "@/components/public/aurea-jet/JetCurtainSequence";
 import { ScrollMarquee } from "@/components/public/aurea-jet/JetScrollKit";
 import JetPlateStrip from "@/components/public/aurea-jet/JetPlateStrip";
-import JetDestinationsRail from "@/components/public/aurea-jet/JetDestinationsRail";
 import JetQuoteConsole from "@/components/public/aurea-jet/JetQuoteConsole";
 import JetServiceSuite from "@/components/public/aurea-jet/JetServiceSuite";
 import JetTopNav from "@/components/public/aurea-jet/JetTopNav";
 import JetConciergeFab from "@/components/public/aurea-jet/JetConciergeFab";
 import JetScatterTrio from "@/components/public/aurea-jet/JetScatterTrio";
 import JetAtmosphereSelector from "@/components/public/aurea-jet/JetAtmosphereSelector";
-import JetSignatureCards from "@/components/public/aurea-jet/JetSignatureCards";
-import JetCollectionTabs from "@/components/public/aurea-jet/JetCollectionTabs";
-import JetDailyPick from "@/components/public/aurea-jet/JetDailyPick";
 import JetWindowDive from "@/components/public/aurea-jet/JetWindowDive";
 import JetFleetGrid from "@/components/public/aurea-jet/JetFleetGrid";
 import JetExploded from "@/components/public/aurea-jet/JetExploded";
@@ -195,73 +187,47 @@ export default function PrivateJetPublicSite() {
         </div>
       </section>
 
-      {/* ═══ Storytelling sticky: jet incollato, frasi blur-in, ingresso in cabina ═══ */}
+      {/* ═══ 01 · Storytelling sticky: jet incollato, frasi blur-in, ingresso nella suite ═══ */}
       <JetWindowDive />
 
-      {/* ═══ Film cinematografico scrubbato dallo scroll ═══ */}
-      <JetFilmScrub />
-
-
-      {/* ═══ Trio di foto sfalsate + manifesto (blocco d'apertura stile riferimento) ═══ */}
+      {/* ═══ 02 · Trio di foto sfalsate + manifesto parola-per-parola ═══ */}
       <JetScatterTrio />
 
-      {/* ═══ Manifesto sticky con frasi in dissolvenza (stile riferimento) ═══ */}
-      <JetManifestoStack />
+      {/* ═══ 03 · Film cinematografico scrubbato dallo scroll (unico video del sito) ═══ */}
+      <JetFilmScrub />
 
-      {/* ═══ Film portal: fotogramma + player a schermo pieno ═══ */}
-      <JetFilmPortal />
-
-      {/* ═══ Atmosfere di bordo: swatch + crossfade + liste spec (stile Elixir) ═══ */}
+      {/* ═══ 04 · Atmosfere di bordo: swatch + crossfade + liste spec ═══ */}
       <JetAtmosphereSelector />
 
-      {/* ═══ Manifesto editoriale + triptych parallasse ═══ */}
-      <JetEditorial />
-
-      {/* ═══ Card editoriali full-bleed con prezzo (L'icona / Il classico / L'accessibile) ═══ */}
-      <JetSignatureCards />
-
-      {/* ═══ Flotta: griglia glassmorphism con hover oro ═══ */}
+      {/* ═══ 05 · Flotta: griglia glassmorphism con hover oro ═══ */}
       <JetFleetGrid />
 
-      {/* ═══ Dettagli ingegneristici: vista esplosa che si ricompone ═══ */}
+      {/* ═══ 06 · Dettagli ingegneristici: vista esplosa che si ricompone ═══ */}
       <JetExploded />
 
-      {/* ═══ Flotta: palco sticky + pannelli scroll-linked ═══ */}
-      <JetCabinStage />
-
-
-      {/* ═══ Nastro con velocità legata allo scroll (stile riferimento) ═══ */}
+      {/* ═══ 07 · Nastro con velocità legata allo scroll ═══ */}
       <ScrollMarquee
         items={["Milano Linate", "Nizza", "Ibiza", "Olbia", "Ginevra", "Dubai", "Saint-Tropez", "Mykonos", "Londra Luton"]}
       />
 
-      {/* ═══ Collezione flotta a tab con carosello trascinabile ═══ */}
-      <JetCollectionTabs />
-
-      {/* ═══ Sequenza a tendina + contatori ═══ */}
+      {/* ═══ 08 · Sequenza a tendina + contatori ═══ */}
       <JetCurtainSequence />
 
-      {/* ═══ La rotta del giorno (blocco Cultura del riferimento) ═══ */}
-      <JetDailyPick />
-
-      {/* ═══ La web-app Aurea Deck (console reale, full-bleed) ═══ */}
-      <JetFlightDeck />
-
-      {/* ═══ Allestimenti: nastro orizzontale con snap ═══ */}
+      {/* ═══ 09 · Materiali: nastro orizzontale con snap ═══ */}
       <JetPlateStrip />
 
+      {/* ═══ 10 · La web-app Aurea Deck (console operativa reale) ═══ */}
+      <JetFlightDeck />
 
-      {/* ═══ Destinazioni: rail orizzontale pinnato ═══ */}
-      <JetDestinationsRail />
-
-      {/* ═══ Configuratore preventivo live ═══ */}
+      {/* ═══ 11 · Configuratore preventivo live ═══ */}
       <JetQuoteConsole />
 
-      {/* ═══ Servizi, sicurezza, clienti, FAQ, concierge ═══ */}
+      {/* ═══ 12 · Servizi, sicurezza, clienti, FAQ, concierge ═══ */}
       <JetServiceSuite />
 
-      {/* ═══ Cerchio esclusivo: rotte off-market ═══ */}
+      {/* ═══ 13 · Cerchio esclusivo: rotte off-market ═══ */}
       <JetCircleForm />
+
 
 
       {/* ═══ Request — VIP console ═══ */}

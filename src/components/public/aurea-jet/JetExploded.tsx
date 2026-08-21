@@ -4,7 +4,7 @@
  * avionica e ala convergono sulla fusoliera fino a comporre il jet completo.
  * ADDITIVO — solo presentazione.
  */
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
 import fuselage from "@/assets/aurea-jet/part-fuselage.png";
 import engine from "@/assets/aurea-jet/part-engine.png";
@@ -15,18 +15,27 @@ import wing from "@/assets/aurea-jet/part-wing.png";
 export default function JetExploded() {
   const ref = useRef<HTMLElement>(null);
   const reduced = useReducedMotion();
+  const [k, setK] = useState(1);
+  useEffect(() => {
+    const mq = window.matchMedia("(max-width: 640px)");
+    const sync = () => setK(mq.matches ? 0.42 : 1);
+    sync();
+    mq.addEventListener("change", sync);
+    return () => mq.removeEventListener("change", sync);
+  }, []);
+  const pc = (v: number) => `${(v * k).toFixed(1)}%`;
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end end"] });
 
   const assemble = useTransform(scrollYProgress, [0.05, 0.78], [1, 0]);
 
-  const engineX = useTransform(assemble, [0, 1], ["8%", "-46%"]);
-  const engineY = useTransform(assemble, [0, 1], ["4%", "-42%"]);
-  const seatX = useTransform(assemble, [0, 1], ["-6%", "38%"]);
-  const seatY = useTransform(assemble, [0, 1], ["6%", "46%"]);
-  const avX = useTransform(assemble, [0, 1], ["-14%", "-54%"]);
-  const avY = useTransform(assemble, [0, 1], ["-2%", "40%"]);
-  const wingY = useTransform(assemble, [0, 1], ["2%", "-46%"]);
-  const wingX = useTransform(assemble, [0, 1], ["2%", "44%"]);
+  const engineX = useTransform(assemble, [0, 1], [pc(8.0), pc(-46.0)]);
+  const engineY = useTransform(assemble, [0, 1], [pc(4.0), pc(-42.0)]);
+  const seatX = useTransform(assemble, [0, 1], [pc(-6.0), pc(38.0)]);
+  const seatY = useTransform(assemble, [0, 1], [pc(6.0), pc(46.0)]);
+  const avX = useTransform(assemble, [0, 1], [pc(-14.0), pc(-54.0)]);
+  const avY = useTransform(assemble, [0, 1], [pc(-2.0), pc(40.0)]);
+  const wingY = useTransform(assemble, [0, 1], [pc(2.0), pc(-46.0)]);
+  const wingX = useTransform(assemble, [0, 1], [pc(2.0), pc(44.0)]);
   const partOpacity = useTransform(scrollYProgress, [0.72, 0.86], [1, 0]);
   const finalOpacity = useTransform(scrollYProgress, [0.74, 0.9], [0, 1]);
   const finalScale = useTransform(scrollYProgress, [0.74, 1], [0.86, 1]);

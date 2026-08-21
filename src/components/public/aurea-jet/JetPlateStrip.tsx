@@ -7,17 +7,15 @@
  * ADDITIVO — solo presentazione.
  */
 import { motion, useReducedMotion } from "framer-motion";
-import cabinDining from "@/assets/aurea-jet/cabin-dining.jpg";
-import fboLounge from "@/assets/aurea-jet/fbo-lounge.jpg";
-import tarmacLimo from "@/assets/aurea-jet/tarmac-limo.jpg";
-import helicopter from "@/assets/aurea-jet/helicopter.jpg";
+import detailStitching from "@/assets/aurea-jet/detail-stitching.jpg";
+import detailVeneer from "@/assets/aurea-jet/detail-veneer.jpg";
+import detailCrystal from "@/assets/aurea-jet/detail-crystal.jpg";
 import { LuxeCorners } from "@/components/public/luxe";
 
 const PLATES = [
-  { image: cabinDining, title: "Tavola Aurea", caption: "Menu firmato · servito in quota" },
-  { image: fboLounge, title: "Terminal privato", caption: "Lounge riservata · imbarco in 7 minuti" },
-  { image: tarmacLimo, title: "Transfer sotto l’ala", caption: "Berlina blindata · autista dedicato" },
-  { image: helicopter, title: "Ultimo miglio", caption: "Elicottero · da elisuperficie a villa" },
+  { image: detailStitching, title: "Pelle cucita a mano", caption: "Nabuk avorio · filo oro champagne" },
+  { image: detailVeneer, title: "Radica e titanio", caption: "Tavolo su misura · inserti spazzolati" },
+  { image: detailCrystal, title: "Cristalleria di bordo", caption: "Servizio dedicato · marmo nero" },
 ];
 
 export default function JetPlateStrip() {
@@ -30,8 +28,8 @@ export default function JetPlateStrip() {
           L’allestimento
         </h3>
         <p className="max-w-xl text-sm leading-relaxed text-muted-foreground sm:text-base">
-          Ogni volo Aurea arriva completo del suo scenario: terminal privato, tavola a bordo,
-          transfer coordinato e ultimo miglio in elicottero.
+          Materiali scelti a mano, uno per volta: pelle, radica, titanio e cristallo.
+          Il dettaglio che si sente sotto le dita, prima ancora di decollare.
         </p>
       </div>
 

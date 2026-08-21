@@ -8,7 +8,7 @@
 import { useRef } from "react";
 import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
 import jetSide from "@/assets/aurea-jet/part-wing.png";
-import cabinMain from "@/assets/aurea-jet/cabin-main.jpg";
+import cabinSuite from "@/assets/aurea-jet/cabin-suite.jpg";
 
 const LINES = [
   { at: 0.06, title: "Nessuna coda. Nessun gate.", body: "Il tuo equipaggio è già a bordo quando arrivi." },
@@ -37,8 +37,8 @@ export default function JetWindowDive() {
         {/* cabina finale */}
         <motion.div className="absolute inset-0" style={reduced ? { opacity: 1 } : { opacity: cabinOpacity }}>
           <motion.img
-            src={cabinMain}
-            alt="Cabina extra-lusso di un jet privato"
+            src={cabinSuite}
+            alt="Suite privata a bordo di un jet extra-lusso"
             loading="lazy"
             className="h-full w-full object-cover"
             style={reduced ? undefined : { scale: cabinScale }}
@@ -50,7 +50,7 @@ export default function JetWindowDive() {
           >
             <p className="text-[10px] uppercase tracking-[0.34em] text-primary">Sei dentro</p>
             <h3 className="jet-serif mx-auto mt-4 max-w-2xl text-3xl leading-[1.05] sm:text-5xl">
-              La cabina è la tua sala riunioni. E la tua suite.
+              La cabina è la tua suite. A dodicimila metri.
             </h3>
           </motion.div>
         </motion.div>
