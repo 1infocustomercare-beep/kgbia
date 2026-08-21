@@ -3,13 +3,14 @@
  * Editorial variant switcher (Ruzza-style triple product selector) adapted to
  * three cabin classes: immagine grande, specifiche e note di bordo.
  */
-import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { Gauge, Users, Ruler, Timer } from "lucide-react";
 import cabinMain from "@/assets/aurea-jet/cabin-main.jpg";
 import cabinNight from "@/assets/aurea-jet/cabin-night.jpg";
 import helicopter from "@/assets/aurea-jet/helicopter.jpg";
 import { LuxePanel, LuxeTag } from "@/components/public/luxe";
+import { useJetStepper } from "./useJetStepper";
+
 
 const FLEET = [
   {
@@ -60,11 +61,21 @@ const FLEET = [
 ];
 
 export default function JetFleetSelector() {
-  const [active, setActive] = useState(1);
+  const {
+    ref: sectionRef,
+    index: active,
+    setIndex: setActive,
+    swipeHandlers,
+  } = useJetStepper<HTMLElement>({ count: FLEET.length, initial: 1 });
   const jet = FLEET[active];
 
   return (
-    <section id="flotta" className="relative border-y border-border/50 px-5 py-20 sm:px-8 sm:py-28">
+    <section
+      ref={sectionRef}
+      id="flotta"
+      className="relative border-y border-border/50 px-5 py-20 sm:px-8 sm:py-28"
+    >
+
       <div className="mx-auto max-w-6xl">
         <div className="mb-10 flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
           <div>
@@ -93,7 +104,9 @@ export default function JetFleetSelector() {
         </div>
 
         <div className="grid gap-5 lg:grid-cols-[1.25fr_1fr]">
+          <div {...swipeHandlers} className="cursor-grab select-none active:cursor-grabbing">
           <LuxePanel glass className="relative overflow-hidden p-0">
+
             <AnimatePresence mode="wait">
               <motion.img
                 key={jet.id}
@@ -116,6 +129,11 @@ export default function JetFleetSelector() {
               <p className="mt-2 text-sm text-foreground/75">{jet.tagline}</p>
             </div>
           </LuxePanel>
+          <p className="mt-3 text-[10px] uppercase tracking-[0.22em] text-muted-foreground/80 lg:hidden">
+            Scorri per cambiare cabina
+          </p>
+          </div>
+
 
           <div className="flex flex-col gap-5">
             <LuxePanel className="grid grid-cols-2 divide-x divide-y divide-border/50">

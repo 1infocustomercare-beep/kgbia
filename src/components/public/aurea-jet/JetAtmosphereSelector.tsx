@@ -6,12 +6,13 @@
  *
  * ADDITIVO — solo presentazione.
  */
-import { useEffect, useRef, useState } from "react";
-import { AnimatePresence, motion, useInView, useReducedMotion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import cabinNight from "@/assets/aurea-jet/cabin-night.jpg";
 import cabinDining from "@/assets/aurea-jet/cabin-dining.jpg";
 import fboLounge from "@/assets/aurea-jet/fbo-lounge.jpg";
 import { LuxeCorners, LuxeTag } from "@/components/public/luxe";
+import { useJetStepper } from "./useJetStepper";
+
 
 const ATMOSPHERES = [
   {
@@ -53,27 +54,21 @@ const ATMOSPHERES = [
 ];
 
 export default function JetAtmosphereSelector() {
-  const [active, setActive] = useState(0);
-  const [autoplay, setAutoplay] = useState(true);
-  const sectionRef = useRef<HTMLElement | null>(null);
-  const inView = useInView(sectionRef, { margin: "-25% 0px -25% 0px" });
-  const reduced = useReducedMotion();
+  const {
+    ref: sectionRef,
+    index: active,
+    setIndex: select,
+    engaged,
+    inView,
+    reduced,
+    swipeHandlers,
+  } = useJetStepper<HTMLElement>({ count: ATMOSPHERES.length, autoplayMs: 5200 });
+  const autoplay = !engaged;
   const current = ATMOSPHERES[active];
-
-  /* Autoplay: scorre le atmosfere quando la sezione è a schermo, si ferma al primo tap */
-  useEffect(() => {
-    if (!autoplay || !inView || reduced) return;
-    const id = window.setInterval(() => setActive((i) => (i + 1) % ATMOSPHERES.length), 5200);
-    return () => window.clearInterval(id);
-  }, [autoplay, inView, reduced]);
-
-  const select = (i: number) => {
-    setAutoplay(false);
-    setActive(i);
-  };
 
   return (
     <section ref={sectionRef} id="atmosfere" className="relative bg-background px-5 py-24 sm:px-8 sm:py-32">
+
       <div className="mx-auto max-w-6xl">
         <LuxeTag>Atmosfere di bordo</LuxeTag>
         <h2 className="mt-6 max-w-2xl font-heading text-[clamp(1.9rem,5vw,3.6rem)] font-semibold leading-[1.02]">
@@ -118,8 +113,12 @@ export default function JetAtmosphereSelector() {
 
 
         <div className="mt-10 grid gap-8 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,1fr)] lg:items-start">
-          <div className="relative aspect-[4/5] overflow-hidden border border-border/60 bg-card/40 sm:aspect-[4/3]">
+          <div
+            {...swipeHandlers}
+            className="relative aspect-[4/5] cursor-grab select-none overflow-hidden border border-border/60 bg-card/40 active:cursor-grabbing sm:aspect-[4/3]"
+          >
             <LuxeCorners />
+
             <AnimatePresence mode="wait">
               <motion.img
                 key={current.id}
