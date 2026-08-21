@@ -84,7 +84,12 @@ export default function JetPlateStrip() {
           );
         })}
       </motion.div>
+      </div>
+      <p className="mx-auto mt-4 max-w-6xl px-5 text-[10px] uppercase tracking-[0.22em] text-muted-foreground/80 sm:px-8">
+        Trascina o scorri per esplorare i materiali
+      </p>
     </section>
+
   );
 }
 
