@@ -133,12 +133,13 @@ export function ScrollMarquee({
   });
 
   const row = [...items, ...items, ...items, ...items];
+  const xPct = useTransform(x, (v) => `${v}%`);
 
   return (
     <div className={cn("relative overflow-hidden border-y border-border/50 bg-card/40 py-4", className)}>
       <motion.div
         className="flex w-[200%] shrink-0 items-center whitespace-nowrap will-change-transform"
-        style={reduced ? undefined : { x: useTransform(x, (v) => `${v}%`), skewX: skew }}
+        style={reduced ? undefined : { x: xPct, skewX: skew }}
       >
         {row.map((item, i) => (
           <span
