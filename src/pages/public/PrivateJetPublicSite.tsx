@@ -60,20 +60,8 @@ export default function PrivateJetPublicSite() {
           <div className="absolute inset-0 bg-[linear-gradient(90deg,hsl(var(--background)/0.94)_0%,hsl(var(--background)/0.48)_48%,transparent_78%)]" />
           <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-background to-transparent" />
 
-          <header className="absolute inset-x-0 top-0 z-40 flex h-20 items-center justify-between border-b border-border/30 px-5 sm:px-10 lg:px-16">
-            <div className="ml-12 flex items-center gap-3 sm:ml-0">
-              <div className="flex h-10 w-10 items-center justify-center border border-primary/45 bg-background/55 backdrop-blur-xl">
-                <Plane className="h-5 w-5 text-primary" />
-              </div>
-              <div>
-                <p className="text-sm font-semibold uppercase tracking-[0.22em]">Aurea Jet</p>
-                <p className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground">Private Aviation</p>
-              </div>
-            </div>
-            <Button asChild size="sm" className="min-h-11 rounded-none px-5 uppercase tracking-[0.14em]">
-              <a href="#richiesta">Richiedi un volo</a>
-            </Button>
-          </header>
+          <JetTopNav />
+
 
           <motion.div
             className="absolute inset-0 z-10 flex items-center px-5 sm:px-10 lg:px-16"
