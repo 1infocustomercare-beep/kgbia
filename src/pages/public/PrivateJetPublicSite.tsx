@@ -7,12 +7,19 @@ import { Button } from "@/components/ui/button";
 import jetBackground from "@/assets/hero-cinematic/private-jet-hangar.jpg";
 import jetFlyby from "@/assets/hero-cinematic/private-jet.png";
 import { LuxeDivider, LuxeGrain, LuxePanel, LuxeStat, LuxeTag } from "@/components/public/luxe";
+import JetFilmScrub from "@/components/public/aurea-jet/JetFilmScrub";
+import JetEditorial from "@/components/public/aurea-jet/JetEditorial";
+import JetFleetSelector from "@/components/public/aurea-jet/JetFleetSelector";
+import JetDestinationsRail from "@/components/public/aurea-jet/JetDestinationsRail";
+import JetQuoteConsole from "@/components/public/aurea-jet/JetQuoteConsole";
+import JetServiceSuite from "@/components/public/aurea-jet/JetServiceSuite";
 
 const services = [
   { icon: Plane, title: "Charter su misura", text: "Rotta, aeromobile e orari costruiti intorno alla tua agenda." },
   { icon: Globe2, title: "Copertura globale", text: "Accesso a oltre 5.000 aeroporti e terminal riservati." },
   { icon: ShieldCheck, title: "Standard verificati", text: "Operatori certificati, assistenza dedicata e privacy assoluta." },
 ];
+
 
 export default function PrivateJetPublicSite() {
   const heroRef = useRef<HTMLElement>(null);
