@@ -78,14 +78,16 @@ export default function JetConciergeFab() {
           type="button"
           onClick={() => setOpen(true)}
           aria-label="Apri il concierge Aurea"
-          className="pointer-events-auto group flex items-center gap-2.5 rounded-full border border-primary/45 bg-card/90 px-4 py-3 shadow-[0_20px_50px_-20px_rgba(0,0,0,0.9)] backdrop-blur-md transition-transform hover:-translate-y-0.5"
+          className="pointer-events-auto group flex items-center gap-2.5 rounded-full border border-primary/45 px-4 py-3 shadow-[0_20px_50px_-20px_rgba(0,0,0,0.9)] backdrop-blur-md transition-transform hover:-translate-y-0.5"
+          style={{ background: "hsl(30 8% 8% / 0.92)", color: "hsl(40 26% 95%)" }}
         >
           <MessageCircle className="h-5 w-5 text-primary" />
           <span className="text-left">
             <span className="block font-heading text-sm leading-none">Concierge</span>
-            <span className="mt-1 block text-[9px] uppercase tracking-[0.16em] text-primary/80">Assistente AI</span>
+            <span className="mt-1 block text-[9px] uppercase tracking-[0.16em] text-primary/85">Assistente AI</span>
           </span>
         </button>
+
       )}
     </div>
   );

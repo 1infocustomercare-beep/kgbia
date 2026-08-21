@@ -50,28 +50,35 @@ function Dial({ value, max, unit, label }: { value: number; max: number; unit: s
   const r = 26;
   const c = 2 * Math.PI * r;
   return (
-    <div className="flex flex-col items-center gap-1.5">
-      <svg viewBox="0 0 64 64" className="h-[62px] w-[62px] -rotate-90">
-        <circle cx="32" cy="32" r={r} fill="none" stroke="hsl(var(--foreground) / 0.14)" strokeWidth="3" />
-        <circle
-          cx="32"
-          cy="32"
-          r={r}
-          fill="none"
-          stroke="hsl(var(--primary))"
-          strokeWidth="3"
-          strokeLinecap="round"
-          strokeDasharray={c}
-          strokeDashoffset={c * (1 - pct)}
-          style={{ transition: "stroke-dashoffset 0.6s ease-out" }}
-        />
-      </svg>
-      <p className="-mt-[46px] font-heading text-[15px] font-semibold leading-none">{Math.round(value).toLocaleString("it-IT")}</p>
-      <p className="mb-[18px] text-[8px] uppercase tracking-[0.16em] text-muted-foreground">{unit}</p>
+    <div className="flex flex-col items-center gap-2">
+      <div className="relative h-[62px] w-[62px]">
+        <svg viewBox="0 0 64 64" className="h-full w-full -rotate-90">
+          <circle cx="32" cy="32" r={r} fill="none" stroke="hsl(var(--foreground) / 0.14)" strokeWidth="3" />
+          <circle
+            cx="32"
+            cy="32"
+            r={r}
+            fill="none"
+            stroke="hsl(var(--primary))"
+            strokeWidth="3"
+            strokeLinecap="round"
+            strokeDasharray={c}
+            strokeDashoffset={c * (1 - pct)}
+            style={{ transition: "stroke-dashoffset 0.6s ease-out" }}
+          />
+        </svg>
+        <div className="absolute inset-0 flex flex-col items-center justify-center">
+          <span className="font-heading text-[13px] font-semibold leading-none">
+            {Math.round(value).toLocaleString("it-IT")}
+          </span>
+          <span className="mt-0.5 text-[7px] uppercase tracking-[0.14em] text-muted-foreground">{unit}</span>
+        </div>
+      </div>
       <p className="text-[8px] uppercase tracking-[0.18em] text-muted-foreground">{label}</p>
     </div>
   );
 }
+
 
 function Sparkline({ seed }: { seed: number }) {
   const points = useMemo(() => {
