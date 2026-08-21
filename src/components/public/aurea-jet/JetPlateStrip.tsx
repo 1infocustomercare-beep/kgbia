@@ -43,10 +43,20 @@ export default function JetPlateStrip() {
         </p>
       </div>
 
+      <div
+        ref={railRef}
+        onPointerDown={onDown}
+        onPointerMove={onMove}
+        onPointerUp={onUp}
+        onPointerLeave={onUp}
+        className="no-scrollbar cursor-grab overflow-x-auto active:cursor-grabbing"
+        style={{ touchAction: "pan-y" }}
+      >
       <motion.div
-        className="flex gap-5 px-5 pb-4 sm:gap-7 sm:px-8"
+        className="flex w-max gap-5 px-5 pb-4 sm:gap-7 sm:px-8"
         style={reduced ? undefined : { x: railX }}
       >
+
         {PLATES.map((plate, i) => {
           const depth = depths[i];
           return (
