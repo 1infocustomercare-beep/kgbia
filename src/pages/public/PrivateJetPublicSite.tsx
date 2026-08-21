@@ -211,8 +211,8 @@ export default function PrivateJetPublicSite() {
       {/* ═══ 07 · Sequenza a tendina + contatori ═══ */}
       <JetCurtainSequence />
 
-      {/* ═══ 08 · Dettagli ingegneristici: vista esplosa che si ricompone ═══ */}
-      <JetExploded />
+      {/* ═══ 08 · (rimosso dal flusso: sezione atelier non pertinente al sito agenzia) ═══ */}
+
 
       {/* ═══ 09 · Materiali: nastro orizzontale con snap ═══ */}
       <JetPlateStrip />
