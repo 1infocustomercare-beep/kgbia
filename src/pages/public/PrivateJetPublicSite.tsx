@@ -8,12 +8,17 @@ import jetBackground from "@/assets/hero-cinematic/private-jet-hangar.jpg";
 import jetFlyby from "@/assets/hero-cinematic/private-jet.png";
 import { LuxeDivider, LuxeGrain, LuxePanel, LuxeStat } from "@/components/public/luxe";
 import JetFilmScrub from "@/components/public/aurea-jet/JetFilmScrub";
+import JetManifestoStack from "@/components/public/aurea-jet/JetManifestoStack";
+import JetFilmPortal from "@/components/public/aurea-jet/JetFilmPortal";
 import JetEditorial from "@/components/public/aurea-jet/JetEditorial";
-import JetFleetSelector from "@/components/public/aurea-jet/JetFleetSelector";
+import JetCabinStage from "@/components/public/aurea-jet/JetCabinStage";
+import JetIosApp from "@/components/public/aurea-jet/JetIosApp";
+import JetPlateStrip from "@/components/public/aurea-jet/JetPlateStrip";
 import JetDestinationsRail from "@/components/public/aurea-jet/JetDestinationsRail";
 import JetQuoteConsole from "@/components/public/aurea-jet/JetQuoteConsole";
 import JetServiceSuite from "@/components/public/aurea-jet/JetServiceSuite";
 import JetTopNav from "@/components/public/aurea-jet/JetTopNav";
+import JetConciergeFab from "@/components/public/aurea-jet/JetConciergeFab";
 
 
 
