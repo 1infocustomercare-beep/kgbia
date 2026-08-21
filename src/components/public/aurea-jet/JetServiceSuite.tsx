@@ -9,8 +9,6 @@ import {
   Plane, Radio, Ship, ShieldCheck, Stethoscope, Trophy, Send, MessageSquare, ChevronDown, Building2,
 } from "lucide-react";
 import { LuxePanel, LuxeTag, LuxeDivider } from "@/components/public/luxe";
-import fboLounge from "@/assets/aurea-jet/fbo-lounge.jpg";
-import cockpit from "@/assets/aurea-jet/cockpit.jpg";
 
 /* ── Servizi ── */
 const SERVICES = [
@@ -231,10 +229,25 @@ export default function JetServiceSuite() {
       {/* Sicurezza + cockpit */}
       <section className="relative border-y border-border/50">
         <div className="grid lg:grid-cols-2">
-          <div className="relative min-h-[46svh]">
-            <img src={cockpit} alt="Cockpit di un jet privato in volo notturno" loading="lazy" width={1600} height={1000} className="absolute inset-0 h-full w-full object-cover" />
-            <div className="absolute inset-0 bg-gradient-to-r from-background/80 to-background/20" />
+          <div className="relative min-h-[46svh] overflow-hidden bg-card/40">
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_28%_30%,hsl(var(--primary)/0.16),transparent_62%)]" />
+            <div className="absolute inset-0 opacity-[0.16] [background-image:linear-gradient(hsl(var(--primary)/0.5)_1px,transparent_1px),linear-gradient(90deg,hsl(var(--primary)/0.5)_1px,transparent_1px)] [background-size:44px_44px]" />
+            <div className="relative flex h-full min-h-[46svh] flex-col justify-center gap-5 px-6 py-14 sm:px-12">
+              <p className="text-[10px] uppercase tracking-[0.32em] text-primary">Flight desk · live</p>
+              {[
+                { k: "Audit operatori", v: "Wyvern / ARGUS verificato" },
+                { k: "Monitoraggio meteo", v: "Ogni 4 minuti, per tratta" },
+                { k: "Doppio equipaggio", v: "Su tutte le rotte > 6h" },
+                { k: "Slot & handling", v: "Confermati prima del pagamento" },
+              ].map((r) => (
+                <div key={r.k} className="flex items-baseline justify-between gap-4 border-b border-border/50 pb-3">
+                  <span className="text-[10px] uppercase tracking-[0.24em] text-muted-foreground">{r.k}</span>
+                  <span className="jet-serif text-right text-base text-foreground sm:text-xl">{r.v}</span>
+                </div>
+              ))}
+            </div>
           </div>
+
           <div className="px-5 py-16 sm:px-10 sm:py-24">
             <LuxeTag><ShieldCheck className="h-3 w-3" /> Sicurezza</LuxeTag>
             <h2 className="mt-5 font-heading text-3xl font-semibold leading-tight sm:text-4xl">
@@ -294,14 +307,29 @@ export default function JetServiceSuite() {
               ))}
             </div>
           </div>
-          <div className="relative overflow-hidden border border-border/60">
-            <img src={fboLounge} alt="Lounge privata di un terminal executive" loading="lazy" width={1600} height={1000} className="h-full min-h-[42svh] w-full object-cover" />
-            <div className="absolute inset-0 bg-gradient-to-t from-background/85 to-transparent" />
-            <div className="absolute bottom-0 p-7">
-              <p className="text-[10px] uppercase tracking-[0.3em] text-primary">Terminal privato</p>
-              <p className="mt-2 font-heading text-2xl font-semibold">Controlli in 4 minuti.</p>
+          <div className="relative overflow-hidden border border-border/60 bg-card/40">
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_75%_18%,hsl(var(--primary)/0.18),transparent_60%)]" />
+            <div className="relative flex min-h-[42svh] flex-col justify-between gap-8 p-7">
+              <div>
+                <p className="text-[10px] uppercase tracking-[0.3em] text-primary">Terminal privato</p>
+                <p className="jet-serif mt-3 text-3xl leading-tight sm:text-4xl">Controlli in 4 minuti.</p>
+              </div>
+              <div className="grid grid-cols-2 gap-px bg-border/40">
+                {[
+                  { k: "Arrivo", v: "15′ prima" },
+                  { k: "Bagagli", v: "Senza limiti" },
+                  { k: "Security", v: "Dedicata" },
+                  { k: "Transfer", v: "Sotto l’ala" },
+                ].map((s) => (
+                  <div key={s.k} className="bg-background/70 px-4 py-5">
+                    <p className="text-[9px] uppercase tracking-[0.24em] text-muted-foreground">{s.k}</p>
+                    <p className="mt-1 text-sm font-semibold text-foreground">{s.v}</p>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
+
         </div>
       </section>
     </>

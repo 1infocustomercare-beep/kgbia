@@ -20,7 +20,7 @@ export default function JetConciergeFab() {
   const [open, setOpen] = useState(false);
 
   return (
-    <div className="pointer-events-none fixed bottom-4 right-4 z-[60] flex flex-col items-end gap-3 md:bottom-7 md:right-7">
+    <div className="pointer-events-none fixed bottom-24 right-4 z-[60] flex flex-col items-end gap-3 md:bottom-7 md:right-7">
       <AnimatePresence>
         {open && (
           <motion.div
@@ -44,7 +44,7 @@ export default function JetConciergeFab() {
                 <X className="h-4 w-4" />
               </button>
             </div>
-            <div className="flex max-h-[46vh] flex-col gap-2.5 overflow-y-auto px-4 py-4">
+            <div className="flex max-h-[46svh] flex-col gap-2.5 overflow-y-auto px-4 py-4">
               {SCRIPT.map((m, i) => (
                 <motion.p
                   key={i}

@@ -6,9 +6,9 @@
  *
  * ADDITIVO — solo presentazione.
  */
-import cabinDining from "@/assets/aurea-jet/cabin-dining.jpg";
-import fboLounge from "@/assets/aurea-jet/fbo-lounge.jpg";
 import tarmacLimo from "@/assets/aurea-jet/tarmac-limo.jpg";
+import crewService from "@/assets/aurea-jet/crew-service.jpg";
+import destinationCoast from "@/assets/aurea-jet/destination-coast.jpg";
 import { LuxeTag } from "@/components/public/luxe";
 import { ClipCurtain, LineWipe, ScrollCounter, ScrollWords } from "./JetScrollKit";
 
@@ -35,23 +35,23 @@ export default function JetCurtainSequence() {
 
         <div className="mt-14 grid gap-5 sm:grid-cols-3">
           <ClipCurtain
-            src={fboLounge}
-            alt="Lounge FBO privata"
-            caption="01 · Lounge privata, nessun controllo in fila"
-            className="h-[52vh] min-h-[300px] sm:mt-0"
+            src={tarmacLimo}
+            alt="Berlina sotto l'ala del jet"
+            caption="01 · Auto sotto l'ala, nessun controllo in fila"
+            className="h-[52svh] min-h-[300px] sm:mt-0"
           />
           <ClipCurtain
-            src={tarmacLimo}
-            alt="Transfer sotto l'ala"
-            caption="02 · Auto sotto l'ala, bagagli a bordo"
-            className="h-[52vh] min-h-[300px] sm:mt-14"
+            src={crewService}
+            alt="Servizio champagne a bordo"
+            caption="02 · Servizio dedicato, champagne in quota"
+            className="h-[52svh] min-h-[300px] sm:mt-14"
             from="left"
           />
           <ClipCurtain
-            src={cabinDining}
-            alt="Servizio a bordo"
-            caption="03 · Tavola stellata a 13.000 metri"
-            className="h-[52vh] min-h-[300px] sm:mt-6"
+            src={destinationCoast}
+            alt="Costa mediterranea vista dall'alto"
+            caption="03 · Atterri dove inizia la tua estate"
+            className="h-[52svh] min-h-[300px] sm:mt-6"
           />
         </div>
 

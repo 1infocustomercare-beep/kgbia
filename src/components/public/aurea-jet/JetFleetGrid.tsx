@@ -6,17 +6,17 @@
  */
 import { motion } from "framer-motion";
 import { Gauge, Ruler, Users } from "lucide-react";
-import cabinMain from "@/assets/aurea-jet/cabin-main.jpg";
-import cabinNight from "@/assets/aurea-jet/cabin-night.jpg";
-import cabinDining from "@/assets/aurea-jet/cabin-dining.jpg";
+import exteriorG700 from "@/assets/aurea-jet/exterior-g700.jpg";
+import exteriorHangar from "@/assets/aurea-jet/exterior-hangar.jpg";
+import galleyDetail from "@/assets/aurea-jet/galley-detail.jpg";
 import wingCoast from "@/assets/aurea-jet/wing-coast.jpg";
 import cockpit from "@/assets/aurea-jet/cockpit.jpg";
 import helicopter from "@/assets/aurea-jet/helicopter.jpg";
 
 const FLEET = [
-  { name: "Aurea G700", tier: "Ultra long range", img: cabinMain, pax: "19", range: "13.890 km", speed: "Mach 0.925", hourly: "€ 12.400 / h" },
-  { name: "Aurea Global 8000", tier: "Ultra long range", img: cabinNight, pax: "17", range: "14.800 km", speed: "Mach 0.94", hourly: "€ 13.100 / h" },
-  { name: "Aurea Falcon 10X", tier: "Wide cabin", img: cabinDining, pax: "16", range: "13.900 km", speed: "Mach 0.925", hourly: "€ 11.700 / h" },
+  { name: "Aurea G700", tier: "Ultra long range", img: exteriorG700, pax: "19", range: "13.890 km", speed: "Mach 0.925", hourly: "€ 12.400 / h" },
+  { name: "Aurea Global 8000", tier: "Ultra long range", img: exteriorHangar, pax: "17", range: "14.800 km", speed: "Mach 0.94", hourly: "€ 13.100 / h" },
+  { name: "Aurea Falcon 10X", tier: "Wide cabin", img: galleyDetail, pax: "16", range: "13.900 km", speed: "Mach 0.925", hourly: "€ 11.700 / h" },
   { name: "Aurea Challenger 3500", tier: "Super mid-size", img: wingCoast, pax: "10", range: "6.500 km", speed: "Mach 0.83", hourly: "€ 6.900 / h" },
   { name: "Aurea Praetor 600", tier: "Super mid-size", img: cockpit, pax: "12", range: "7.400 km", speed: "Mach 0.83", hourly: "€ 6.400 / h" },
   { name: "Aurea Rotor 175", tier: "Elicottero VIP", img: helicopter, pax: "8", range: "780 km", speed: "287 km/h", hourly: "€ 4.200 / h" },
@@ -49,7 +49,7 @@ export default function JetFleetGrid() {
               <div className="relative h-52 overflow-hidden">
                 <img
                   src={jet.img}
-                  alt={`Interni ${jet.name}`}
+                  alt={`Aeromobile ${jet.name}`}
                   loading="lazy"
                   className="h-full w-full object-cover transition-transform duration-[900ms] ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-110"
                 />

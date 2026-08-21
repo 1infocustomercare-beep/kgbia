@@ -4,7 +4,7 @@
  * avionica e ala convergono sulla fusoliera fino a comporre il jet completo.
  * ADDITIVO — solo presentazione.
  */
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
 import fuselage from "@/assets/aurea-jet/part-fuselage.png";
 import engine from "@/assets/aurea-jet/part-engine.png";
@@ -15,18 +15,27 @@ import wing from "@/assets/aurea-jet/part-wing.png";
 export default function JetExploded() {
   const ref = useRef<HTMLElement>(null);
   const reduced = useReducedMotion();
+  const [k, setK] = useState(1);
+  useEffect(() => {
+    const mq = window.matchMedia("(max-width: 640px)");
+    const sync = () => setK(mq.matches ? 0.8 : 1);
+    sync();
+    mq.addEventListener("change", sync);
+    return () => mq.removeEventListener("change", sync);
+  }, []);
+  const pc = (v: number) => `calc(-50% + ${(v * k).toFixed(1)}%)`;
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end end"] });
 
   const assemble = useTransform(scrollYProgress, [0.05, 0.78], [1, 0]);
 
-  const engineX = useTransform(assemble, [0, 1], ["8%", "-46%"]);
-  const engineY = useTransform(assemble, [0, 1], ["4%", "-42%"]);
-  const seatX = useTransform(assemble, [0, 1], ["-6%", "38%"]);
-  const seatY = useTransform(assemble, [0, 1], ["6%", "46%"]);
-  const avX = useTransform(assemble, [0, 1], ["-14%", "-54%"]);
-  const avY = useTransform(assemble, [0, 1], ["-2%", "40%"]);
-  const wingY = useTransform(assemble, [0, 1], ["2%", "-46%"]);
-  const wingX = useTransform(assemble, [0, 1], ["2%", "44%"]);
+  const engineX = useTransform(assemble, [0, 1], [pc(8.0), pc(-46.0)]);
+  const engineY = useTransform(assemble, [0, 1], [pc(4.0), pc(-42.0)]);
+  const seatX = useTransform(assemble, [0, 1], [pc(-6.0), pc(38.0)]);
+  const seatY = useTransform(assemble, [0, 1], [pc(6.0), pc(46.0)]);
+  const avX = useTransform(assemble, [0, 1], [pc(-14.0), pc(-54.0)]);
+  const avY = useTransform(assemble, [0, 1], [pc(-2.0), pc(40.0)]);
+  const wingY = useTransform(assemble, [0, 1], [pc(2.0), pc(-46.0)]);
+  const wingX = useTransform(assemble, [0, 1], [pc(2.0), pc(44.0)]);
   const partOpacity = useTransform(scrollYProgress, [0.72, 0.86], [1, 0]);
   const finalOpacity = useTransform(scrollYProgress, [0.74, 0.9], [0, 1]);
   const finalScale = useTransform(scrollYProgress, [0.74, 1], [0.86, 1]);
@@ -51,16 +60,16 @@ export default function JetExploded() {
             src={fuselage}
             alt="Fusoliera del jet"
             loading="lazy"
-            className="absolute left-1/2 top-1/2 w-[min(92vw,980px)] -translate-x-1/2 -translate-y-1/2 object-contain"
-            style={reduced ? undefined : { opacity: fuseOpacity, rotate }}
+            className="absolute left-1/2 top-1/2 w-[min(92vw,980px)] object-contain"
+            style={{ x: "-50%", y: "-50%", ...(reduced ? {} : { opacity: fuseOpacity, rotate }) }}
           />
           {/* jet completo */}
           <motion.img
             src={wing}
             alt="Jet privato completo"
             loading="lazy"
-            className="absolute left-1/2 top-1/2 w-[min(88vw,860px)] -translate-x-1/2 -translate-y-1/2 object-contain drop-shadow-[0_40px_80px_hsl(var(--primary)/0.25)]"
-            style={reduced ? { opacity: 1 } : { opacity: finalOpacity, scale: finalScale }}
+            className="absolute left-1/2 top-1/2 w-[min(88vw,860px)] object-contain drop-shadow-[0_40px_80px_hsl(var(--primary)/0.25)]"
+            style={{ x: "-50%", y: "-50%", ...(reduced ? { opacity: 1 } : { opacity: finalOpacity, scale: finalScale }) }}
           />
 
           <Part src={engine} alt="Motore" x={engineX} y={engineY} o={partOpacity} reduced={!!reduced} size="w-[26vw] max-w-[240px]" />
@@ -86,7 +95,7 @@ export default function JetExploded() {
             alt=""
             aria-hidden
             loading="lazy"
-            className="absolute left-1/2 top-1/2 w-[24vw] max-w-[220px] -translate-x-1/2 -translate-y-1/2 object-contain opacity-0"
+            className="absolute left-1/2 top-1/2 w-[24vw] max-w-[220px] object-contain opacity-0"
             style={{ x: wingX, y: wingY }}
           />
         </motion.div>
@@ -117,8 +126,10 @@ function Part({
       src={src}
       alt={alt}
       loading="lazy"
-      className={`absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 object-contain drop-shadow-[0_24px_60px_hsl(var(--background))] ${size}`}
-      style={reduced ? { opacity: 0.9 } : { x, y, opacity: o }}
+      className={`absolute left-1/2 top-1/2 object-contain drop-shadow-[0_24px_60px_hsl(var(--background))] ${size}`}
+      style={
+        reduced ? { x: "-50%", y: "-50%", opacity: 0.9 } : { x, y, opacity: o }
+      }
     />
   );
 }
