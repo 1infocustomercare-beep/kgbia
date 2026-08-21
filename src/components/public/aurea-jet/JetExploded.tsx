@@ -60,16 +60,16 @@ export default function JetExploded() {
             src={fuselage}
             alt="Fusoliera del jet"
             loading="lazy"
-            className="absolute left-1/2 top-1/2 w-[min(92vw,980px)] -translate-x-1/2 -translate-y-1/2 object-contain"
-            style={reduced ? undefined : { opacity: fuseOpacity, rotate }}
+            className="absolute left-1/2 top-1/2 w-[min(92vw,980px)] object-contain"
+            style={{ x: "-50%", y: "-50%", ...(reduced ? {} : { opacity: fuseOpacity, rotate }) }}
           />
           {/* jet completo */}
           <motion.img
             src={wing}
             alt="Jet privato completo"
             loading="lazy"
-            className="absolute left-1/2 top-1/2 w-[min(88vw,860px)] -translate-x-1/2 -translate-y-1/2 object-contain drop-shadow-[0_40px_80px_hsl(var(--primary)/0.25)]"
-            style={reduced ? { opacity: 1 } : { opacity: finalOpacity, scale: finalScale }}
+            className="absolute left-1/2 top-1/2 w-[min(88vw,860px)] object-contain drop-shadow-[0_40px_80px_hsl(var(--primary)/0.25)]"
+            style={{ x: "-50%", y: "-50%", ...(reduced ? { opacity: 1 } : { opacity: finalOpacity, scale: finalScale }) }}
           />
 
           <Part src={engine} alt="Motore" x={engineX} y={engineY} o={partOpacity} reduced={!!reduced} size="w-[26vw] max-w-[240px]" />
@@ -126,8 +126,12 @@ function Part({
       src={src}
       alt={alt}
       loading="lazy"
-      className={`absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 object-contain drop-shadow-[0_24px_60px_hsl(var(--background))] ${size}`}
-      style={reduced ? { opacity: 0.9 } : { x, y, opacity: o }}
+      className={`absolute left-1/2 top-1/2 object-contain drop-shadow-[0_24px_60px_hsl(var(--background))] ${size}`}
+      style={
+        reduced
+          ? { x: "-50%", y: "-50%", opacity: 0.9 }
+          : { translateX: "-50%", translateY: "-50%", x, y, opacity: o }
+      }
     />
   );
 }
