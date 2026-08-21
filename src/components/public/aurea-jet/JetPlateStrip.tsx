@@ -26,7 +26,10 @@ export default function JetPlateStrip() {
   const smooth = useSpring(scrollYProgress, { stiffness: 90, damping: 26, mass: 0.4 });
   /* Nastro guidato dallo scroll: scorre in orizzontale mentre la sezione attraversa il viewport */
   const railX = useTransform(smooth, [0, 1], ["6%", "-24%"]);
-  const railXMobile = useTransform(smooth, [0, 1], ["4%", "-46%"]);
+  const depth0 = useTransform(smooth, [0, 1], [26, -26]);
+  const depth1 = useTransform(smooth, [0, 1], [38, -38]);
+  const depth2 = useTransform(smooth, [0, 1], [50, -50]);
+  const depths = [depth0, depth1, depth2];
 
   return (
     <section ref={sectionRef} id="allestimenti" className="relative overflow-hidden bg-background py-20 sm:py-28">
