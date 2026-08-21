@@ -37,7 +37,27 @@ export default function PrivateJetPublicSite() {
   const trailOpacity = useTransform(scrollYProgress, [0.08, 0.44, 0.78], [0, 0.85, 0]);
 
   return (
-    <main id="top" className="min-h-screen overflow-x-clip bg-background text-foreground">
+    <main
+      id="top"
+      className="min-h-screen overflow-x-clip bg-background text-foreground"
+      style={{
+        // Scoped luxury palette (champagne gold on deep graphite) — demo-only, does not affect Empire webapp
+        ["--background" as string]: "30 8% 6%",
+        ["--foreground" as string]: "40 26% 95%",
+        ["--card" as string]: "30 8% 9%",
+        ["--card-foreground" as string]: "40 26% 95%",
+        ["--muted" as string]: "30 6% 14%",
+        ["--muted-foreground" as string]: "38 12% 68%",
+        ["--primary" as string]: "40 58% 62%",
+        ["--primary-foreground" as string]: "30 12% 8%",
+        ["--accent" as string]: "40 58% 62%",
+        ["--accent-foreground" as string]: "30 12% 8%",
+        ["--border" as string]: "38 16% 22%",
+        ["--input" as string]: "38 16% 22%",
+        ["--ring" as string]: "40 58% 62%",
+      }}
+    >
+
       <BackButton to="/demo" label="Tutte le demo" variant="floating" theme="glass" className="!h-11 !w-11" />
 
       <section ref={heroRef} className="relative h-[240svh] bg-background">
