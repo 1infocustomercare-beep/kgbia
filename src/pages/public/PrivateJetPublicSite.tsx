@@ -161,14 +161,23 @@ export default function PrivateJetPublicSite() {
       {/* ═══ Film cinematografico scrubbato dallo scroll ═══ */}
       <JetFilmScrub />
 
+      {/* ═══ Trio di foto sfalsate + manifesto (blocco d'apertura stile riferimento) ═══ */}
+      <JetScatterTrio />
+
       {/* ═══ Manifesto sticky con frasi in dissolvenza (stile riferimento) ═══ */}
       <JetManifestoStack />
 
       {/* ═══ Film portal: fotogramma + player a schermo pieno ═══ */}
       <JetFilmPortal />
 
+      {/* ═══ Atmosfere di bordo: swatch + crossfade + liste spec (stile Elixir) ═══ */}
+      <JetAtmosphereSelector />
+
       {/* ═══ Manifesto editoriale + triptych parallasse ═══ */}
       <JetEditorial />
+
+      {/* ═══ Card editoriali full-bleed con prezzo (L'icona / Il classico / L'accessibile) ═══ */}
+      <JetSignatureCards />
 
       {/* ═══ Flotta: palco sticky + pannelli scroll-linked ═══ */}
       <JetCabinStage />
@@ -178,14 +187,21 @@ export default function PrivateJetPublicSite() {
         items={["Milano Linate", "Nizza", "Ibiza", "Olbia", "Ginevra", "Dubai", "Saint-Tropez", "Mykonos", "Londra Luton"]}
       />
 
+      {/* ═══ Collezione flotta a tab con carosello trascinabile ═══ */}
+      <JetCollectionTabs />
+
       {/* ═══ Sequenza a tendina + contatori ═══ */}
       <JetCurtainSequence />
+
+      {/* ═══ La rotta del giorno (blocco Cultura del riferimento) ═══ */}
+      <JetDailyPick />
 
       {/* ═══ La web-app Aurea Deck (console reale, full-bleed) ═══ */}
       <JetFlightDeck />
 
       {/* ═══ Allestimenti: nastro orizzontale con snap ═══ */}
       <JetPlateStrip />
+
 
       {/* ═══ Destinazioni: rail orizzontale pinnato ═══ */}
       <JetDestinationsRail />
