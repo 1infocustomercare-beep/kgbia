@@ -48,7 +48,7 @@ export default function JetPlateStrip() {
         style={reduced ? undefined : { x: railX }}
       >
         {PLATES.map((plate, i) => {
-          const depth = useTransform(smooth, [0, 1], [26 + i * 12, -26 - i * 12]);
+          const depth = depths[i];
           return (
             <motion.figure
               key={plate.title}
