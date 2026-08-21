@@ -1,7 +1,7 @@
 import { useRef } from "react";
 import { Link } from "react-router-dom";
 import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
-import { ArrowRight, CalendarDays, ChevronDown, Globe2, Plane, ShieldCheck, Sparkles } from "lucide-react";
+import { ArrowRight, CalendarDays, ChevronDown, Plane, Sparkles } from "lucide-react";
 import BackButton from "@/components/BackButton";
 import { Button } from "@/components/ui/button";
 import jetBackground from "@/assets/hero-cinematic/private-jet-hangar.jpg";
@@ -16,11 +16,6 @@ import JetServiceSuite from "@/components/public/aurea-jet/JetServiceSuite";
 import JetTopNav from "@/components/public/aurea-jet/JetTopNav";
 
 
-const services = [
-  { icon: Plane, title: "Charter su misura", text: "Rotta, aeromobile e orari costruiti intorno alla tua agenda." },
-  { icon: Globe2, title: "Copertura globale", text: "Accesso a oltre 5.000 aeroporti e terminal riservati." },
-  { icon: ShieldCheck, title: "Standard verificati", text: "Operatori certificati, assistenza dedicata e privacy assoluta." },
-];
 
 
 export default function PrivateJetPublicSite() {
