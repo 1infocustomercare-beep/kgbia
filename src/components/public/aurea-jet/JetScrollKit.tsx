@@ -33,7 +33,7 @@ export function ScrollWords({
   text,
   className,
   accent,
-  offset = ["start 0.85", "end 0.45"] as const,
+  offset = ["start 0.92", "end 0.62"] as const,
 }: {
   text: string;
   className?: string;
@@ -45,7 +45,7 @@ export function ScrollWords({
   const reduced = useReducedMotion();
   const { scrollYProgress } = useScroll({
     target: ref,
-    offset: offset as unknown as ["start 0.85", "end 0.45"],
+    offset: offset as unknown as ["start 0.92", "end 0.62"],
   });
   const words = text.split(" ");
 
@@ -174,7 +174,7 @@ export function ClipCurtain({
 }) {
   const ref = useRef<HTMLDivElement>(null);
   const reduced = useReducedMotion();
-  const { scrollYProgress } = useScroll({ target: ref, offset: ["start 0.95", "center 0.55"] });
+  const { scrollYProgress } = useScroll({ target: ref, offset: ["start 0.92", "center 0.64"] });
   const inset = useTransform(scrollYProgress, [0, 1], [100, 0]);
   const clip = useTransform(inset, (v) =>
     from === "bottom" ? `inset(${v}% 0% 0% 0%)` : `inset(0% ${v}% 0% 0%)`,

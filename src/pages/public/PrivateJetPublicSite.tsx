@@ -25,6 +25,7 @@ import JetExploded from "@/components/public/aurea-jet/JetExploded";
 import JetCircleForm from "@/components/public/aurea-jet/JetCircleForm";
 import { getLenis, destroyLenis } from "@/lib/lenis-singleton";
 import heroClouds from "@/assets/aurea-jet/hero-clouds.jpg";
+import { JET_SCROLL } from "@/components/public/aurea-jet/jet-motion";
 
 export default function PrivateJetPublicSite() {
   const heroRef = useRef<HTMLElement>(null);
@@ -87,7 +88,7 @@ export default function PrivateJetPublicSite() {
 
       <BackButton to="/demo" label="Tutte le demo" variant="floating" theme="glass" className="!h-11 !w-11" />
 
-      <section ref={heroRef} className="relative h-[240svh] bg-background">
+      <section ref={heroRef} className={`relative bg-background ${JET_SCROLL.heroHeight}`}>
         <div className="sticky top-0 h-[100svh] overflow-hidden">
           <motion.img
             src={heroClouds}
@@ -97,12 +98,12 @@ export default function PrivateJetPublicSite() {
             className="absolute inset-0 h-full w-full object-cover object-[62%_center]"
             style={reducedMotion ? undefined : { scale: backdropScale, y: backdropY }}
           />
-          <img
+          <motion.img
             src={jetBackground}
             alt=""
             aria-hidden
-            loading="lazy"
-            className="absolute inset-0 h-full w-full object-cover object-[60%_center] opacity-25 mix-blend-luminosity"
+            className="absolute inset-0 h-full w-full object-cover object-[60%_center] opacity-20 mix-blend-luminosity"
+            style={reducedMotion ? undefined : { scale: backdropScale }}
           />
           <motion.div
             className="absolute inset-0 bg-background"

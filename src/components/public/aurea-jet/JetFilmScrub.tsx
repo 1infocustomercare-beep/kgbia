@@ -8,14 +8,15 @@
  */
 import { useEffect, useRef, useState } from "react";
 import { motion, useMotionValueEvent, useReducedMotion, useScroll, useTransform } from "framer-motion";
-import cabinFilm from "@/assets/aurea-jet/cabin-scrub.mp4.asset.json";
-import cabinPoster from "@/assets/aurea-jet/cabin-main.jpg";
+import cabinFilm from "@/assets/aurea-jet/aurea-journey.mp4.asset.json";
+import cabinPoster from "@/assets/aurea-jet/tarmac-night.jpg";
+import { clampProgress, JET_SCROLL } from "./jet-motion";
 
 const CAPTIONS = [
-  { at: 0.06, kicker: "01 · Imbarco", title: "Nessuna fila. Nessuna attesa.", text: "Arrivi 15 minuti prima. L’auto ti lascia sotto l’ala." },
-  { at: 0.34, kicker: "02 · Cabina", title: "Il tuo salotto a 13.000 metri.", text: "Pelle su misura, radica lucidata, luce calibrata sul fuso orario di arrivo." },
-  { at: 0.62, kicker: "03 · Servizio", title: "Un solo referente, sempre.", text: "Chef, champagne, transfer e privacy coordinati da un unico flight advisor." },
-  { at: 0.86, kicker: "04 · Arrivo", title: "Atterri dove serve davvero.", text: "Oltre 5.000 aeroporti: scendi a 20 minuti dalla tua destinazione." },
+  { at: 0.04, kicker: "01 · Avvicinamento", title: "La pista è già tua.", text: "Arrivi al terminal privato. Equipaggio, slot e bagagli sono già coordinati." },
+  { at: 0.29, kicker: "02 · Ingresso", title: "Dal piazzale alla suite.", text: "Nessun gate: attraversi la porta e il viaggio cambia immediatamente ritmo." },
+  { at: 0.54, kicker: "03 · Materia", title: "Silenzio, pelle, luce.", text: "Ogni superficie e ogni atmosfera sono preparate sul tuo profilo di viaggio." },
+  { at: 0.79, kicker: "04 · Quota", title: "Il tempo torna privato.", text: "Servizio discreto, continuità operativa e il mondo che scorre sotto di te." },
 ];
 
 export default function JetFilmScrub() {
@@ -24,16 +25,18 @@ export default function JetFilmScrub() {
   const targetRef = useRef(0);
   const currentRef = useRef(0);
   const rafRef = useRef<number>();
+  const activeRef = useRef(false);
   const reduced = useReducedMotion();
   const [active, setActive] = useState(0);
 
   const { scrollYProgress } = useScroll({ target: wrapRef, offset: ["start start", "end end"] });
 
-  const frameScale = useTransform(scrollYProgress, [0, 0.5, 1], [1.12, 1, 1.06]);
-  const veil = useTransform(scrollYProgress, [0, 0.5, 1], [0.62, 0.42, 0.7]);
+  const frameScale = useTransform(scrollYProgress, [0, 0.48, 1], [1.045, 1, 1.025]);
+  const veil = useTransform(scrollYProgress, [0, 0.46, 1], [0.66, 0.34, 0.58]);
 
   useMotionValueEvent(scrollYProgress, "change", (p) => {
-    targetRef.current = Math.min(Math.max(p, 0), 1);
+    targetRef.current = clampProgress(p);
+    activeRef.current = p > 0.005 && p < 0.995;
     let idx = 0;
     CAPTIONS.forEach((c, i) => {
       if (p >= c.at - 0.06) idx = i;
@@ -45,8 +48,8 @@ export default function JetFilmScrub() {
     if (reduced) return;
     const loop = () => {
       const video = videoRef.current;
-      if (video && video.duration && !Number.isNaN(video.duration)) {
-        currentRef.current += (targetRef.current - currentRef.current) * 0.12;
+      if (activeRef.current && video && video.duration && !Number.isNaN(video.duration)) {
+        currentRef.current += (targetRef.current - currentRef.current) * 0.2;
         const t = currentRef.current * (video.duration - 0.05);
         if (Math.abs(video.currentTime - t) > 0.02) video.currentTime = t;
       }
@@ -59,7 +62,7 @@ export default function JetFilmScrub() {
   }, [reduced]);
 
   return (
-    <section ref={wrapRef} className="relative h-[420svh] bg-background">
+    <section ref={wrapRef} className={`relative bg-background ${JET_SCROLL.filmHeight}`}>
       <div className="sticky top-0 h-[100svh] overflow-hidden">
         <motion.div className="absolute inset-0" style={reduced ? undefined : { scale: frameScale }}>
           <video
@@ -68,7 +71,7 @@ export default function JetFilmScrub() {
             poster={cabinPoster}
             muted
             playsInline
-            preload="auto"
+            preload="metadata"
             autoPlay={!!reduced}
             loop={!!reduced}
             aria-hidden="true"
@@ -77,7 +80,7 @@ export default function JetFilmScrub() {
         </motion.div>
 
         <motion.div className="absolute inset-0 bg-background" style={{ opacity: reduced ? 0.5 : veil }} />
-        <div className="absolute inset-0 bg-[linear-gradient(90deg,hsl(var(--background)/0.9)_0%,hsl(var(--background)/0.25)_55%,transparent_100%)]" />
+        <div className="absolute inset-0 bg-[linear-gradient(90deg,hsl(var(--background)/0.92)_0%,hsl(var(--background)/0.24)_58%,transparent_100%)]" />
         <div className="absolute inset-x-0 top-0 h-28 bg-gradient-to-b from-background to-transparent" />
         <div className="absolute inset-x-0 bottom-0 h-36 bg-gradient-to-t from-background to-transparent" />
 
@@ -87,12 +90,12 @@ export default function JetFilmScrub() {
             {CAPTIONS.map((c, i) => (
               <div
                 key={c.title}
-                className="transition-all duration-700"
+                className="transition-all duration-500"
                 style={{
                   position: i === 0 ? "relative" : "absolute",
                   inset: i === 0 ? undefined : 0,
                   opacity: active === i ? 1 : 0,
-                  transform: `translateY(${active === i ? 0 : active > i ? -28 : 28}px)`,
+                   transform: `translateY(${active === i ? 0 : active > i ? -18 : 18}px)`,
                   pointerEvents: active === i ? "auto" : "none",
                 }}
               >
@@ -107,7 +110,7 @@ export default function JetFilmScrub() {
         {/* Film progress rail */}
         <div className="absolute inset-x-5 bottom-8 sm:inset-x-10 lg:inset-x-16">
           <div className="mb-3 flex items-center justify-between text-[9px] uppercase tracking-[0.3em] text-foreground/50">
-            <span>Film · Cabina Aurea</span>
+            <span>Viaggio · Aurea Journey</span>
             <span>{String(active + 1).padStart(2, "0")} / {String(CAPTIONS.length).padStart(2, "0")}</span>
           </div>
           <div className="h-px w-full bg-border/60">
