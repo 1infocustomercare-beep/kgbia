@@ -24,7 +24,7 @@ const FLEET = [
 
 export default function JetFleetGrid() {
   return (
-    <section id="flotta-grid" className="relative px-5 py-24 sm:px-10 sm:py-36">
+    <section id="flotta" className="relative px-5 py-24 sm:px-10 sm:py-36">
       <div className="mx-auto max-w-6xl">
         <div className="mb-14 max-w-2xl">
           <p className="text-[10px] font-semibold uppercase tracking-[0.34em] text-primary">La flotta</p>
