@@ -6,8 +6,8 @@
  *
  * ADDITIVO — solo presentazione.
  */
-import { useState } from "react";
-import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
+import { useEffect, useRef, useState } from "react";
+import { AnimatePresence, motion, useInView, useReducedMotion } from "framer-motion";
 import cabinNight from "@/assets/aurea-jet/cabin-night.jpg";
 import cabinDining from "@/assets/aurea-jet/cabin-dining.jpg";
 import fboLounge from "@/assets/aurea-jet/fbo-lounge.jpg";
