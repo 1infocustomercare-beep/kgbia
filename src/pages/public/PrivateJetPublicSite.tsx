@@ -193,18 +193,12 @@ export default function PrivateJetPublicSite() {
             className="absolute inset-0 h-full w-full object-cover object-[62%_center]"
             style={reducedMotion ? undefined : { scale: backdropScale, y: backdropY }}
           />
-          <motion.img
-            src={jetBackground}
-            alt=""
-            aria-hidden
-            className="absolute inset-0 h-full w-full object-cover object-[60%_center] opacity-20 mix-blend-luminosity"
-            style={reducedMotion ? undefined : { scale: backdropScale }}
-          />
           <motion.div
             className="absolute inset-0 bg-background"
             style={{ opacity: reducedMotion ? 0.58 : veilOpacity }}
           />
-          <div className="absolute inset-0 bg-[linear-gradient(90deg,hsl(var(--background)/0.94)_0%,hsl(var(--background)/0.48)_48%,transparent_78%)]" />
+          <div className="absolute inset-0 bg-[linear-gradient(90deg,hsl(var(--background)/0.94)_0%,hsl(var(--background)/0.6)_52%,hsl(var(--background)/0.18)_82%)]" />
+
           <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-background to-transparent" />
 
           <JetTopNav />
