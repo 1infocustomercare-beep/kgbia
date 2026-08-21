@@ -48,14 +48,19 @@ export default function JetFleetGrid() {
               className="jet-glass jet-sheen group relative overflow-hidden rounded-[26px] transition-all duration-500 hover:border-primary/55 hover:shadow-[0_36px_100px_-40px_hsl(var(--primary)/0.55)]"
             >
               <div className="relative h-48 overflow-hidden sm:h-52">
-                <img
+                <motion.img
                   src={jet.img}
                   alt={`Aeromobile ${jet.name}`}
                   loading="lazy"
                   width={1536}
                   height={1024}
+                  initial={{ scale: 1.14 }}
+                  whileInView={{ scale: 1 }}
+                  viewport={{ once: true, margin: "-8% 0px" }}
+                  transition={{ duration: 1.4, ease: [0.16, 1, 0.3, 1] }}
                   className="h-full w-full object-cover transition-transform duration-[900ms] ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-[1.08]"
                 />
+
                 <div className="absolute inset-0 bg-[linear-gradient(180deg,hsl(var(--background)/0.15)_0%,transparent_38%,hsl(var(--background)/0.92)_100%)]" />
                 <span className="absolute left-4 top-4 rounded-full border border-primary/45 bg-background/45 px-3 py-1 text-[9px] uppercase tracking-[0.26em] text-primary backdrop-blur-md">
                   {jet.tier}
