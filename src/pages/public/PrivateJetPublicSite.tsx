@@ -12,7 +12,9 @@ import JetManifestoStack from "@/components/public/aurea-jet/JetManifestoStack";
 import JetFilmPortal from "@/components/public/aurea-jet/JetFilmPortal";
 import JetEditorial from "@/components/public/aurea-jet/JetEditorial";
 import JetCabinStage from "@/components/public/aurea-jet/JetCabinStage";
-import JetIosApp from "@/components/public/aurea-jet/JetIosApp";
+import JetFlightDeck from "@/components/public/aurea-jet/JetFlightDeck";
+import JetCurtainSequence from "@/components/public/aurea-jet/JetCurtainSequence";
+import { ScrollMarquee } from "@/components/public/aurea-jet/JetScrollKit";
 import JetPlateStrip from "@/components/public/aurea-jet/JetPlateStrip";
 import JetDestinationsRail from "@/components/public/aurea-jet/JetDestinationsRail";
 import JetQuoteConsole from "@/components/public/aurea-jet/JetQuoteConsole";
@@ -166,8 +168,16 @@ export default function PrivateJetPublicSite() {
       {/* ═══ Flotta: palco sticky + pannelli scroll-linked ═══ */}
       <JetCabinStage />
 
-      {/* ═══ Web-app iOS premium con strumentazione live ═══ */}
-      <JetIosApp />
+      {/* ═══ Nastro con velocità legata allo scroll (stile riferimento) ═══ */}
+      <ScrollMarquee
+        items={["Milano Linate", "Nizza", "Ibiza", "Olbia", "Ginevra", "Dubai", "Saint-Tropez", "Mykonos", "Londra Luton"]}
+      />
+
+      {/* ═══ Sequenza a tendina + contatori ═══ */}
+      <JetCurtainSequence />
+
+      {/* ═══ La web-app Aurea Deck (console reale, full-bleed) ═══ */}
+      <JetFlightDeck />
 
       {/* ═══ Allestimenti: nastro orizzontale con snap ═══ */}
       <JetPlateStrip />
