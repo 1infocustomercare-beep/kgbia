@@ -104,7 +104,9 @@ export default function JetFleetSelector() {
         </div>
 
         <div className="grid gap-5 lg:grid-cols-[1.25fr_1fr]">
+          <div {...swipeHandlers} className="cursor-grab select-none active:cursor-grabbing">
           <LuxePanel glass className="relative overflow-hidden p-0">
+
             <AnimatePresence mode="wait">
               <motion.img
                 key={jet.id}
