@@ -8,12 +8,17 @@ import jetBackground from "@/assets/hero-cinematic/private-jet-hangar.jpg";
 import jetFlyby from "@/assets/hero-cinematic/private-jet.png";
 import { LuxeDivider, LuxeGrain, LuxePanel, LuxeStat } from "@/components/public/luxe";
 import JetFilmScrub from "@/components/public/aurea-jet/JetFilmScrub";
+import JetManifestoStack from "@/components/public/aurea-jet/JetManifestoStack";
+import JetFilmPortal from "@/components/public/aurea-jet/JetFilmPortal";
 import JetEditorial from "@/components/public/aurea-jet/JetEditorial";
-import JetFleetSelector from "@/components/public/aurea-jet/JetFleetSelector";
+import JetCabinStage from "@/components/public/aurea-jet/JetCabinStage";
+import JetIosApp from "@/components/public/aurea-jet/JetIosApp";
+import JetPlateStrip from "@/components/public/aurea-jet/JetPlateStrip";
 import JetDestinationsRail from "@/components/public/aurea-jet/JetDestinationsRail";
 import JetQuoteConsole from "@/components/public/aurea-jet/JetQuoteConsole";
 import JetServiceSuite from "@/components/public/aurea-jet/JetServiceSuite";
 import JetTopNav from "@/components/public/aurea-jet/JetTopNav";
+import JetConciergeFab from "@/components/public/aurea-jet/JetConciergeFab";
 
 
 
@@ -149,11 +154,23 @@ export default function PrivateJetPublicSite() {
       {/* ═══ Film cinematografico scrubbato dallo scroll ═══ */}
       <JetFilmScrub />
 
+      {/* ═══ Manifesto sticky con frasi in dissolvenza (stile riferimento) ═══ */}
+      <JetManifestoStack />
+
+      {/* ═══ Film portal: fotogramma + player a schermo pieno ═══ */}
+      <JetFilmPortal />
+
       {/* ═══ Manifesto editoriale + triptych parallasse ═══ */}
       <JetEditorial />
 
-      {/* ═══ Flotta: tre cabine ═══ */}
-      <JetFleetSelector />
+      {/* ═══ Flotta: palco sticky + pannelli scroll-linked ═══ */}
+      <JetCabinStage />
+
+      {/* ═══ Web-app iOS premium con strumentazione live ═══ */}
+      <JetIosApp />
+
+      {/* ═══ Allestimenti: nastro orizzontale con snap ═══ */}
+      <JetPlateStrip />
 
       {/* ═══ Destinazioni: rail orizzontale pinnato ═══ */}
       <JetDestinationsRail />
@@ -163,6 +180,7 @@ export default function PrivateJetPublicSite() {
 
       {/* ═══ Servizi, sicurezza, clienti, FAQ, concierge ═══ */}
       <JetServiceSuite />
+
 
       {/* ═══ Request — VIP console ═══ */}
       <section id="richiesta" className="relative px-5 pb-24 sm:px-8 sm:pb-36">
@@ -214,7 +232,10 @@ export default function PrivateJetPublicSite() {
           Sito dimostrativo Empire · dati, tariffe e disponibilità sono esemplificativi
         </p>
       </footer>
+      {/* ═══ Concierge fisso (pattern del sito di riferimento) ═══ */}
+      <JetConciergeFab />
     </main>
+
   );
 }
 
