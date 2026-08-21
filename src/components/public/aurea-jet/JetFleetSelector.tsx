@@ -129,6 +129,11 @@ export default function JetFleetSelector() {
               <p className="mt-2 text-sm text-foreground/75">{jet.tagline}</p>
             </div>
           </LuxePanel>
+          <p className="mt-3 text-[10px] uppercase tracking-[0.22em] text-muted-foreground/80 lg:hidden">
+            Scorri per cambiare cabina
+          </p>
+          </div>
+
 
           <div className="flex flex-col gap-5">
             <LuxePanel className="grid grid-cols-2 divide-x divide-y divide-border/50">
