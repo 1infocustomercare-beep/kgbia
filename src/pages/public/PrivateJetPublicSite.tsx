@@ -33,7 +33,7 @@ export default function PrivateJetPublicSite() {
   const revealY = useTransform(scrollYProgress, [0.34, 0.62], [70, 0]);
   const backdropScale = useTransform(scrollYProgress, [0, 1], [1.03, 1.14]);
   const backdropY = useTransform(scrollYProgress, [0, 1], [0, 52]);
-  const veilOpacity = useTransform(scrollYProgress, [0, 0.58, 1], [0.56, 0.72, 0.42]);
+  const veilOpacity = useTransform(scrollYProgress, [0, 0.58, 1], [0.42, 0.58, 0.34]);
   const trailOpacity = useTransform(scrollYProgress, [0.08, 0.44, 0.78], [0, 0.85, 0]);
 
   return (
