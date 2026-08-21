@@ -54,29 +54,53 @@ const ATMOSPHERES = [
 
 export default function JetAtmosphereSelector() {
   const [active, setActive] = useState(0);
+  const [autoplay, setAutoplay] = useState(true);
+  const sectionRef = useRef<HTMLElement | null>(null);
+  const inView = useInView(sectionRef, { margin: "-25% 0px -25% 0px" });
   const reduced = useReducedMotion();
   const current = ATMOSPHERES[active];
 
+  /* Autoplay: scorre le atmosfere quando la sezione è a schermo, si ferma al primo tap */
+  useEffect(() => {
+    if (!autoplay || !inView || reduced) return;
+    const id = window.setInterval(() => setActive((i) => (i + 1) % ATMOSPHERES.length), 5200);
+    return () => window.clearInterval(id);
+  }, [autoplay, inView, reduced]);
+
+  const select = (i: number) => {
+    setAutoplay(false);
+    setActive(i);
+  };
+
   return (
-    <section id="atmosfere" className="relative bg-background px-5 py-24 sm:px-8 sm:py-32">
+    <section ref={sectionRef} id="atmosfere" className="relative bg-background px-5 py-24 sm:px-8 sm:py-32">
       <div className="mx-auto max-w-6xl">
         <LuxeTag>Atmosfere di bordo</LuxeTag>
         <h2 className="mt-6 max-w-2xl font-heading text-[clamp(1.9rem,5vw,3.6rem)] font-semibold leading-[1.02]">
           Ogni rotta ha la sua <span className="italic text-primary">ora</span>.
         </h2>
 
-        {/* Swatch row — drag/scroll orizzontale su mobile */}
+        {/* Swatch row — autoplay + tap/scroll orizzontale su mobile */}
         <div className="no-scrollbar mt-10 flex gap-4 overflow-x-auto pb-2">
           {ATMOSPHERES.map((a, i) => (
             <button
               key={a.id}
               type="button"
-              onClick={() => setActive(i)}
+              onClick={() => select(i)}
               aria-pressed={active === i}
-              className={`group relative flex min-h-11 shrink-0 items-center gap-3 border px-4 py-3 transition-colors ${
+              className={`group relative flex min-h-11 shrink-0 items-center gap-3 overflow-hidden border px-4 py-3 transition-colors ${
                 active === i ? "border-primary/70 bg-card" : "border-border/60 bg-card/40 hover:border-primary/40"
               }`}
             >
+              {active === i && autoplay && inView && !reduced && (
+                <motion.span
+                  key={`bar-${a.id}`}
+                  className="absolute inset-x-0 bottom-0 h-[2px] origin-left bg-primary/70"
+                  initial={{ scaleX: 0 }}
+                  animate={{ scaleX: 1 }}
+                  transition={{ duration: 5.2, ease: "linear" }}
+                />
+              )}
               <span
                 className="h-9 w-9 rounded-full border border-border/60"
                 style={{ background: a.swatch }}
@@ -91,6 +115,7 @@ export default function JetAtmosphereSelector() {
             </button>
           ))}
         </div>
+
 
         <div className="mt-10 grid gap-8 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,1fr)] lg:items-start">
           <div className="relative aspect-[4/5] overflow-hidden border border-border/60 bg-card/40 sm:aspect-[4/3]">
