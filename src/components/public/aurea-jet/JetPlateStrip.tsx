@@ -31,6 +31,24 @@ export default function JetPlateStrip() {
   const depth2 = useTransform(smooth, [0, 1], [50, -50]);
   const depths = [depth0, depth1, depth2];
 
+  /* Drag orizzontale (mobile + desktop) coerente con le altre sezioni */
+  const railRef = useRef<HTMLDivElement>(null);
+  const drag = useRef({ down: false, x: 0, left: 0 });
+  const onDown = (e: React.PointerEvent) => {
+    const el = railRef.current;
+    if (!el) return;
+    drag.current = { down: true, x: e.clientX, left: el.scrollLeft };
+  };
+  const onMove = (e: React.PointerEvent) => {
+    const el = railRef.current;
+    if (!el || !drag.current.down) return;
+    el.scrollLeft = drag.current.left - (e.clientX - drag.current.x);
+  };
+  const onUp = () => {
+    drag.current.down = false;
+  };
+
+
   return (
     <section ref={sectionRef} id="allestimenti" className="relative overflow-hidden bg-background py-20 sm:py-28">
       <div className="mx-auto mb-12 grid max-w-6xl gap-6 px-5 sm:px-8 lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1fr)] lg:items-end">
