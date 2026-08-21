@@ -6,7 +6,7 @@ import BackButton from "@/components/BackButton";
 import { Button } from "@/components/ui/button";
 import jetBackground from "@/assets/hero-cinematic/private-jet-hangar.jpg";
 import jetFlyby from "@/assets/hero-cinematic/private-jet.png";
-import { LuxeDivider, LuxeGrain, LuxePanel, LuxeStat, LuxeTag } from "@/components/public/luxe";
+import { LuxeDivider, LuxeGrain, LuxePanel, LuxeStat } from "@/components/public/luxe";
 import JetFilmScrub from "@/components/public/aurea-jet/JetFilmScrub";
 import JetEditorial from "@/components/public/aurea-jet/JetEditorial";
 import JetFleetSelector from "@/components/public/aurea-jet/JetFleetSelector";
@@ -37,7 +37,7 @@ export default function PrivateJetPublicSite() {
   const trailOpacity = useTransform(scrollYProgress, [0.08, 0.44, 0.78], [0, 0.85, 0]);
 
   return (
-    <main className="min-h-screen overflow-x-clip bg-background text-foreground">
+    <main id="top" className="min-h-screen overflow-x-clip bg-background text-foreground">
       <BackButton to="/demo" label="Tutte le demo" variant="floating" theme="glass" className="!h-11 !w-11" />
 
       <section ref={heroRef} className="relative h-[240svh] bg-background">
