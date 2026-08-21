@@ -66,7 +66,7 @@ export default function PrivateJetPublicSite() {
   return (
     <main
       id="top"
-      className="min-h-screen overflow-x-clip bg-background text-foreground"
+      className="jet-lux min-h-screen overflow-x-clip bg-background text-foreground"
       style={{
         // Scoped luxury palette (champagne gold on deep graphite) — demo-only, does not affect Empire webapp
         ["--background" as string]: "30 8% 6%",
@@ -84,7 +84,58 @@ export default function PrivateJetPublicSite() {
         ["--ring" as string]: "40 58% 62%",
       }}
     >
-      <style>{`.jet-serif{font-family:'Playfair Display',Georgia,serif;font-weight:500;letter-spacing:-0.01em}`}</style>
+      <style>{`
+.jet-serif{font-family:'Playfair Display',Georgia,serif;font-weight:500;letter-spacing:-0.01em}
+
+/* ═══ Aurea Liquid Glass — livello vetro luxury coerente su tutto il sito ═══ */
+.jet-lux .jet-glass,
+.jet-lux [class*="bg-card/"],
+.jet-lux [class*="bg-background/"]{
+  -webkit-backdrop-filter:blur(20px) saturate(150%);
+  backdrop-filter:blur(20px) saturate(150%);
+}
+.jet-lux .jet-glass{
+  position:relative;
+  background:
+    linear-gradient(160deg,hsl(40 40% 92% / 0.08) 0%,hsl(30 10% 8% / 0.55) 42%,hsl(30 10% 6% / 0.72) 100%);
+  border:1px solid hsl(40 45% 80% / 0.14);
+  box-shadow:
+    inset 0 1px 0 hsl(40 60% 92% / 0.14),
+    inset 0 -1px 0 hsl(30 10% 4% / 0.6),
+    0 24px 70px -38px hsl(30 20% 2% / 0.9);
+}
+/* riflesso obliquo che scorre sul vetro all'hover */
+.jet-lux .jet-sheen::after{
+  content:"";position:absolute;inset:0;pointer-events:none;border-radius:inherit;
+  background:linear-gradient(115deg,transparent 34%,hsl(40 70% 90% / 0.16) 46%,transparent 58%);
+  transform:translateX(-120%);
+  transition:transform 1.1s cubic-bezier(.16,1,.3,1);
+}
+.jet-lux .jet-sheen:hover::after{transform:translateX(120%)}
+
+/* pannelli/card esistenti ereditano lo stesso vetro champagne */
+.jet-lux section [class*="bg-card/"]{
+  border-color:hsl(40 45% 80% / 0.13);
+  box-shadow:inset 0 1px 0 hsl(40 60% 92% / 0.1),0 22px 60px -40px hsl(30 20% 2% / 0.85);
+}
+.jet-lux ::selection{background:hsl(40 58% 62% / 0.28)}
+
+/* Mobile: vetro più leggero per performance, nessun overflow orizzontale */
+@media (max-width:640px){
+  .jet-lux .jet-glass,
+  .jet-lux [class*="bg-card/"],
+  .jet-lux [class*="bg-background/"]{
+    -webkit-backdrop-filter:blur(12px) saturate(130%);
+    backdrop-filter:blur(12px) saturate(130%);
+  }
+  .jet-lux .jet-sheen::after{display:none}
+  .jet-lux img{max-width:100%}
+}
+@media (prefers-reduced-motion:reduce){
+  .jet-lux .jet-sheen::after{display:none}
+}
+      `}</style>
+
 
       <BackButton to="/demo" label="Tutte le demo" variant="floating" theme="glass" className="!h-11 !w-11" />
 
