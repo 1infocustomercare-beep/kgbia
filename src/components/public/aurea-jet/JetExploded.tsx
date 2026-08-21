@@ -23,7 +23,7 @@ export default function JetExploded() {
     mq.addEventListener("change", sync);
     return () => mq.removeEventListener("change", sync);
   }, []);
-  const pc = (v: number) => `${(v * k).toFixed(1)}%`;
+  const pc = (v: number) => `calc(-50% + ${(v * k).toFixed(1)}%)`;
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end end"] });
 
   const assemble = useTransform(scrollYProgress, [0.05, 0.78], [1, 0]);
@@ -95,7 +95,7 @@ export default function JetExploded() {
             alt=""
             aria-hidden
             loading="lazy"
-            className="absolute left-1/2 top-1/2 w-[24vw] max-w-[220px] -translate-x-1/2 -translate-y-1/2 object-contain opacity-0"
+            className="absolute left-1/2 top-1/2 w-[24vw] max-w-[220px] object-contain opacity-0"
             style={{ x: wingX, y: wingY }}
           />
         </motion.div>
@@ -128,9 +128,7 @@ function Part({
       loading="lazy"
       className={`absolute left-1/2 top-1/2 object-contain drop-shadow-[0_24px_60px_hsl(var(--background))] ${size}`}
       style={
-        reduced
-          ? { x: "-50%", y: "-50%", opacity: 0.9 }
-          : { translateX: "-50%", translateY: "-50%", x, y, opacity: o }
+        reduced ? { x: "-50%", y: "-50%", opacity: 0.9 } : { x, y, opacity: o }
       }
     />
   );
