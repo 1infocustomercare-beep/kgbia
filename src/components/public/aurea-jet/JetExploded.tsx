@@ -18,7 +18,7 @@ export default function JetExploded() {
   const [k, setK] = useState(1);
   useEffect(() => {
     const mq = window.matchMedia("(max-width: 640px)");
-    const sync = () => setK(mq.matches ? 0.42 : 1);
+    const sync = () => setK(mq.matches ? 0.8 : 1);
     sync();
     mq.addEventListener("change", sync);
     return () => mq.removeEventListener("change", sync);
