@@ -11,6 +11,7 @@ import engine from "@/assets/aurea-jet/part-engine.png";
 import seat from "@/assets/aurea-jet/part-seat.png";
 import avionics from "@/assets/aurea-jet/part-cockpit.png";
 import wing from "@/assets/aurea-jet/part-wing.png";
+import { JET_SCROLL } from "./jet-motion";
 
 export default function JetExploded() {
   const ref = useRef<HTMLElement>(null);
@@ -26,7 +27,7 @@ export default function JetExploded() {
   const pc = (v: number) => `calc(-50% + ${(v * k).toFixed(1)}%)`;
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end end"] });
 
-  const assemble = useTransform(scrollYProgress, [0.05, 0.78], [1, 0]);
+  const assemble = useTransform(scrollYProgress, [0.04, 0.62], [1, 0]);
 
   const engineX = useTransform(assemble, [0, 1], [pc(8.0), pc(-46.0)]);
   const engineY = useTransform(assemble, [0, 1], [pc(4.0), pc(-42.0)]);
@@ -36,14 +37,14 @@ export default function JetExploded() {
   const avY = useTransform(assemble, [0, 1], [pc(-2.0), pc(40.0)]);
   const wingY = useTransform(assemble, [0, 1], [pc(2.0), pc(-46.0)]);
   const wingX = useTransform(assemble, [0, 1], [pc(2.0), pc(44.0)]);
-  const partOpacity = useTransform(scrollYProgress, [0.72, 0.86], [1, 0]);
-  const finalOpacity = useTransform(scrollYProgress, [0.74, 0.9], [0, 1]);
-  const finalScale = useTransform(scrollYProgress, [0.74, 1], [0.86, 1]);
-  const fuseOpacity = useTransform(scrollYProgress, [0.7, 0.84], [1, 0]);
+  const partOpacity = useTransform(scrollYProgress, [0.6, 0.74], [1, 0]);
+  const finalOpacity = useTransform(scrollYProgress, [0.62, 0.76], [0, 1]);
+  const finalScale = useTransform(scrollYProgress, [0.62, 0.86], [0.9, 1]);
+  const fuseOpacity = useTransform(scrollYProgress, [0.58, 0.72], [1, 0]);
   const rotate = useTransform(assemble, [0, 1], [0, -6]);
 
   return (
-    <section ref={ref} className="relative h-[340svh] bg-background">
+    <section ref={ref} className={`relative bg-background ${JET_SCROLL.explodedHeight}`}>
       <div className="sticky top-0 flex h-[100svh] flex-col items-center justify-center overflow-hidden">
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_45%,hsl(var(--primary)/0.12),transparent_62%)]" />
 

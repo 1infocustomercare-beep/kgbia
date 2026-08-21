@@ -9,6 +9,7 @@ import { useRef } from "react";
 import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
 import jetSide from "@/assets/aurea-jet/part-wing.png";
 import cabinSuite from "@/assets/aurea-jet/cabin-suite.jpg";
+import { JET_SCROLL } from "./jet-motion";
 
 const LINES = [
   { at: 0.06, title: "Nessuna coda. Nessun gate.", body: "Il tuo equipaggio è già a bordo quando arrivi." },
@@ -21,18 +22,18 @@ export default function JetWindowDive() {
   const reduced = useReducedMotion();
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end end"] });
 
-  const jetScale = useTransform(scrollYProgress, [0, 0.55, 0.82, 1], [0.9, 1.35, 9, 26]);
-  const jetX = useTransform(scrollYProgress, [0, 0.55, 1], ["0%", "-4%", "-26%"]);
-  const jetOpacity = useTransform(scrollYProgress, [0.74, 0.9], [1, 0]);
-  const jetBlur = useTransform(scrollYProgress, [0.7, 0.95], [0, 14]);
+  const jetScale = useTransform(scrollYProgress, [0, 0.5, 0.76, 0.9], [0.92, 1.28, 7.5, 18]);
+  const jetX = useTransform(scrollYProgress, [0, 0.5, 0.9], ["0%", "-3%", "-22%"]);
+  const jetOpacity = useTransform(scrollYProgress, [0.7, 0.84], [1, 0]);
+  const jetBlur = useTransform(scrollYProgress, [0.68, 0.86], [0, 10]);
   const jetFilter = useTransform(jetBlur, (b) => `blur(${b}px)`);
 
-  const cabinOpacity = useTransform(scrollYProgress, [0.72, 0.9], [0, 1]);
-  const cabinScale = useTransform(scrollYProgress, [0.72, 1], [1.4, 1]);
-  const cabinCopyOpacity = useTransform(scrollYProgress, [0.9, 0.97], [0, 1]);
+  const cabinOpacity = useTransform(scrollYProgress, [0.68, 0.84], [0, 1]);
+  const cabinScale = useTransform(scrollYProgress, [0.68, 0.94], [1.24, 1]);
+  const cabinCopyOpacity = useTransform(scrollYProgress, [0.82, 0.9], [0, 1]);
 
   return (
-    <section ref={ref} className="relative h-[420svh] bg-background">
+    <section ref={ref} className={`relative bg-background ${JET_SCROLL.portalHeight}`}>
       <div className="sticky top-0 h-[100svh] overflow-hidden">
         {/* cabina finale */}
         <motion.div className="absolute inset-0" style={reduced ? { opacity: 1 } : { opacity: cabinOpacity }}>
@@ -95,9 +96,9 @@ function BlurLine({
   reduced: boolean;
 }) {
   const start = line.at;
-  const opacity = useTransform(progress, [start, start + 0.06, start + 0.14, start + 0.2], [0, 1, 1, 0]);
-  const blur = useTransform(progress, [start, start + 0.06, start + 0.14, start + 0.2], [16, 0, 0, 16]);
-  const y = useTransform(progress, [start, start + 0.2], [40, -40]);
+  const opacity = useTransform(progress, [start, start + 0.035, start + 0.12, start + 0.165], [0, 1, 1, 0]);
+  const blur = useTransform(progress, [start, start + 0.035, start + 0.12, start + 0.165], [12, 0, 0, 10]);
+  const y = useTransform(progress, [start, start + 0.165], [26, -24]);
   const filter = useTransform(blur, (b) => `blur(${b}px)`);
   const side = index % 2 === 0;
 

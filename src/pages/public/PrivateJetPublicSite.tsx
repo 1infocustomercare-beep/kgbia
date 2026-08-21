@@ -25,6 +25,7 @@ import JetExploded from "@/components/public/aurea-jet/JetExploded";
 import JetCircleForm from "@/components/public/aurea-jet/JetCircleForm";
 import { getLenis, destroyLenis } from "@/lib/lenis-singleton";
 import heroClouds from "@/assets/aurea-jet/hero-clouds.jpg";
+import { JET_SCROLL } from "@/components/public/aurea-jet/jet-motion";
 
 export default function PrivateJetPublicSite() {
   const heroRef = useRef<HTMLElement>(null);
@@ -87,7 +88,7 @@ export default function PrivateJetPublicSite() {
 
       <BackButton to="/demo" label="Tutte le demo" variant="floating" theme="glass" className="!h-11 !w-11" />
 
-      <section ref={heroRef} className="relative h-[240svh] bg-background">
+      <section ref={heroRef} className={`relative bg-background ${JET_SCROLL.heroHeight}`}>
         <div className="sticky top-0 h-[100svh] overflow-hidden">
           <motion.img
             src={heroClouds}
@@ -97,12 +98,12 @@ export default function PrivateJetPublicSite() {
             className="absolute inset-0 h-full w-full object-cover object-[62%_center]"
             style={reducedMotion ? undefined : { scale: backdropScale, y: backdropY }}
           />
-          <img
+          <motion.img
             src={jetBackground}
             alt=""
             aria-hidden
-            loading="lazy"
-            className="absolute inset-0 h-full w-full object-cover object-[60%_center] opacity-25 mix-blend-luminosity"
+            className="absolute inset-0 h-full w-full object-cover object-[60%_center] opacity-20 mix-blend-luminosity"
+            style={reducedMotion ? undefined : { scale: backdropScale }}
           />
           <motion.div
             className="absolute inset-0 bg-background"
@@ -187,40 +188,40 @@ export default function PrivateJetPublicSite() {
         </div>
       </section>
 
-      {/* ═══ 01 · Storytelling sticky: jet incollato, frasi blur-in, ingresso nella suite ═══ */}
-      <JetWindowDive />
-
-      {/* ═══ 02 · Trio di foto sfalsate + manifesto parola-per-parola ═══ */}
+      {/* ═══ 01 · Apertura editoriale leggera ═══ */}
       <JetScatterTrio />
 
-      {/* ═══ 03 · Film cinematografico scrubbato dallo scroll (unico video del sito) ═══ */}
-      <JetFilmScrub />
+      {/* ═══ 02 · Primo atto immersivo: ingresso nella suite ═══ */}
+      <JetWindowDive />
+
+      {/* ═══ 03 · Flotta: il prodotto arriva prima della metà pagina ═══ */}
+      <JetFleetGrid />
 
       {/* ═══ 04 · Atmosfere di bordo: swatch + crossfade + liste spec ═══ */}
       <JetAtmosphereSelector />
 
-      {/* ═══ 05 · Flotta: griglia glassmorphism con hover oro ═══ */}
-      <JetFleetGrid />
+      {/* ═══ 05 · Aurea Journey: unico film, scrubbato e sincronizzato ═══ */}
+      <JetFilmScrub />
 
-      {/* ═══ 06 · Dettagli ingegneristici: vista esplosa che si ricompone ═══ */}
-      <JetExploded />
-
-      {/* ═══ 07 · Nastro con velocità legata allo scroll ═══ */}
+      {/* ═══ 06 · Nastro destinazioni come pausa editoriale ═══ */}
       <ScrollMarquee
         items={["Milano Linate", "Nizza", "Ibiza", "Olbia", "Ginevra", "Dubai", "Saint-Tropez", "Mykonos", "Londra Luton"]}
       />
 
-      {/* ═══ 08 · Sequenza a tendina + contatori ═══ */}
+      {/* ═══ 07 · Sequenza a tendina + contatori ═══ */}
       <JetCurtainSequence />
+
+      {/* ═══ 08 · Dettagli ingegneristici: vista esplosa che si ricompone ═══ */}
+      <JetExploded />
 
       {/* ═══ 09 · Materiali: nastro orizzontale con snap ═══ */}
       <JetPlateStrip />
 
-      {/* ═══ 10 · La web-app Aurea Deck (console operativa reale) ═══ */}
-      <JetFlightDeck />
-
-      {/* ═══ 11 · Configuratore preventivo live ═══ */}
+      {/* ═══ 10 · Configuratore preventivo live ═══ */}
       <JetQuoteConsole />
+
+      {/* ═══ 11 · La web-app Aurea Deck (console operativa reale) ═══ */}
+      <JetFlightDeck />
 
       {/* ═══ 12 · Servizi, sicurezza, clienti, FAQ, concierge ═══ */}
       <JetServiceSuite />

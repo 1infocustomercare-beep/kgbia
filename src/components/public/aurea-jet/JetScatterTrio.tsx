@@ -22,10 +22,10 @@ const SHOTS = [
 function Shot({ src, alt, rot, y, w, pos }: (typeof SHOTS)[number]) {
   const ref = useRef<HTMLDivElement>(null);
   const reduced = useReducedMotion();
-  const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "end start"] });
-  const ty = useTransform(scrollYProgress, [0, 1], [y, -y]);
-  const rotate = useTransform(scrollYProgress, [0, 1], [rot * 2.2, rot * -0.4]);
-  const scale = useTransform(scrollYProgress, [0, 0.5, 1], [0.92, 1.04, 0.96]);
+  const { scrollYProgress } = useScroll({ target: ref, offset: ["start 0.94", "end 0.12"] });
+  const ty = useTransform(scrollYProgress, [0, 0.5, 1], [y * 0.55, 0, -y * 0.45]);
+  const rotate = useTransform(scrollYProgress, [0, 0.5, 1], [rot * 1.35, rot * 0.25, rot * -0.35]);
+  const scale = useTransform(scrollYProgress, [0, 0.5, 1], [0.96, 1.025, 0.985]);
 
   return (
     <motion.div
@@ -42,7 +42,7 @@ export default function JetScatterTrio() {
   return (
     <section className="relative overflow-hidden bg-background px-5 py-24 sm:px-8 sm:py-36">
       <div className="mx-auto max-w-6xl">
-        <div className="flex min-h-[62svh] flex-col items-stretch gap-6 sm:flex-row sm:justify-between">
+        <div className="flex min-h-[54svh] flex-col items-stretch gap-10 sm:min-h-[62svh] sm:flex-row sm:justify-between sm:gap-6">
           {SHOTS.map((s) => (
             <Shot key={s.alt} {...s} />
           ))}

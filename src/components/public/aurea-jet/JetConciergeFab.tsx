@@ -20,7 +20,7 @@ export default function JetConciergeFab() {
   const [open, setOpen] = useState(false);
 
   return (
-    <div className="pointer-events-none fixed bottom-24 right-4 z-[60] flex flex-col items-end gap-3 md:bottom-7 md:right-7">
+    <div className="pointer-events-none fixed bottom-24 right-4 z-[60] flex max-w-[calc(100vw-2rem)] flex-col items-end gap-3 md:bottom-7 md:right-7">
       <AnimatePresence>
         {open && (
           <motion.div
@@ -78,11 +78,11 @@ export default function JetConciergeFab() {
           type="button"
           onClick={() => setOpen(true)}
           aria-label="Apri il concierge Aurea"
-          className="pointer-events-auto group flex items-center gap-2.5 rounded-full border border-primary/45 px-4 py-3 shadow-[0_20px_50px_-20px_rgba(0,0,0,0.9)] backdrop-blur-md transition-transform hover:-translate-y-0.5"
+          className="pointer-events-auto group flex h-12 w-12 items-center justify-center rounded-full border border-primary/45 shadow-[0_20px_50px_-20px_rgba(0,0,0,0.9)] backdrop-blur-md transition-transform hover:-translate-y-0.5 md:h-auto md:w-auto md:gap-2.5 md:px-4 md:py-3"
           style={{ background: "hsl(30 8% 8% / 0.92)", color: "hsl(40 26% 95%)" }}
         >
           <MessageCircle className="h-5 w-5 text-primary" />
-          <span className="text-left">
+          <span className="hidden text-left md:block">
             <span className="block font-heading text-sm leading-none">Concierge</span>
             <span className="mt-1 block text-[9px] uppercase tracking-[0.16em] text-primary/85">Assistente AI</span>
           </span>
