@@ -1,18 +1,22 @@
 import { useRef } from "react";
 import { Link } from "react-router-dom";
 import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
-import { ArrowRight, CalendarDays, ChevronDown, Globe2, Plane, ShieldCheck, Sparkles } from "lucide-react";
+import { ArrowRight, CalendarDays, ChevronDown, Plane, Sparkles } from "lucide-react";
 import BackButton from "@/components/BackButton";
 import { Button } from "@/components/ui/button";
 import jetBackground from "@/assets/hero-cinematic/private-jet-hangar.jpg";
 import jetFlyby from "@/assets/hero-cinematic/private-jet.png";
-import { LuxeDivider, LuxeGrain, LuxePanel, LuxeStat, LuxeTag } from "@/components/public/luxe";
+import { LuxeDivider, LuxeGrain, LuxePanel, LuxeStat } from "@/components/public/luxe";
+import JetFilmScrub from "@/components/public/aurea-jet/JetFilmScrub";
+import JetEditorial from "@/components/public/aurea-jet/JetEditorial";
+import JetFleetSelector from "@/components/public/aurea-jet/JetFleetSelector";
+import JetDestinationsRail from "@/components/public/aurea-jet/JetDestinationsRail";
+import JetQuoteConsole from "@/components/public/aurea-jet/JetQuoteConsole";
+import JetServiceSuite from "@/components/public/aurea-jet/JetServiceSuite";
+import JetTopNav from "@/components/public/aurea-jet/JetTopNav";
 
-const services = [
-  { icon: Plane, title: "Charter su misura", text: "Rotta, aeromobile e orari costruiti intorno alla tua agenda." },
-  { icon: Globe2, title: "Copertura globale", text: "Accesso a oltre 5.000 aeroporti e terminal riservati." },
-  { icon: ShieldCheck, title: "Standard verificati", text: "Operatori certificati, assistenza dedicata e privacy assoluta." },
-];
+
+
 
 export default function PrivateJetPublicSite() {
   const heroRef = useRef<HTMLElement>(null);
@@ -29,11 +33,31 @@ export default function PrivateJetPublicSite() {
   const revealY = useTransform(scrollYProgress, [0.34, 0.62], [70, 0]);
   const backdropScale = useTransform(scrollYProgress, [0, 1], [1.03, 1.14]);
   const backdropY = useTransform(scrollYProgress, [0, 1], [0, 52]);
-  const veilOpacity = useTransform(scrollYProgress, [0, 0.58, 1], [0.56, 0.72, 0.42]);
+  const veilOpacity = useTransform(scrollYProgress, [0, 0.58, 1], [0.42, 0.58, 0.34]);
   const trailOpacity = useTransform(scrollYProgress, [0.08, 0.44, 0.78], [0, 0.85, 0]);
 
   return (
-    <main className="min-h-screen overflow-x-clip bg-background text-foreground">
+    <main
+      id="top"
+      className="min-h-screen overflow-x-clip bg-background text-foreground"
+      style={{
+        // Scoped luxury palette (champagne gold on deep graphite) — demo-only, does not affect Empire webapp
+        ["--background" as string]: "30 8% 6%",
+        ["--foreground" as string]: "40 26% 95%",
+        ["--card" as string]: "30 8% 9%",
+        ["--card-foreground" as string]: "40 26% 95%",
+        ["--muted" as string]: "30 6% 14%",
+        ["--muted-foreground" as string]: "38 12% 68%",
+        ["--primary" as string]: "40 58% 62%",
+        ["--primary-foreground" as string]: "30 12% 8%",
+        ["--accent" as string]: "40 58% 62%",
+        ["--accent-foreground" as string]: "30 12% 8%",
+        ["--border" as string]: "38 16% 22%",
+        ["--input" as string]: "38 16% 22%",
+        ["--ring" as string]: "40 58% 62%",
+      }}
+    >
+
       <BackButton to="/demo" label="Tutte le demo" variant="floating" theme="glass" className="!h-11 !w-11" />
 
       <section ref={heroRef} className="relative h-[240svh] bg-background">
@@ -53,20 +77,8 @@ export default function PrivateJetPublicSite() {
           <div className="absolute inset-0 bg-[linear-gradient(90deg,hsl(var(--background)/0.94)_0%,hsl(var(--background)/0.48)_48%,transparent_78%)]" />
           <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-background to-transparent" />
 
-          <header className="absolute inset-x-0 top-0 z-40 flex h-20 items-center justify-between border-b border-border/30 px-5 sm:px-10 lg:px-16">
-            <div className="ml-12 flex items-center gap-3 sm:ml-0">
-              <div className="flex h-10 w-10 items-center justify-center border border-primary/45 bg-background/55 backdrop-blur-xl">
-                <Plane className="h-5 w-5 text-primary" />
-              </div>
-              <div>
-                <p className="text-sm font-semibold uppercase tracking-[0.22em]">Aurea Jet</p>
-                <p className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground">Private Aviation</p>
-              </div>
-            </div>
-            <Button asChild size="sm" className="min-h-11 rounded-none px-5 uppercase tracking-[0.14em]">
-              <a href="#richiesta">Richiedi un volo</a>
-            </Button>
-          </header>
+          <JetTopNav />
+
 
           <motion.div
             className="absolute inset-0 z-10 flex items-center px-5 sm:px-10 lg:px-16"
