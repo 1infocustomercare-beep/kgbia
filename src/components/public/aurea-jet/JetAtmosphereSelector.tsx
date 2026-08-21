@@ -6,12 +6,13 @@
  *
  * ADDITIVO — solo presentazione.
  */
-import { useEffect, useRef, useState } from "react";
-import { AnimatePresence, motion, useInView, useReducedMotion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import cabinNight from "@/assets/aurea-jet/cabin-night.jpg";
 import cabinDining from "@/assets/aurea-jet/cabin-dining.jpg";
 import fboLounge from "@/assets/aurea-jet/fbo-lounge.jpg";
 import { LuxeCorners, LuxeTag } from "@/components/public/luxe";
+import { useJetStepper } from "./useJetStepper";
+
 
 const ATMOSPHERES = [
   {
