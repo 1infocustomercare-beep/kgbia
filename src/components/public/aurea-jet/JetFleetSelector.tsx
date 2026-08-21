@@ -61,11 +61,21 @@ const FLEET = [
 ];
 
 export default function JetFleetSelector() {
-  const [active, setActive] = useState(1);
+  const {
+    ref: sectionRef,
+    index: active,
+    setIndex: setActive,
+    swipeHandlers,
+  } = useJetStepper<HTMLElement>({ count: FLEET.length, initial: 1 });
   const jet = FLEET[active];
 
   return (
-    <section id="flotta" className="relative border-y border-border/50 px-5 py-20 sm:px-8 sm:py-28">
+    <section
+      ref={sectionRef}
+      id="flotta"
+      className="relative border-y border-border/50 px-5 py-20 sm:px-8 sm:py-28"
+    >
+
       <div className="mx-auto max-w-6xl">
         <div className="mb-10 flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
           <div>
