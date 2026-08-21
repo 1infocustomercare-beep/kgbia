@@ -154,11 +154,23 @@ export default function PrivateJetPublicSite() {
       {/* ═══ Film cinematografico scrubbato dallo scroll ═══ */}
       <JetFilmScrub />
 
+      {/* ═══ Manifesto sticky con frasi in dissolvenza (stile riferimento) ═══ */}
+      <JetManifestoStack />
+
+      {/* ═══ Film portal: fotogramma + player a schermo pieno ═══ */}
+      <JetFilmPortal />
+
       {/* ═══ Manifesto editoriale + triptych parallasse ═══ */}
       <JetEditorial />
 
-      {/* ═══ Flotta: tre cabine ═══ */}
-      <JetFleetSelector />
+      {/* ═══ Flotta: palco sticky + pannelli scroll-linked ═══ */}
+      <JetCabinStage />
+
+      {/* ═══ Web-app iOS premium con strumentazione live ═══ */}
+      <JetIosApp />
+
+      {/* ═══ Allestimenti: nastro orizzontale con snap ═══ */}
+      <JetPlateStrip />
 
       {/* ═══ Destinazioni: rail orizzontale pinnato ═══ */}
       <JetDestinationsRail />
@@ -168,6 +180,7 @@ export default function PrivateJetPublicSite() {
 
       {/* ═══ Servizi, sicurezza, clienti, FAQ, concierge ═══ */}
       <JetServiceSuite />
+
 
       {/* ═══ Request — VIP console ═══ */}
       <section id="richiesta" className="relative px-5 pb-24 sm:px-8 sm:pb-36">
