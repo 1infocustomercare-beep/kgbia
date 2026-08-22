@@ -83,6 +83,8 @@ const TECH_STACK = [
 
 export default function PrestigeServices() {
   const { ref } = useEmpireScrollDirector<HTMLDivElement>("prestige-services", { steps: SERVICES.length });
+  const isNarrow = useIsNarrow();
+
 
   return (
     <section
