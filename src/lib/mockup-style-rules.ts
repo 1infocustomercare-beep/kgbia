@@ -260,6 +260,21 @@ export const CONTENT_CONTRACT = [
   "immagine finale VERTICALE, formato ritratto 3:4, il telefono occupa la maggior parte dell'altezza",
 ].join("; ");
 
+/**
+ * Regole di RIFINITURA: alzano la qualità percepita (gerarchia, profondità,
+ * densità informativa, cura dei dettagli) senza appiattire le identità.
+ */
+export const CRAFT_CONTRACT = [
+  "gerarchia visiva a 3 livelli chiari: un solo elemento dominante, un livello di supporto, un livello di dettaglio micro",
+  "allineamento ottico impeccabile: baseline coerenti, numeri tabulari allineati a destra, icone centrate nel loro box",
+  "profondità reale coerente col materiale: ombre con una sola direzione di luce, mai ombre contraddittorie",
+  "densità informativa alta ma respirata: ogni schermata mostra dati veri (prezzi, orari, percentuali, nomi) e almeno uno stato (attivo, esaurito, in corso)",
+  "raggi, spessori e spaziature costanti dentro la stessa schermata: nessun mix casuale di radius o bordi",
+  "riquadri con contenuto bilanciato: nessuna card mezza vuota, nessun blocco che sfora il proprio bordo",
+  "colori dalla palette dichiarata, massimo un accento dominante per schermata, contrasto testo/fondo sempre leggibile",
+  "finitura da portfolio d'agenzia: livello di dettaglio superiore ai reference, mai piatta o generica",
+].join("; ");
+
 export function buildScreenPrompt(identity: MockupIdentity, screenKey: string): string {
   const rules = STYLE_RULES[identity.id];
   const screen = identity.screens.find((s) => s.key === screenKey) ?? identity.screens[0];
@@ -271,11 +286,14 @@ export function buildScreenPrompt(identity: MockupIdentity, screenKey: string): 
     `Tipografia: ${identity.typography.display} / ${identity.typography.body} / ${identity.typography.treatment}. Scala ${rules?.type.scale} (${rules?.type.key}), ${rules?.type.case}, tracking ${rules?.type.tracking}, leading ${rules?.type.leading}.`,
     `Spaziatura: ${rules?.spacing.key} — unità ${rules?.spacing.unit}, gutter ${rules?.spacing.gutter}, ritmo ${rules?.spacing.rhythm}, padding ${rules?.spacing.padding}.`,
     `Linee: ${rules?.line.desc}. Riquadri: ${rules?.box.desc}.`,
+    `Materiale delle superfici: ${rules?.material.desc}. Trattamento immagini: ${rules?.imagery.desc}. Iconografia: ${rules?.icons.desc}.`,
     `Componenti dominanti: ${rules?.kit.desc}. Uso accento: ${rules?.accent.desc}. Chrome: ${rules?.chrome.desc}.`,
     `Micro-animazione congelata nel frame: ${rules?.motion.desc}.`,
     `Fotografia della scena: ${identity.photography}. Composizione UI: ${identity.composition}.`,
     `Vincoli di inquadratura: ${FRAMING_CONTRACT}.`,
     `Vincoli di contenuto: ${CONTENT_CONTRACT}.`,
+    `Vincoli di rifinitura: ${CRAFT_CONTRACT}.`,
   ].join("\n");
 }
+
 
