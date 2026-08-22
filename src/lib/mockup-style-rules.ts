@@ -211,6 +211,9 @@ function buildRules(): Record<string, StyleRules> {
       motion: MICRO_MOTIONS[idx[5]],
       accent: ACCENT_USAGES[idx[6]],
       chrome: CHROME_MODES[idx[7]],
+      material: SURFACE_MATERIALS[idx[8]],
+      imagery: IMAGE_TREATMENTS[idx[9]],
+      icons: ICON_SYSTEMS[idx[10]],
       signature,
     };
   });
