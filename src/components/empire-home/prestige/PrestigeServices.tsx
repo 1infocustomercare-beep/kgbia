@@ -91,49 +91,23 @@ export default function PrestigeServices() {
           </div>
 
           <div className="lg:col-span-7">
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-              {SERVICES.map((s, i) => {
-                const Icon = s.icon;
-                return (
-                  <article
+            {isNarrow ? (
+              <ServicesScrollStack />
+            ) : (
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                {SERVICES.map((s, i) => (
+                  <ServiceCard
                     key={s.title}
-                    className="prestige-card group"
+                    service={s}
                     style={{
                       animation: `prestigeSlideIn .8s ${i * 0.06}s cubic-bezier(.22,1,.36,1) backwards`,
                     }}
-                  >
-                    <div
-                      className="flex h-11 w-11 items-center justify-center rounded-xl"
-                      style={{
-                        background: "linear-gradient(135deg, hsl(var(--pr-emerald) / 0.95), hsl(var(--pr-emerald-deep)))",
-                        color: "hsl(var(--pr-gold-light))",
-                        boxShadow: "inset 0 1px 0 hsl(var(--pr-gold) / 0.25)",
-                      }}
-                    >
-                      <Icon size={20} />
-                    </div>
-                    <h3 className="prestige-display mt-4 text-xl sm:text-2xl" style={{ color: "hsl(var(--pr-text-on-light))" }}>
-                      {s.title}
-                    </h3>
-                    <p className="mt-2 text-sm leading-relaxed" style={{ color: "hsl(var(--pr-muted-on-light))" }}>
-                      {s.desc}
-                    </p>
-                    <ul className="mt-4 flex flex-wrap gap-1.5">
-                      {s.bullets.map((b) => (
-                        <li
-                          key={b}
-                          className="rounded-full px-2.5 py-1 text-[11px] font-medium"
-                          style={{ background: "hsl(var(--pr-emerald) / 0.08)", color: "hsl(var(--pr-emerald))" }}
-                        >
-                          {b}
-                        </li>
-                      ))}
-                    </ul>
-                  </article>
-                );
-              })}
-            </div>
+                  />
+                ))}
+              </div>
+            )}
           </div>
+
         </div>
 
         {/* MILESTONES + TECH STACK — trasparenza di processo e stack */}
