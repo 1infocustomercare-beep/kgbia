@@ -163,7 +163,7 @@ export default function PrestigeIndustries() {
         className="relative mx-auto max-w-6xl px-4 sm:px-5 lg:px-10"
         style={cinematic ? { minHeight: `${INDUSTRIES.length * 78 + 40}vh` } : undefined}
       >
-       <div className={cinematic ? "sticky top-[9vh]" : undefined}>
+       <div className={cinematic ? "sticky top-[3vh]" : undefined}>
         <div className="text-center">
           <div className="prestige-eyebrow" style={{ color: "hsl(var(--pr-gold-light))" }}>
             ✦ Il caso tuo
@@ -209,12 +209,12 @@ export default function PrestigeIndustries() {
         {/* Active panel */}
         <div
           key={current.id}
-          className="prestige-card mt-8 grid grid-cols-1 gap-6 sm:gap-8 lg:grid-cols-[280px_1fr] lg:items-center"
+          className="prestige-card mt-6 grid grid-cols-1 gap-6 sm:gap-8 lg:grid-cols-[280px_1fr] lg:items-center"
           style={{ animation: "prestigeFadeIn .6s ease-out" }}
         >
           {/* Mockup image (real premium PNG) */}
           <div
-            className="relative mx-auto w-full max-w-[260px] overflow-hidden rounded-[2rem] lg:mx-0"
+            className="relative mx-auto w-full max-w-[230px] overflow-hidden rounded-[2rem] lg:mx-0"
             style={{
               aspectRatio: "9 / 19.5",
               transform: cinematic
