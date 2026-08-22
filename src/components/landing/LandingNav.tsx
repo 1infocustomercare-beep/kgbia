@@ -137,7 +137,7 @@ export default function LandingNav() {
               const Icon = l.icon;
               const isActive = active === l.href;
               return (
-                <li key={l.href} className={l.secondary ? "hidden xl:block" : ""} style={{ ["--gf" as any]: l.from, ["--gt" as any]: l.to }}>
+                <li key={l.href} className={l.secondary ? "hidden 2xl:block" : ""} style={{ ["--gf" as any]: l.from, ["--gt" as any]: l.to }}>
                   <button
                     onClick={() => scrollTo(l.href)}
                     data-active={isActive ? "true" : "false"}
