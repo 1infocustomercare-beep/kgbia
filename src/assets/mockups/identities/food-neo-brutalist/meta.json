@@ -1,21 +1,36 @@
 {
   "identityId": "food-neo-brutalist",
   "sector": "food",
-  "brand": "food-neo-brutalist",
-  "style": "Empire Studio",
-  "family": "food-neo-brutalist",
-  "palette": "Palette dedicata al settore",
-  "description": "food-neo-brutalist: webapp su misura con 2 schermate coerenti — tipografia, palette, componenti e micro-interazioni disegnati su questo settore.",
+  "brand": "Officina del Panino",
+  "style": "brutal-slab/grid-edge-to-edge/inner-glow-hairline/glass-panel/form-stepper/count-up/accent-underlay/rail-left-icons/concrete-mineral/framed-passepartout/technical-tick",
+  "family": "neo-brutalist-industrial",
+  "palette": "mobile",
+  "description": "Officina del Panino: webapp su misura con 7 schermate coerenti — tipografia, palette, componenti e micro-interazioni disegnati su questo settore.",
   "labels": [
     "Catalogo",
-    "Vetrina"
+    "Cart",
+    "Tracking",
+    "Fidelity",
+    "Order",
+    "Assistente AI",
+    "Galleria"
   ],
   "captions": [
     "Listino completo con categorie, foto reali e prezzi in euro.",
-    "Home dell'app: identità di brand, funzioni chiave e CTA principale."
+    "Schermata cart.",
+    "Schermata tracking.",
+    "Programma fedeltà con punti e premi automatici.",
+    "Schermata order.",
+    "Chat con l'agente AI che risponde e converte 24/7.",
+    "Galleria immersiva con contenuti editoriali."
   ],
   "features": [
     "Catalogo",
-    "Vetrina"
+    "Cart",
+    "Tracking",
+    "Fidelity",
+    "Order",
+    "Assistente AI",
+    "Galleria"
   ]
 }

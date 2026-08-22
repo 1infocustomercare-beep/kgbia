@@ -2,20 +2,35 @@
   "identityId": "food-mediterranean",
   "sector": "food",
   "brand": "Sole di Puglia",
-  "style": "numeric-first/grid-edge-to-edge/frosted-stroke/bento-mosaic/big-metric-blocks/spring-press/full-flood/flat-tabbar-topline",
+  "style": "numeric-first/grid-6-editorial/frosted-stroke/bento-mosaic/big-metric-blocks/spring-press/type-highlight/top-segmented-only/polished-lacquer/high-key-clean/solid-glyph",
   "family": "mediterranean-sunlit",
-  "palette": "desktop",
-  "description": "Sole di Puglia: webapp su misura con 2 schermate coerenti — tipografia, palette, componenti e micro-interazioni disegnati su questo settore.",
+  "palette": "mobile",
+  "description": "Sole di Puglia: webapp su misura con 7 schermate coerenti — tipografia, palette, componenti e micro-interazioni disegnati su questo settore.",
   "labels": [
     "Vetrina",
-    "Admin"
+    "Catalogo",
+    "Producers",
+    "Delivery",
+    "Admin",
+    "Order",
+    "Fidelity"
   ],
   "captions": [
     "Home dell'app: identità di brand, funzioni chiave e CTA principale.",
-    "Pannello di gestione con metriche operative in tempo reale."
+    "Listino completo con categorie, foto reali e prezzi in euro.",
+    "Schermata producers.",
+    "Schermata delivery.",
+    "Pannello di gestione con metriche operative in tempo reale.",
+    "Schermata order.",
+    "Programma fedeltà con punti e premi automatici."
   ],
   "features": [
     "Vetrina",
-    "Admin"
+    "Catalogo",
+    "Producers",
+    "Delivery",
+    "Admin",
+    "Order",
+    "Fidelity"
   ]
 }
