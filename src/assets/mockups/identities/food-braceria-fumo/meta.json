@@ -4,15 +4,33 @@
   "brand": "Bracere Otto",
   "style": "swiss-tight/grid-10-airy/dashed-technical/stacked-paper/media-first-editorial/ink-reveal/hairline-details/floating-frosted-tabbar",
   "family": "braceria-carbone-fumo",
-  "palette": "mobile",
-  "description": "Bracere Otto: webapp su misura con 1 schermate coerenti — tipografia, palette, componenti e micro-interazioni disegnati su questo settore.",
+  "palette": "desktop",
+  "description": "Bracere Otto: webapp su misura con 7 schermate coerenti — tipografia, palette, componenti e micro-interazioni disegnati su questo settore.",
   "labels": [
-    "Vetrina"
+    "Vetrina",
+    "Catalogo",
+    "Dettaglio",
+    "Prenotazione",
+    "Admin",
+    "Order",
+    "Fidelity"
   ],
   "captions": [
-    "Home dell'app: identità di brand, funzioni chiave e CTA principale."
+    "Home dell'app: identità di brand, funzioni chiave e CTA principale.",
+    "Catalogo navigabile con filtri e schede prodotto.",
+    "Scheda di dettaglio con contenuti, opzioni e aggiunta al carrello.",
+    "Flusso di prenotazione in pochi tap con conferma immediata.",
+    "Pannello di gestione con metriche operative in tempo reale.",
+    "Schermata order.",
+    "Programma fedeltà con punti e premi automatici."
   ],
   "features": [
-    "Vetrina"
+    "Vetrina",
+    "Catalogo",
+    "Dettaglio",
+    "Prenotazione",
+    "Admin",
+    "Order",
+    "Fidelity"
   ]
 }
