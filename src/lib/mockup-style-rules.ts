@@ -163,6 +163,9 @@ export type StyleRules = {
   motion: (typeof MICRO_MOTIONS)[number];
   accent: (typeof ACCENT_USAGES)[number];
   chrome: (typeof CHROME_MODES)[number];
+  material: (typeof SURFACE_MATERIALS)[number];
+  imagery: (typeof IMAGE_TREATMENTS)[number];
+  icons: (typeof ICON_SYSTEMS)[number];
   /** firma testuale univoca del set di regole */
   signature: string;
 };
@@ -174,9 +177,10 @@ export type StyleRules = {
  * poi perturbazione greedy fino a firma univoca (nessuna identità può
  * condividere l'intero set di regole con un'altra).
  */
-const AXES = [TYPE_SCALES, SPACING_SYSTEMS, LINE_LANGUAGES, BOX_STYLES, COMPONENT_KITS, MICRO_MOTIONS, ACCENT_USAGES, CHROME_MODES] as const;
+const AXES = [TYPE_SCALES, SPACING_SYSTEMS, LINE_LANGUAGES, BOX_STYLES, COMPONENT_KITS, MICRO_MOTIONS, ACCENT_USAGES, CHROME_MODES, SURFACE_MATERIALS, IMAGE_TREATMENTS, ICON_SYSTEMS] as const;
 
-const STRIDES = [1, 3, 5, 7, 11, 13, 17, 19];
+const STRIDES = [1, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31];
+
 
 function buildRules(): Record<string, StyleRules> {
   const out: Record<string, StyleRules> = {};
