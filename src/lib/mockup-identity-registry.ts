@@ -19,6 +19,7 @@ import { HEALTHCARE_EXPANSION } from "./mockup-identity-expansion-healthcare";
 import { WAVE2_A } from "./mockup-identity-expansion-wave2-a";
 import { WAVE2_B } from "./mockup-identity-expansion-wave2-b";
 import { WAVE2_C } from "./mockup-identity-expansion-wave2-c";
+import { completeScreens, screenCoverage, SCREEN_TARGET } from "./mockup-screen-completion";
 
 const EXPANSIONS: ExpansionRow[] = [
   ...FOOD_EXPANSION, ...BEAUTY_EXPANSION, ...NCC_EXPANSION, ...FITNESS_EXPANSION,
