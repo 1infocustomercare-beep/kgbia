@@ -1,5 +1,25 @@
+import { useEffect, useRef, useState, type CSSProperties } from "react";
+import { motion, useScroll, useSpring, useTransform, useMotionValueEvent, useReducedMotion, type MotionValue } from "framer-motion";
 import { useEmpireScrollDirector } from "../ScrollDirector";
-import { Globe, Smartphone, Bot, MessageSquare, CreditCard, BarChart3 } from "lucide-react";
+import { Globe, Smartphone, Bot, MessageSquare, CreditCard, BarChart3, type LucideIcon } from "lucide-react";
+
+type Service = { icon: LucideIcon; title: string; desc: string; bullets: string[] };
+
+/** Switch mobile (stack carousel) / desktop (griglia). */
+function useIsNarrow() {
+  const [narrow, setNarrow] = useState(() =>
+    typeof window === "undefined" ? false : window.matchMedia("(max-width: 767px)").matches
+  );
+  useEffect(() => {
+    const mq = window.matchMedia("(max-width: 767px)");
+    const on = () => setNarrow(mq.matches);
+    on();
+    mq.addEventListener("change", on);
+    return () => mq.removeEventListener("change", on);
+  }, []);
+  return narrow;
+}
+
 
 const SERVICES = [
   {
