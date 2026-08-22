@@ -313,7 +313,7 @@ function ServicesScrollStack() {
           overflow: hidden;
         }
         .prestige-svcstack-stage {
-          position: relative; height: 62svh; perspective: 1000px;
+          position: relative; height: 44svh; perspective: 1000px;
         }
         .prestige-svcstack-card {
           position: absolute; left: 0; right: 0; top: 0;
