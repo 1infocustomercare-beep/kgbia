@@ -105,6 +105,7 @@ const SECTOR_FILLERS: Record<SectorKey, ScreenSpec[]> = {
     m("pet", "Scheda animale", "Libretto, vaccini e note", ["dati animale", "vaccini con date", "note comportamento"]),
     m("chat", "Assistente AI", "Consigli e promemoria richiami", ["bolle conversazione", "promemoria vaccino", "azioni rapide"]),
     d("admin", "Gestione struttura", "Box, turni e presenze animali", ["mappa box", "KPI presenze", "turni staff"]),
+    m("shop", "Shop e alimenti", "Cibo, accessori e riordino automatico", ["griglia prodotti", "prezzo in €", "abbonamento riordino", "CTA carrello"]),
   ],
   childcare: [
     m("dayplan", "Giornata", "Routine, pasti e riposo", ["timeline giornata", "pasti", "riposo", "note educatrice"]),
