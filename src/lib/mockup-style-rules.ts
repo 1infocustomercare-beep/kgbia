@@ -99,6 +99,8 @@ export const ACCENT_USAGES = [
   { key: "type-highlight", desc: "accento sulla tipografia (parole chiave evidenziate)" },
   { key: "badge-system", desc: "accento su badge e pill di stato" },
   { key: "gradient-wash", desc: "accento in gradiente morbido su superfici" },
+  { key: "duotone-photo", desc: "accento come duotone sulle fotografie, UI monocroma" },
+  { key: "accent-underlay", desc: "accento solo dietro i blocchi come sottofondo pieno, testo neutro sopra" },
 ] as const;
 
 /** Chrome di sistema iOS + navigazione. */
@@ -109,7 +111,47 @@ export const CHROME_MODES = [
   { key: "top-segmented-only", desc: "solo segmented control in testa, navigazione a scroll" },
   { key: "large-title-collapsing", desc: "large title iOS in stato compresso con back" },
   { key: "sidebar-drawer-hint", desc: "hamburger + drawer aperto al 20% sul bordo" },
+  { key: "capsule-dock-3", desc: "dock capsula centrata con 3 voci e pill attiva" },
+  { key: "rail-left-icons", desc: "rail verticale di icone a sinistra, contenuto a destra" },
 ] as const;
+
+/**
+ * MATERIALE della superficie UI: dà a ogni identità una "pelle" diversa,
+ * non solo colori differenti.
+ */
+export const SURFACE_MATERIALS = [
+  { key: "matte-paper", desc: "superfici carta opaca con grana finissima, nessun riflesso" },
+  { key: "polished-lacquer", desc: "lacca lucida profonda con riflessi speculari morbidi" },
+  { key: "brushed-metal", desc: "metallo satinato con micro-striature direzionali" },
+  { key: "frosted-glass", desc: "vetro satinato con blur reale e bordi luminosi" },
+  { key: "linen-textile", desc: "tessuto lino con trama visibile sulle sezioni" },
+  { key: "concrete-mineral", desc: "cemento minerale con macchie tonali sottili" },
+  { key: "warm-parchment", desc: "pergamena calda con bordi leggermente più scuri" },
+  { key: "obsidian-oled", desc: "nero OLED assoluto con superfici che emergono per luce" },
+] as const;
+
+/** Trattamento delle immagini/fotografie dentro la UI. */
+export const IMAGE_TREATMENTS = [
+  { key: "full-bleed-cinema", desc: "foto a pieno campo con gradiente di leggibilità in basso" },
+  { key: "framed-passepartout", desc: "foto in cornice con ampio passepartout e didascalia" },
+  { key: "circular-crop", desc: "ritagli circolari o a arco, mai rettangoli semplici" },
+  { key: "collage-overlap", desc: "due foto sovrapposte con offset e ombra dura" },
+  { key: "grain-film", desc: "foto con grana pellicola e leggera vignettatura" },
+  { key: "high-key-clean", desc: "foto luminosissime su fondo chiaro, ombre quasi assenti" },
+  { key: "macro-detail", desc: "solo macro dettaglio materico, mai inquadrature larghe" },
+  { key: "editorial-diptych", desc: "dittico verticale con due foto separate da un filetto" },
+] as const;
+
+/** Iconografia + dataviz: cambia il "carattere" degli elementi funzionali. */
+export const ICON_SYSTEMS = [
+  { key: "thin-line-1px", desc: "icone lineari 1px, geometriche, nessun riempimento" },
+  { key: "solid-glyph", desc: "glifi pieni compatti dentro pastiglie" },
+  { key: "duotone-icons", desc: "icone duotone con accento sul livello secondario" },
+  { key: "hand-etched", desc: "icone incise stile etichetta artigianale" },
+  { key: "rounded-bubble", desc: "icone molto arrotondate dentro cerchi morbidi" },
+  { key: "technical-tick", desc: "icone tecniche con tacche, mirini e quadranti" },
+] as const;
+
 
 export type StyleRules = {
   identityId: string;
@@ -121,6 +163,9 @@ export type StyleRules = {
   motion: (typeof MICRO_MOTIONS)[number];
   accent: (typeof ACCENT_USAGES)[number];
   chrome: (typeof CHROME_MODES)[number];
+  material: (typeof SURFACE_MATERIALS)[number];
+  imagery: (typeof IMAGE_TREATMENTS)[number];
+  icons: (typeof ICON_SYSTEMS)[number];
   /** firma testuale univoca del set di regole */
   signature: string;
 };
@@ -132,9 +177,10 @@ export type StyleRules = {
  * poi perturbazione greedy fino a firma univoca (nessuna identità può
  * condividere l'intero set di regole con un'altra).
  */
-const AXES = [TYPE_SCALES, SPACING_SYSTEMS, LINE_LANGUAGES, BOX_STYLES, COMPONENT_KITS, MICRO_MOTIONS, ACCENT_USAGES, CHROME_MODES] as const;
+const AXES = [TYPE_SCALES, SPACING_SYSTEMS, LINE_LANGUAGES, BOX_STYLES, COMPONENT_KITS, MICRO_MOTIONS, ACCENT_USAGES, CHROME_MODES, SURFACE_MATERIALS, IMAGE_TREATMENTS, ICON_SYSTEMS] as const;
 
-const STRIDES = [1, 3, 5, 7, 11, 13, 17, 19];
+const STRIDES = [1, 5, 5, 7, 11, 13, 17, 19, 23, 29, 31];
+
 
 function buildRules(): Record<string, StyleRules> {
   const out: Record<string, StyleRules> = {};
@@ -165,6 +211,9 @@ function buildRules(): Record<string, StyleRules> {
       motion: MICRO_MOTIONS[idx[5]],
       accent: ACCENT_USAGES[idx[6]],
       chrome: CHROME_MODES[idx[7]],
+      material: SURFACE_MATERIALS[idx[8]],
+      imagery: IMAGE_TREATMENTS[idx[9]],
+      icons: ICON_SYSTEMS[idx[10]],
       signature,
     };
   });
@@ -211,6 +260,21 @@ export const CONTENT_CONTRACT = [
   "immagine finale VERTICALE, formato ritratto 3:4, il telefono occupa la maggior parte dell'altezza",
 ].join("; ");
 
+/**
+ * Regole di RIFINITURA: alzano la qualità percepita (gerarchia, profondità,
+ * densità informativa, cura dei dettagli) senza appiattire le identità.
+ */
+export const CRAFT_CONTRACT = [
+  "gerarchia visiva a 3 livelli chiari: un solo elemento dominante, un livello di supporto, un livello di dettaglio micro",
+  "allineamento ottico impeccabile: baseline coerenti, numeri tabulari allineati a destra, icone centrate nel loro box",
+  "profondità reale coerente col materiale: ombre con una sola direzione di luce, mai ombre contraddittorie",
+  "densità informativa alta ma respirata: ogni schermata mostra dati veri (prezzi, orari, percentuali, nomi) e almeno uno stato (attivo, esaurito, in corso)",
+  "raggi, spessori e spaziature costanti dentro la stessa schermata: nessun mix casuale di radius o bordi",
+  "riquadri con contenuto bilanciato: nessuna card mezza vuota, nessun blocco che sfora il proprio bordo",
+  "colori dalla palette dichiarata, massimo un accento dominante per schermata, contrasto testo/fondo sempre leggibile",
+  "finitura da portfolio d'agenzia: livello di dettaglio superiore ai reference, mai piatta o generica",
+].join("; ");
+
 export function buildScreenPrompt(identity: MockupIdentity, screenKey: string): string {
   const rules = STYLE_RULES[identity.id];
   const screen = identity.screens.find((s) => s.key === screenKey) ?? identity.screens[0];
@@ -222,11 +286,14 @@ export function buildScreenPrompt(identity: MockupIdentity, screenKey: string): 
     `Tipografia: ${identity.typography.display} / ${identity.typography.body} / ${identity.typography.treatment}. Scala ${rules?.type.scale} (${rules?.type.key}), ${rules?.type.case}, tracking ${rules?.type.tracking}, leading ${rules?.type.leading}.`,
     `Spaziatura: ${rules?.spacing.key} — unità ${rules?.spacing.unit}, gutter ${rules?.spacing.gutter}, ritmo ${rules?.spacing.rhythm}, padding ${rules?.spacing.padding}.`,
     `Linee: ${rules?.line.desc}. Riquadri: ${rules?.box.desc}.`,
-    `Componenti dominanti: ${rules?.kit.desc}. Uso accento: ${rules?.accent.desc}. Chrome: ${rules?.chrome.desc}.`,
+    `Materiale delle superfici: ${rules?.material.desc}. Trattamento immagini: ${rules?.imagery.desc}. Iconografia: ${rules?.icons.desc}.`,
+    `Componenti dominanti (adattali allo scopo della schermata, senza tradirne il linguaggio): ${rules?.kit.desc}. Uso accento: ${rules?.accent.desc}. Chrome: ${rules?.chrome.desc}.`,
     `Micro-animazione congelata nel frame: ${rules?.motion.desc}.`,
     `Fotografia della scena: ${identity.photography}. Composizione UI: ${identity.composition}.`,
     `Vincoli di inquadratura: ${FRAMING_CONTRACT}.`,
     `Vincoli di contenuto: ${CONTENT_CONTRACT}.`,
+    `Vincoli di rifinitura: ${CRAFT_CONTRACT}.`,
   ].join("\n");
 }
+
 

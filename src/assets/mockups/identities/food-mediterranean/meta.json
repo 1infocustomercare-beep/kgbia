@@ -4,15 +4,18 @@
   "brand": "Sole di Puglia",
   "style": "numeric-first/grid-edge-to-edge/frosted-stroke/bento-mosaic/big-metric-blocks/spring-press/full-flood/flat-tabbar-topline",
   "family": "mediterranean-sunlit",
-  "palette": "mobile",
-  "description": "Sole di Puglia: webapp su misura con 1 schermate coerenti — tipografia, palette, componenti e micro-interazioni disegnati su questo settore.",
+  "palette": "desktop",
+  "description": "Sole di Puglia: webapp su misura con 2 schermate coerenti — tipografia, palette, componenti e micro-interazioni disegnati su questo settore.",
   "labels": [
-    "Vetrina"
+    "Vetrina",
+    "Admin"
   ],
   "captions": [
-    "Home dell'app: identità di brand, funzioni chiave e CTA principale."
+    "Home dell'app: identità di brand, funzioni chiave e CTA principale.",
+    "Pannello di gestione con metriche operative in tempo reale."
   ],
   "features": [
-    "Vetrina"
+    "Vetrina",
+    "Admin"
   ]
 }
