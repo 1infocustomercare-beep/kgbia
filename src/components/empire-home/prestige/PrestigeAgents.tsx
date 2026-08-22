@@ -52,7 +52,7 @@ export default function PrestigeAgents() {
         <div className="grid grid-cols-1 items-center gap-10 lg:grid-cols-12 lg:gap-12">
           <div className="lg:col-span-7">
             <div className="prestige-eyebrow" style={{ color: "hsl(var(--pr-gold-light))" }}>
-              ✦ Agenti AI, automazioni e gestionali
+              ✦ Agenti AI · automazioni · software e web app su misura
             </div>
             <h2 className="prestige-display mt-4 text-3xl sm:text-5xl lg:text-6xl">
               Costruiamo il sistema che manda avanti la tua azienda{" "}
