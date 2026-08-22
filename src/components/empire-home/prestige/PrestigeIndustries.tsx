@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { useEmpireScrollDirector } from "../ScrollDirector";
 import { UtensilsCrossed, Car, Scissors, Dumbbell, Hotel, Briefcase, Check } from "lucide-react";
 import { SECTOR_MOCKUPS } from "@/data/sector-mockups";
 
@@ -90,11 +91,64 @@ const getStudioMockupForSector = (id: string): string => {
   return variant?.screens[0]?.image ?? variant?.screen ?? SECTOR_MOCKUPS[0]?.variants[0]?.screen ?? "";
 };
 
+/** true se il device può reggere gli effetti scroll pinnati (desktop, no reduced-motion). */
+const useCinematicScroll = () => {
+  const [enabled, setEnabled] = useState(false);
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const mq = window.matchMedia(
+      "(min-width: 1024px) and (min-height: 640px) and (prefers-reduced-motion: no-preference)",
+    );
+    const sync = () => setEnabled(mq.matches);
+    sync();
+    mq.addEventListener("change", sync);
+    return () => mq.removeEventListener("change", sync);
+  }, []);
+  return enabled;
+};
+
 export default function PrestigeIndustries() {
-  // Nessun cambio pilotato dallo scroll: il contenuto cambia SOLO su clic
-  // dell'utente, così c'è tutto il tempo per leggere il settore selezionato.
   const [active, setActive] = useState("food");
-  const handleTab = (id: string) => setActive(id);
+  const cinematic = useCinematicScroll();
+  /** Dopo un clic manuale lo scroll non sovrascrive la scelta per 6 secondi. */
+  const manualUntil = useRef(0);
+  const lastAutoChange = useRef(0);
+  const activeRef = useRef(active);
+  activeRef.current = active;
+
+  const handleTab = (id: string) => {
+    manualUntil.current = Date.now() + 6000;
+    setActive(id);
+  };
+
+  /**
+   * Effetto cinematografico: il pannello resta pinnato mentre lo scroll
+   * avanza di settore in settore. Ogni step ha una finestra di scroll ampia
+   * (una schermata intera) + un cooldown minimo, così il contenuto è sempre
+   * leggibile e non "salta" mai.
+   */
+  const onScrollUpdate = useCallback(
+    ({ progress, inView }: { progress: number; inView: boolean }) => {
+      if (!inView) return;
+      const now = Date.now();
+      if (now < manualUntil.current) return;
+      if (now - lastAutoChange.current < 420) return;
+      const idx = Math.min(
+        INDUSTRIES.length - 1,
+        Math.max(0, Math.floor(progress * INDUSTRIES.length)),
+      );
+      const next = INDUSTRIES[idx]?.id;
+      if (!next || next === activeRef.current) return;
+      lastAutoChange.current = now;
+      setActive(next);
+    },
+    [],
+  );
+
+  const { ref, progress } = useEmpireScrollDirector<HTMLDivElement>("prestige-industries", {
+    steps: INDUSTRIES.length,
+    onUpdate: cinematic ? onScrollUpdate : undefined,
+  });
 
   const current = INDUSTRIES.find((i) => i.id === active)!;
   const Icon = current.icon;
@@ -104,7 +158,12 @@ export default function PrestigeIndustries() {
       data-section="prestige-industries"
       className="prestige-section prestige-dark py-16 sm:py-24 md:py-32"
     >
-      <div className="mx-auto max-w-6xl px-4 sm:px-5 lg:px-10">
+      <div
+        ref={ref}
+        className="relative mx-auto max-w-6xl px-4 sm:px-5 lg:px-10"
+        style={cinematic ? { minHeight: `${INDUSTRIES.length * 78 + 40}vh` } : undefined}
+      >
+       <div className={cinematic ? "sticky top-[9vh]" : undefined}>
         <div className="text-center">
           <div className="prestige-eyebrow" style={{ color: "hsl(var(--pr-gold-light))" }}>
             ✦ Il caso tuo
@@ -158,6 +217,10 @@ export default function PrestigeIndustries() {
             className="relative mx-auto w-full max-w-[260px] overflow-hidden rounded-[2rem] lg:mx-0"
             style={{
               aspectRatio: "9 / 19.5",
+              transform: cinematic
+                ? `translate3d(0, ${(0.5 - progress) * -22}px, 0)`
+                : undefined,
+              willChange: cinematic ? "transform" : undefined,
               boxShadow: "0 30px 70px -20px hsl(var(--pr-gold) / 0.35), 0 0 0 8px hsl(var(--pr-emerald-deep))",
               background: "hsl(var(--pr-emerald-deep))",
             }}
@@ -201,6 +264,7 @@ export default function PrestigeIndustries() {
             </ul>
           </div>
         </div>
+       </div>
       </div>
       <style>{`
         @keyframes prestigeFadeIn {
