@@ -19,6 +19,7 @@ import { HEALTHCARE_EXPANSION } from "./mockup-identity-expansion-healthcare";
 import { WAVE2_A } from "./mockup-identity-expansion-wave2-a";
 import { WAVE2_B } from "./mockup-identity-expansion-wave2-b";
 import { WAVE2_C } from "./mockup-identity-expansion-wave2-c";
+import { completeScreens, screenCoverage, SCREEN_TARGET } from "./mockup-screen-completion";
 
 const EXPANSIONS: ExpansionRow[] = [
   ...FOOD_EXPANSION, ...BEAUTY_EXPANSION, ...NCC_EXPANSION, ...FITNESS_EXPANSION,
@@ -32,18 +33,22 @@ export const FULL_SURFACE_SIGNATURES: Record<string, SurfaceSignature> = {
   ...Object.fromEntries(EXPANSIONS.map((r) => [r.identity.family, r.surface])),
 };
 
-/** Matrice completa per settore. */
+/** Matrice completa per settore (ogni identità completata a 7 schermate). */
 export const FULL_IDENTITY_MATRIX: Record<SectorKey, MockupIdentity[]> = (() => {
   const out = Object.fromEntries(
     (Object.keys(IDENTITY_MATRIX) as SectorKey[]).map((k) => [k, [...IDENTITY_MATRIX[k]]]),
   ) as Record<SectorKey, MockupIdentity[]>;
   EXPANSIONS.forEach((r) => out[r.identity.sector].push(r.identity));
+  (Object.keys(out) as SectorKey[]).forEach((k) => {
+    out[k] = out[k].map((i) => completeScreens(i, SCREEN_TARGET));
+  });
   return out;
 })();
 
 export const FULL_IDENTITIES: MockupIdentity[] = Object.values(FULL_IDENTITY_MATRIX).flat();
 
-export { SECTOR_LABELS };
+export { SECTOR_LABELS, SCREEN_TARGET, screenCoverage };
+
 
 export function getFullIdentities(sector: SectorKey): MockupIdentity[] {
   return FULL_IDENTITY_MATRIX[sector] ?? [];
