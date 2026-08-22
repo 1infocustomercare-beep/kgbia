@@ -436,7 +436,25 @@ const HSCROLL_CSS = `
   }
 
   /* ── MOBILE DECK 3D ─────────────────────────────────────────────── */
+  /* ── MOBILE CAROUSEL PINNATO ────────────────────────────────────── */
+  .prestige-hmob .prestige-hscroll-row { perspective: 1200px; }
+  .prestige-hmob .prestige-hscroll-panel { padding: 0 .85rem 1.5rem; }
+  .prestige-hmob-card {
+    position: relative;
+    width: 100%;
+    max-width: 30rem;
+    margin: 0 auto;
+    transform-style: preserve-3d;
+    will-change: transform, opacity;
+    border-radius: 1.5rem;
+    box-shadow:
+      0 24px 60px -28px hsl(0 0% 0% / .85),
+      0 0 40px hsl(var(--pr-gold) / calc(var(--deck-glow, 0) * .45));
+  }
+  .prestige-hmob-card > .prestige-bento { border-radius: 1.5rem; }
+
   .prestige-hdeck { padding-bottom: 1rem; }
+
   .prestige-hdeck-stage {
     perspective: 1100px;
     perspective-origin: 50% 40%;
