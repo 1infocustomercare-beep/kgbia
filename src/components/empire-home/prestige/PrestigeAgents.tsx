@@ -1,13 +1,11 @@
-import { Bot, CalendarCheck, MessageCircle, Mic, Star, LayoutDashboard, Languages, ShoppingCart, Workflow, Globe, Database, Sparkles } from "lucide-react";
-import { SplineScene } from "@/components/ui/spline-scene";
-import PrestigeAgentRobot from "./PrestigeAgentRobot";
-import PrestigeAgentScene from "./PrestigeAgentScene";
+import { Bot, CalendarCheck, MessageCircle, Mic, Star, LayoutDashboard, Languages, ShoppingCart, Workflow, Globe, Database, Code2 } from "lucide-react";
+import PrestigeAgentStudio from "./PrestigeAgentStudio";
 
 const CAPABILITIES = [
-  { icon: Bot, label: "Agenti AI su misura", desc: "Voce, chat, WhatsApp: addestrati sul tuo business." },
-  { icon: Workflow, label: "Automazioni", desc: "Follow-up, reminder, preventivi e recensioni in automatico." },
-  { icon: Database, label: "Gestionali", desc: "Ordini, agenda, clienti e magazzino in un'unica dashboard." },
-  { icon: Globe, label: "Siti e web app", desc: "Sito, mini-app clienti e pagamenti integrati." },
+  { icon: Bot, label: "Agenti AI su misura", desc: "Voce, chat e WhatsApp addestrati sui tuoi servizi, prezzi e procedure." },
+  { icon: Workflow, label: "Automazioni di processo", desc: "Preventivi, follow-up, documenti e reminder senza lavoro manuale." },
+  { icon: Database, label: "Gestionali e software", desc: "Ordini, agenda, clienti e magazzino in un unico strumento su misura." },
+  { icon: Code2, label: "Siti, web app e integrazioni", desc: "Interfacce che i clienti usano davvero, collegate ai sistemi già in uso." },
 ];
 
 
