@@ -5,14 +5,26 @@
   "style": "editorial-giant/grid-edge-to-edge/hard-2px-outline/framed-plate/calendar-slots/swipe-peek/gradient-wash/top-segmented-only",
   "family": "midnight-lacquer",
   "palette": "mobile",
-  "description": "Kaidō Omakase: webapp su misura con 1 schermate coerenti — tipografia, palette, componenti e micro-interazioni disegnati su questo settore.",
+  "description": "Kaidō Omakase: webapp su misura con 5 schermate coerenti — tipografia, palette, componenti e micro-interazioni disegnati su questo settore.",
   "labels": [
-    "Vetrina"
+    "Seats",
+    "Slots",
+    "Sake",
+    "Confirm",
+    "Order"
   ],
   "captions": [
-    "Schermata d'ingresso con hero editoriale e call to action."
+    "Schermata seats.",
+    "Schermata slots.",
+    "Schermata sake.",
+    "Schermata confirm.",
+    "Schermata order."
   ],
   "features": [
-    "Vetrina"
+    "Seats",
+    "Slots",
+    "Sake",
+    "Confirm",
+    "Order"
   ]
 }
