@@ -176,12 +176,37 @@ export default function PrivateJetPublicSite() {
 @media (prefers-reduced-motion:reduce){
   .jet-lux .jet-sheen::after{display:none}
 }
+
+/* ═══ Fondale ambientale tra le sezioni ═══
+   Livello fisso dietro tutti i contenuti: base grafite profonda + aloni champagne
+   molto tenui + vignettatura. Sta sotto testi e icone e non riduce la leggibilità. */
+.jet-atmos{
+  position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:
+    radial-gradient(120% 70% at 12% 8%, hsl(40 45% 82% / 0.055) 0%, transparent 58%),
+    radial-gradient(90% 60% at 88% 32%, hsl(34 40% 70% / 0.045) 0%, transparent 62%),
+    radial-gradient(110% 80% at 50% 108%, hsl(40 50% 80% / 0.05) 0%, transparent 60%),
+    linear-gradient(180deg, hsl(30 9% 7%) 0%, hsl(30 8% 5.5%) 50%, hsl(30 9% 7%) 100%);
+}
+/* vignettatura per tenere lo sguardo al centro */
+.jet-atmos::after{
+  content:"";position:absolute;inset:0;
+  background:radial-gradient(120% 90% at 50% 50%, transparent 42%, hsl(30 20% 2% / 0.55) 100%);
+}
+/* le sezioni diventano trasparenti così il fondale respira tra un blocco e l'altro,
+   mentre card e pannelli conservano il proprio vetro opaco */
+.jet-lux > section.bg-background{background-color:transparent !important}
+.jet-lux > section + section{border-top:1px solid hsl(40 45% 80% / 0.06)}
+.jet-lux > *{position:relative;z-index:1}
       `}</style>
 
+
+      <div className="jet-atmos" aria-hidden />
 
       <JetSplash />
 
       <BackButton to="/demo" label="Tutte le demo" variant="floating" theme="glass" className="!h-11 !w-11" />
+
 
       <section ref={heroRef} className={`relative bg-background ${JET_SCROLL.heroHeight}`}>
         <div className="sticky top-0 h-[100svh] overflow-hidden">
