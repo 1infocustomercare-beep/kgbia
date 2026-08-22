@@ -180,7 +180,7 @@ export default function PrestigeAgentStudio() {
   return (
     <motion.div
       className="prestige-agent-studio overflow-hidden rounded-[28px]"
-      initial={{ opacity: 0, y: 42, rotateY: -7, scale: 0.94 }}
+      initial={{ opacity: 0.42, y: 42, rotateY: -7, scale: 0.94 }}
       whileInView={{ opacity: 1, y: 0, rotateY: 0, scale: 1 }}
       viewport={{ once: true, amount: 0.12 }}
       transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}

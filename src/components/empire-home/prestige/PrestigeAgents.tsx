@@ -72,7 +72,7 @@ export default function PrestigeAgents() {
                 return (
                   <motion.li
                     key={c.label}
-                    initial={{ opacity: 0, x: -24 }}
+                    initial={{ opacity: 0.3, x: -24 }}
                     whileInView={{ opacity: 1, x: 0 }}
                     viewport={{ once: false, amount: 0.45 }}
                     transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
