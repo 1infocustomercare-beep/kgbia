@@ -15,6 +15,8 @@ import SetupPaidGuard from "@/components/SetupPaidGuard";
 import EmpireDNABackground from "@/components/EmpireDNABackground";
 import EmpireGlassShell from "@/components/glass/EmpireGlassShell";
 import { useReferralCapture } from "@/hooks/useReferralCapture";
+import { purgeLegacyAppShell } from "@/lib/legacy-shell-purge";
+
 
 
 // Detect mobile for tighter safety timeouts
@@ -65,38 +67,8 @@ const isRetryableImportError = (error: unknown) => {
 
 const CHUNK_RECOVERY_FLAG = "empire_chunk_recovery_once";
 
-const LEGACY_APP_CACHE_MARKERS = [
-  "workbox",
-  "vite-plugin-pwa",
-  "pages-runtime",
-  "static-runtime",
-  "media-runtime",
-  "fonts-runtime",
-];
+// Legacy app-shell purge lives in a single module (src/lib/legacy-shell-purge.ts).
 
-const disableLegacyAppShellCache = () => {
-  if (typeof window === "undefined") return;
-
-  if ("serviceWorker" in navigator) {
-    void navigator.serviceWorker
-      .getRegistrations()
-      .then((registrations) => Promise.all(registrations.map((registration) => registration.unregister())))
-      .catch(() => undefined);
-  }
-
-  if ("caches" in window) {
-    void caches
-      .keys()
-      .then((keys) =>
-        Promise.all(
-          keys
-            .filter((key) => LEGACY_APP_CACHE_MARKERS.some((marker) => key.includes(marker)))
-            .map((key) => caches.delete(key)),
-        ),
-      )
-      .catch(() => undefined);
-  }
-};
 
 const clearChunkRecoveryFlag = () => {
   try {
@@ -502,8 +474,9 @@ function App() {
   const handleIntroComplete = useCallback(() => setIntroCompleted(true), []);
 
   useEffect(() => {
-    disableLegacyAppShellCache();
+    void purgeLegacyAppShell();
   }, []);
+
 
   useEffect(() => {
     const startedAt = performance.now();
