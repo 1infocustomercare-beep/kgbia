@@ -99,6 +99,8 @@ export const ACCENT_USAGES = [
   { key: "type-highlight", desc: "accento sulla tipografia (parole chiave evidenziate)" },
   { key: "badge-system", desc: "accento su badge e pill di stato" },
   { key: "gradient-wash", desc: "accento in gradiente morbido su superfici" },
+  { key: "duotone-photo", desc: "accento come duotone sulle fotografie, UI monocroma" },
+  { key: "accent-underlay", desc: "accento solo dietro i blocchi come sottofondo pieno, testo neutro sopra" },
 ] as const;
 
 /** Chrome di sistema iOS + navigazione. */
@@ -109,7 +111,47 @@ export const CHROME_MODES = [
   { key: "top-segmented-only", desc: "solo segmented control in testa, navigazione a scroll" },
   { key: "large-title-collapsing", desc: "large title iOS in stato compresso con back" },
   { key: "sidebar-drawer-hint", desc: "hamburger + drawer aperto al 20% sul bordo" },
+  { key: "capsule-dock-3", desc: "dock capsula centrata con 3 voci e pill attiva" },
+  { key: "rail-left-icons", desc: "rail verticale di icone a sinistra, contenuto a destra" },
 ] as const;
+
+/**
+ * MATERIALE della superficie UI: dà a ogni identità una "pelle" diversa,
+ * non solo colori differenti.
+ */
+export const SURFACE_MATERIALS = [
+  { key: "matte-paper", desc: "superfici carta opaca con grana finissima, nessun riflesso" },
+  { key: "polished-lacquer", desc: "lacca lucida profonda con riflessi speculari morbidi" },
+  { key: "brushed-metal", desc: "metallo satinato con micro-striature direzionali" },
+  { key: "frosted-glass", desc: "vetro satinato con blur reale e bordi luminosi" },
+  { key: "linen-textile", desc: "tessuto lino con trama visibile sulle sezioni" },
+  { key: "concrete-mineral", desc: "cemento minerale con macchie tonali sottili" },
+  { key: "warm-parchment", desc: "pergamena calda con bordi leggermente più scuri" },
+  { key: "obsidian-oled", desc: "nero OLED assoluto con superfici che emergono per luce" },
+] as const;
+
+/** Trattamento delle immagini/fotografie dentro la UI. */
+export const IMAGE_TREATMENTS = [
+  { key: "full-bleed-cinema", desc: "foto a pieno campo con gradiente di leggibilità in basso" },
+  { key: "framed-passepartout", desc: "foto in cornice con ampio passepartout e didascalia" },
+  { key: "circular-crop", desc: "ritagli circolari o a arco, mai rettangoli semplici" },
+  { key: "collage-overlap", desc: "due foto sovrapposte con offset e ombra dura" },
+  { key: "grain-film", desc: "foto con grana pellicola e leggera vignettatura" },
+  { key: "high-key-clean", desc: "foto luminosissime su fondo chiaro, ombre quasi assenti" },
+  { key: "macro-detail", desc: "solo macro dettaglio materico, mai inquadrature larghe" },
+  { key: "editorial-diptych", desc: "dittico verticale con due foto separate da un filetto" },
+] as const;
+
+/** Iconografia + dataviz: cambia il "carattere" degli elementi funzionali. */
+export const ICON_SYSTEMS = [
+  { key: "thin-line-1px", desc: "icone lineari 1px, geometriche, nessun riempimento" },
+  { key: "solid-glyph", desc: "glifi pieni compatti dentro pastiglie" },
+  { key: "duotone-icons", desc: "icone duotone con accento sul livello secondario" },
+  { key: "hand-etched", desc: "icone incise stile etichetta artigianale" },
+  { key: "rounded-bubble", desc: "icone molto arrotondate dentro cerchi morbidi" },
+  { key: "technical-tick", desc: "icone tecniche con tacche, mirini e quadranti" },
+] as const;
+
 
 export type StyleRules = {
   identityId: string;
