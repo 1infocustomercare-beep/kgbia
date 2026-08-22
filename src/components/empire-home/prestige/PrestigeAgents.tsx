@@ -1,13 +1,11 @@
-import { Bot, CalendarCheck, MessageCircle, Mic, Star, LayoutDashboard, Languages, ShoppingCart, Workflow, Globe, Database, Sparkles } from "lucide-react";
-import { SplineScene } from "@/components/ui/spline-scene";
-import PrestigeAgentRobot from "./PrestigeAgentRobot";
-import PrestigeAgentScene from "./PrestigeAgentScene";
+import { Bot, CalendarCheck, MessageCircle, Mic, Star, LayoutDashboard, Languages, ShoppingCart, Workflow, Globe, Database, Code2 } from "lucide-react";
+import PrestigeAgentStudio from "./PrestigeAgentStudio";
 
 const CAPABILITIES = [
-  { icon: Bot, label: "Agenti AI su misura", desc: "Voce, chat, WhatsApp: addestrati sul tuo business." },
-  { icon: Workflow, label: "Automazioni", desc: "Follow-up, reminder, preventivi e recensioni in automatico." },
-  { icon: Database, label: "Gestionali", desc: "Ordini, agenda, clienti e magazzino in un'unica dashboard." },
-  { icon: Globe, label: "Siti e web app", desc: "Sito, mini-app clienti e pagamenti integrati." },
+  { icon: Bot, label: "Agenti AI su misura", desc: "Voce, chat e WhatsApp addestrati sui tuoi servizi, prezzi e procedure." },
+  { icon: Workflow, label: "Automazioni di processo", desc: "Preventivi, follow-up, documenti e reminder senza lavoro manuale." },
+  { icon: Database, label: "Gestionali e software", desc: "Ordini, agenda, clienti e magazzino in un unico strumento su misura." },
+  { icon: Code2, label: "Siti, web app e integrazioni", desc: "Interfacce che i clienti usano davvero, collegate ai sistemi già in uso." },
 ];
 
 
@@ -32,13 +30,15 @@ export default function PrestigeAgents() {
       data-section="prestige-agents"
       className="prestige-section prestige-dark relative py-20 sm:py-28"
     >
-      {/* Spline 3D — sfondo immersivo dietro la sezione agenti */}
+      {/* Sfondo statico: nessuna scena 3D (instabile su mobile), solo veli CSS. */}
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute inset-0 z-0 opacity-40 sm:opacity-50"
-      >
-        <SplineScene sector="ai" glow={false} className="h-full w-full" />
-      </div>
+        className="pointer-events-none absolute inset-0 z-0"
+        style={{
+          background:
+            "radial-gradient(60% 45% at 18% 12%, hsl(var(--pr-emerald) / 0.22), transparent 70%), radial-gradient(50% 40% at 82% 78%, hsl(var(--pr-gold) / 0.14), transparent 72%)",
+        }}
+      />
       <div
         aria-hidden="true"
         className="pointer-events-none absolute inset-0 z-0"
@@ -52,16 +52,17 @@ export default function PrestigeAgents() {
         <div className="grid grid-cols-1 items-center gap-10 lg:grid-cols-12 lg:gap-12">
           <div className="lg:col-span-7">
             <div className="prestige-eyebrow" style={{ color: "hsl(var(--pr-gold-light))" }}>
-              ✦ Agenti AI, automazioni e gestionali
+              ✦ Agenti AI · automazioni · software e web app su misura
             </div>
             <h2 className="prestige-display mt-4 text-3xl sm:text-5xl lg:text-6xl">
-              Otto agenti.{" "}
-              <span className="prestige-italic prestige-gold-text">Un solo team che non dorme mai.</span>
+              Costruiamo il sistema che manda avanti la tua azienda{" "}
+              <span className="prestige-italic prestige-gold-text">anche quando tu non ci sei.</span>
             </h2>
             <p className="mt-5 max-w-2xl text-base sm:text-lg" style={{ color: "hsl(var(--pr-muted-on-dark))" }}>
-              Non un chatbot generico: costruiamo agenti addestrati sul tuo settore, le automazioni che
-              eliminano il lavoro manuale, il gestionale che tiene tutto in ordine e le web app che i tuoi
-              clienti usano davvero.
+              Non vendiamo pacchetti preconfezionati. Partiamo dai processi che ti rubano tempo e ricavi, poi
+              progettiamo ciò che serve al tuo caso: il team di agenti AI, le automazioni, il gestionale, il
+              sito o la web app e le integrazioni con gli strumenti che usi già. Un solo partner dalla
+              strategia al collaudo, con tempi e risultati dichiarati.
             </p>
 
             <ul className="mt-8 grid grid-cols-1 gap-3 sm:grid-cols-2">
@@ -97,14 +98,24 @@ export default function PrestigeAgents() {
             </ul>
           </div>
 
-          {/* ROBOT AGENTICO 3D INTERATTIVO (Spline) in livrea Empire */}
+          {/* CONFIGURATORE INTERATTIVO — sostituisce la scena 3D instabile */}
           <div className="lg:col-span-5">
-            <PrestigeAgentScene />
+            <PrestigeAgentStudio />
           </div>
         </div>
 
 
-        <div className="prestige-agents-marquee mt-12">
+        <div className="mt-12">
+          <div className="prestige-eyebrow" style={{ color: "hsl(var(--pr-gold-light))" }}>
+            ✦ Moduli combinabili — alcuni esempi
+          </div>
+          <p className="mt-2 max-w-2xl text-sm" style={{ color: "hsl(var(--pr-muted-on-dark))" }}>
+            Ogni progetto nasce combinando solo i moduli utili al tuo obiettivo: nulla di superfluo, nessun
+            costo per funzioni che non useresti.
+          </p>
+        </div>
+
+        <div className="prestige-agents-marquee mt-5">
           <div className="prestige-agents-track">
             {LOOP.map((a, i) => {
               const Icon = a.icon;

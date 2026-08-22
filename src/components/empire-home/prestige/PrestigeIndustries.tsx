@@ -1,5 +1,4 @@
-import { useEffect, useRef, useState } from "react";
-import { useEmpireScrollDirector } from "../ScrollDirector";
+import { useState } from "react";
 import { UtensilsCrossed, Car, Scissors, Dumbbell, Hotel, Briefcase, Check } from "lucide-react";
 import { SECTOR_MOCKUPS } from "@/data/sector-mockups";
 
@@ -92,30 +91,16 @@ const getStudioMockupForSector = (id: string): string => {
 };
 
 export default function PrestigeIndustries() {
-  const userTouchedRef = useRef(false);
-  const { ref, step } = useEmpireScrollDirector<HTMLDivElement>("prestige-industries", {
-    steps: INDUSTRIES.length,
-  });
+  // Nessun cambio pilotato dallo scroll: il contenuto cambia SOLO su clic
+  // dell'utente, così c'è tutto il tempo per leggere il settore selezionato.
   const [active, setActive] = useState("food");
-
-  // Auto-cycle in base allo step di scroll, finché l'utente non clicca un tab.
-  useEffect(() => {
-    if (userTouchedRef.current) return;
-    const id = INDUSTRIES[Math.min(step, INDUSTRIES.length - 1)]?.id;
-    if (id) setActive(id);
-  }, [step]);
-
-  const handleTab = (id: string) => {
-    userTouchedRef.current = true;
-    setActive(id);
-  };
+  const handleTab = (id: string) => setActive(id);
 
   const current = INDUSTRIES.find((i) => i.id === active)!;
   const Icon = current.icon;
 
   return (
     <section
-      ref={ref}
       data-section="prestige-industries"
       className="prestige-section prestige-dark py-16 sm:py-24 md:py-32"
     >
