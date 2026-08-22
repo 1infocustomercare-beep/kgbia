@@ -32,6 +32,11 @@ export function getLenis(): Lenis {
   return lenis;
 }
 
+/** Returns the active Lenis instance without creating one. */
+export function peekLenis(): Lenis | null {
+  return lenis;
+}
+
 export function destroyLenis() {
   lenis?.destroy();
   lenis = null;

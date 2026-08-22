@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { ArrowRight, Play, Sparkles } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { scrollToSection } from "@/lib/home-scroll";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useEmpireScrollDirector } from "../ScrollDirector";
 import PrestigePhone from "./PrestigePhone";
@@ -230,7 +231,7 @@ export default function PrestigeHero() {
             </button>
             <button
               className="prestige-cta-ghost justify-center w-full sm:w-auto"
-              onClick={() => document.getElementById("lead")?.scrollIntoView({ behavior: "smooth" })}
+              onClick={() => scrollToSection("#prestige-lead")}
               aria-label={t({ it: "Parla con un consulente", en: "Talk to a consultant" })}
             >
               <Play size={14} className="shrink-0" /> <span>{t({ it: "Parla con un consulente", en: "Talk to a consultant" })}</span>

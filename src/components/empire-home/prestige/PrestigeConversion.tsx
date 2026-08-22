@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { scrollToSection } from "@/lib/home-scroll";
 import {
   AlertTriangle, Phone, Users, CalendarX, ShieldCheck, ShieldAlert, Lock, Sparkles,
   ArrowRight, Check, X, MessageSquare, Bot, Calendar, Star, Clock, Send, ChevronDown,
@@ -145,9 +146,9 @@ export function PrestigeAriannaDemo({ onTalk }: { onTalk?: () => void }) {
                 <button className="prestige-cta justify-center w-full sm:w-auto" onClick={onTalk}>
                   <Bot size={16} /> <span>{t({ it: "Parla con Arianna ora", en: "Talk to Arianna now" })}</span>
                 </button>
-                <a className="prestige-cta-ghost justify-center w-full sm:w-auto" href="#prestige-lead">
+                <button type="button" className="prestige-cta-ghost justify-center w-full sm:w-auto" onClick={() => scrollToSection("#prestige-lead")}>
                   <Calendar size={14} /> <span>{t({ it: "Prenota una demo live", en: "Book a live demo" })}</span>
-                </a>
+                </button>
               </div>
             </div>
             <div className="md:col-span-5">
@@ -265,9 +266,9 @@ export function PrestigeRoiCalculator() {
               <div className="text-xs uppercase tracking-widest" style={{ color: "hsl(var(--pr-text-on-dark) / 0.8)" }}>{t({ it: "Guadagno netto stimato / mese", en: "Estimated net gain / month" })}</div>
               <div className="prestige-display mt-1 text-4xl sm:text-5xl prestige-gold-text">{fmtEur(data.netGain)}</div>
             </div>
-            <a href="#prestige-lead" className="prestige-cta mt-6 w-full justify-center">
+            <button type="button" onClick={() => scrollToSection("#prestige-lead")} className="prestige-cta mt-6 w-full justify-center">
               <span>{t({ it: "Voglio questi risultati", en: "I want these results" })}</span> <ArrowRight size={16} />
-            </a>
+            </button>
           </div>
         </div>
       </div>
@@ -504,9 +505,9 @@ export function PrestigeUrgency() {
               </span>
             </p>
           </div>
-          <a href="#prestige-lead" className="prestige-cta whitespace-nowrap">
+          <button type="button" onClick={() => scrollToSection("#prestige-lead")} className="prestige-cta whitespace-nowrap">
             <span>{t({ it: "Prenota il tuo posto", en: "Reserve your slot" })}</span> <ArrowRight size={16} />
-          </a>
+          </button>
         </div>
       </div>
     </section>
@@ -766,9 +767,9 @@ export function PrestigeStickyCTA() {
       style={{ paddingBottom: "max(env(safe-area-inset-bottom), 8px)" }}
     >
       <div className="mx-3 mb-3 rounded-2xl p-2 flex gap-2 shadow-2xl" style={{ background: "hsl(var(--pr-emerald-deep) / 0.95)", border: "1px solid hsl(var(--pr-gold) / 0.4)", backdropFilter: "blur(10px)" }}>
-        <a href="#prestige-lead" className="prestige-cta flex-1 justify-center" style={{ padding: "0.7rem 1rem", fontSize: 13 }}>
+        <button type="button" onClick={() => scrollToSection("#prestige-lead")} className="prestige-cta flex-1 justify-center" style={{ padding: "0.7rem 1rem", fontSize: 13 }}>
           <Calendar size={14} /> <span>{t({ it: "Prenota demo", en: "Book demo" })}</span>
-        </a>
+        </button>
         {WA ? (
           <a href={`https://wa.me/${WA}`} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center rounded-full px-4" style={{ background: "hsl(142 70% 45%)", color: "white" }} aria-label="WhatsApp">
             <MessageSquare size={18} />

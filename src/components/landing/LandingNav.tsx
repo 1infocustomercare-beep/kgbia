@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { Menu, X, Grid3x3, Sparkles, LayoutGrid, Tag, Bot, HelpCircle, Mail, MonitorSmartphone } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { PrestigeLangToggle } from "@/components/empire-home/prestige/PrestigeLang";
+import { scrollToSection } from "@/lib/home-scroll";
 import { EmpireLogo, EmpireWordmark } from "@/lib/empire-brand";
 
 
@@ -82,17 +83,14 @@ export default function LandingNav() {
       navigate(href);
       return;
     }
-    const el = document.querySelector(href);
-    if (el) {
-      el.scrollIntoView({ behavior: "smooth" });
-      return;
-    }
+    // Ancore: passiamo dal helper unico (compatibile con Lenis + offset nav),
+    // altrimenti lo smooth scroll nativo veniva annullato e il tasto sembrava
+    // morto o portava alla sezione sbagliata.
+    if (scrollToSection(href)) return;
     // Nav riusata fuori dalla home (es. /portfolio): l'ancora non esiste →
-    // torniamo in home sulla sezione richiesta invece di non fare nulla.
+    // torniamo in home sulla sezione richiesta.
     navigate(`/${href}`);
   };
-
-
 
   return (
     <>
@@ -118,7 +116,7 @@ export default function LandingNav() {
           >
 
 
-            <div className={`flex items-center justify-between transition-all duration-700 [transition-timing-function:cubic-bezier(.22,.75,.2,1)] ${scrolled ? "py-1.5" : "py-2.5"}`}>
+            <div className={`flex items-center gap-2 transition-all duration-700 [transition-timing-function:cubic-bezier(.22,.75,.2,1)] ${scrolled ? "h-[52px]" : "h-[60px]"}`}>
           <a
             href="#hero"
             onClick={(e) => { e.preventDefault(); window.scrollTo({ top: 0, behavior: "smooth" }); }}
@@ -129,12 +127,12 @@ export default function LandingNav() {
               <span className="absolute inset-0 rounded-lg bg-[linear-gradient(45deg,#0d6c7e,#2ec4b6)] opacity-40 blur-md transition-opacity duration-500 group-hover/logo:opacity-90" />
               <EmpireLogo size={32} rounded="lg" glow />
             </span>
-            <EmpireWordmark size={16} className="truncate text-[15px] sm:text-lg" />
+            <EmpireWordmark size={16} className="whitespace-nowrap text-[15px] sm:text-lg" />
           </a>
 
 
 
-          <ul className="hidden min-w-0 flex-1 items-center justify-center gap-1.5 px-2 md:flex">
+          <ul className="hidden min-w-0 flex-1 flex-nowrap items-center justify-center gap-1 px-1 md:flex">
             {NAV_LINKS.map((l) => {
               const Icon = l.icon;
               const isActive = active === l.href;
@@ -144,7 +142,7 @@ export default function LandingNav() {
                     onClick={() => scrollTo(l.href)}
                     data-active={isActive ? "true" : "false"}
                     aria-current={isActive ? "true" : undefined}
-                    className="empire-nav-pill group/pill relative flex h-10 items-center gap-2 overflow-hidden rounded-full px-3 xl:px-3.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[hsl(178_74%_55%/0.7)]"
+                    className="empire-nav-pill group/pill relative flex h-10 items-center justify-center gap-2 overflow-hidden rounded-full px-2.5 xl:px-3 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[hsl(178_74%_55%/0.7)]"
                     aria-label={l.label}
                   >
                     <span aria-hidden="true" className="empire-nav-pill-glow" />
@@ -159,17 +157,17 @@ export default function LandingNav() {
             })}
           </ul>
 
-          <div className="hidden shrink-0 items-center gap-2 md:flex">
+          <div className="hidden shrink-0 items-center gap-2 pl-1 md:flex">
             <PrestigeLangToggle />
             <button
               onClick={() => navigate("/auth")}
-              className="empire-nav-ghost rounded-full px-4 py-2 text-[12px] font-semibold uppercase tracking-[0.1em] text-foreground/80"
+              className="empire-nav-ghost flex h-10 items-center rounded-full px-4 text-[12px] font-semibold uppercase tracking-[0.1em] text-foreground/80"
             >
               Accedi
             </button>
             <button
-              onClick={() => scrollTo("#contatti")}
-              className="landing-button-primary empire-cta-glass rounded-full px-6 py-2.5 text-[12.5px] font-semibold uppercase tracking-[0.09em]"
+              onClick={() => navigate("/onboarding")}
+              className="landing-button-primary empire-cta-glass flex h-10 items-center rounded-full px-5 text-[12.5px] font-semibold uppercase tracking-[0.09em]"
             >
               Inizia Ora
             </button>
@@ -177,15 +175,15 @@ export default function LandingNav() {
 
 
           {/* Mobile/tablet: CTA compatta + hamburger (44px touch target) */}
-          <div className="flex items-center gap-2 md:hidden">
+          <div className="ml-auto flex shrink-0 items-center gap-2 md:hidden">
             <button
-              onClick={() => scrollTo("#contatti")}
-              className="landing-button-primary empire-cta-glass h-11 min-w-11 whitespace-nowrap rounded-full px-4 text-[11.5px] font-semibold uppercase tracking-[0.08em]"
+              onClick={() => navigate("/onboarding")}
+              className="landing-button-primary empire-cta-glass flex h-10 items-center justify-center whitespace-nowrap rounded-full px-4 text-[11.5px] font-semibold uppercase tracking-[0.08em]"
             >
               Inizia ora
             </button>
             <button
-              className="empire-nav-icon-btn flex h-11 w-11 items-center justify-center rounded-full text-[hsl(178_40%_96%)]"
+              className="empire-nav-icon-btn flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-[hsl(178_40%_96%)]"
               onClick={() => setMenuOpen(!menuOpen)}
               aria-label={menuOpen ? "Chiudi menu" : "Apri menu"}
               aria-expanded={menuOpen}
@@ -212,7 +210,7 @@ export default function LandingNav() {
               id="landing-mobile-menu"
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
-              className="fixed left-3 right-3 top-[76px] z-[10050] flex max-h-[calc(100svh-110px)] flex-col gap-1 overflow-y-auto rounded-[26px] border border-[hsl(178_74%_60%/0.22)] px-4 py-4 shadow-[0_30px_90px_-30px_hsl(202_60%_2%/0.95)] backdrop-blur-2xl sm:left-5 sm:right-5 md:hidden"
+              className="fixed left-3 right-3 top-[70px] z-[10050] flex max-h-[calc(100svh-110px)] flex-col gap-1 overflow-y-auto rounded-[26px] border border-[hsl(178_74%_60%/0.22)] px-4 py-4 shadow-[0_30px_90px_-30px_hsl(202_60%_2%/0.95)] backdrop-blur-2xl sm:left-5 sm:right-5 md:hidden"
               style={{ background: "linear-gradient(160deg, hsl(0 0% 100% / 0.07), hsl(0 0% 100% / 0.02)), hsl(202 56% 7% / 0.94)", color: "hsl(178 30% 97%)" }}
             >
               {NAV_LINKS.map((l) => {
@@ -247,11 +245,17 @@ export default function LandingNav() {
                 Accedi
               </button>
               <button
-                onClick={() => { setMenuOpen(false); scrollTo("#contatti"); }}
+                onClick={() => { setMenuOpen(false); navigate("/onboarding"); }}
                 className="empire-cta-glass mt-2 min-h-[52px] rounded-full px-6 text-center text-sm font-bold uppercase tracking-[0.08em] text-white shadow-[0_18px_40px_-18px_rgba(46,196,182,0.85)]"
                 style={{ background: "linear-gradient(135deg,#7fe3d6,#2ec4b6 55%,#0d6c7e)" }}
               >
                 Inizia Ora
+              </button>
+              <button
+                onClick={() => { setMenuOpen(false); scrollTo("#contatti"); }}
+                className="empire-nav-mobile-link mt-2 min-h-[48px] rounded-xl border border-white/15 px-3 text-center text-[14px] font-semibold uppercase tracking-[0.08em] text-[hsl(178_25%_97%)]"
+              >
+                Parla con noi
               </button>
 
             </motion.div>
