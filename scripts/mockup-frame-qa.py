@@ -92,18 +92,46 @@ def _blobs(mask: np.ndarray) -> list[dict]:
     return out
 
 
+def _smooth(v: np.ndarray, k: int) -> np.ndarray:
+    k = max(3, k | 1)
+    kernel = np.ones(k, dtype=np.float32) / k
+    return np.convolve(v, kernel, mode="same")
+
+
+def _phone_box_by_edges(img: Image.Image) -> dict:
+    """Fallback per scene full-bleed (marmo, brace, fondo scuro): il soggetto non
+    si separa dal fondo, quindi il corpo del telefono viene individuato dai picchi
+    di energia dei bordi verticali/orizzontali (telefono frontale, assi allineati)."""
+    e = _edges(img)
+    H, W = e.shape
+    col = _smooth(e.mean(axis=0), max(3, W // 90))
+    row = _smooth(e.mean(axis=1), max(3, H // 90))
+    lo_x, hi_x = int(W * 0.02), int(W * 0.45)
+    lo_y, hi_y = int(H * 0.02), int(H * 0.40)
+    x0 = lo_x + int(np.argmax(col[lo_x:hi_x]))
+    x1 = int(W - 1 - hi_x) + int(np.argmax(col[W - 1 - hi_x:W - lo_x])) if hi_x < W else W - 1
+    y0 = lo_y + int(np.argmax(row[lo_y:hi_y]))
+    y1 = int(H - 1 - hi_y) + int(np.argmax(row[H - 1 - hi_y:H - lo_y])) if hi_y < H else H - 1
+    return {"x0": x0, "x1": max(x0 + 1, x1), "y0": y0, "y1": max(y0 + 1, y1),
+            "area": (x1 - x0) * (y1 - y0)}
+
+
 def _phone_box(img: Image.Image) -> tuple[dict, list[dict]]:
     mask = _subject_mask(img)
     H, W = mask.shape
     blobs = _blobs(mask)
     if not blobs:
-        box = {"x0": 0, "x1": W - 1, "y0": 0, "y1": H - 1, "area": H * W}
+        box = _phone_box_by_edges(img)
     else:
         box = blobs[0]
+        if box["area"] > 0.80 * H * W:
+            # scena full-bleed: il blob principale è tutta l'immagine → usa i bordi
+            box = _phone_box_by_edges(img)
     box.update({"W": W, "H": H,
                 "w": max(1, box["x1"] - box["x0"]),
                 "h": max(1, box["y1"] - box["y0"])})
     return box, blobs
+
 
 
 def _tilt_deg(mask: np.ndarray, box: dict) -> float:
