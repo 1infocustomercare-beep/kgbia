@@ -15,8 +15,8 @@ const NAV_LINKS = [
   { label: "Siti Demo", href: "/demo", icon: MonitorSmartphone, from: "#0a5f74", to: "#38bdf8" },
   { label: "Portfolio", href: "#portfolio", icon: LayoutGrid, from: "#0f7f8c", to: "#5ee7d5" },
   { label: "Prezzi", href: "#pricing", icon: Tag, from: "#0d6c7e", to: "#43cfc0" },
-  { label: "AI Agents", href: "#agents", icon: Bot, from: "#0a5f74", to: "#2ec4b6" },
-  { label: "FAQ", href: "#faq", icon: HelpCircle, from: "#116b7d", to: "#7fe3d6" },
+  { label: "AI Agents", href: "#agents", icon: Bot, from: "#0a5f74", to: "#2ec4b6", secondary: true },
+  { label: "FAQ", href: "#faq", icon: HelpCircle, from: "#116b7d", to: "#7fe3d6", secondary: true },
   { label: "Contatti", href: "#contatti", icon: Mail, from: "#0f7f8c", to: "#2ec4b6" },
 ];
 
@@ -137,7 +137,7 @@ export default function LandingNav() {
               const Icon = l.icon;
               const isActive = active === l.href;
               return (
-                <li key={l.href} style={{ ["--gf" as any]: l.from, ["--gt" as any]: l.to }}>
+                <li key={l.href} className={l.secondary ? "hidden xl:block" : ""} style={{ ["--gf" as any]: l.from, ["--gt" as any]: l.to }}>
                   <button
                     onClick={() => scrollTo(l.href)}
                     data-active={isActive ? "true" : "false"}
@@ -148,7 +148,7 @@ export default function LandingNav() {
                     <span aria-hidden="true" className="empire-nav-pill-glow" />
 
                     <Icon aria-hidden="true" className="relative z-10 h-[16px] w-[16px] shrink-0 text-[hsl(178_70%_78%)] transition-colors duration-500 group-hover/pill:text-white" />
-                    <span className="relative z-10 hidden whitespace-nowrap text-[11.5px] font-semibold uppercase tracking-[0.09em] text-foreground/85 transition-colors duration-500 group-hover/pill:text-white 2xl:inline">
+                    <span className="relative z-10 hidden whitespace-nowrap text-[11px] font-semibold uppercase tracking-[0.08em] text-foreground/85 transition-colors duration-500 group-hover/pill:text-white lg:inline">
                       {l.label}
                     </span>
                   </button>
