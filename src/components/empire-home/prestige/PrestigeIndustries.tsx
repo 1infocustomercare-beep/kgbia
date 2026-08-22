@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
+import { motion } from "framer-motion";
 import { useEmpireScrollDirector } from "../ScrollDirector";
 import { UtensilsCrossed, Car, Scissors, Dumbbell, Hotel, Briefcase, Check } from "lucide-react";
 import { SECTOR_MOCKUPS } from "@/data/sector-mockups";
@@ -207,10 +208,12 @@ export default function PrestigeIndustries() {
 
 
         {/* Active panel */}
-        <div
+        <motion.div
           key={current.id}
+          initial={{ opacity: 0, y: 14 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
           className="prestige-card mt-6 grid grid-cols-1 gap-6 sm:gap-8 lg:grid-cols-[280px_1fr] lg:items-center"
-          style={{ animation: "prestigeFadeIn .6s ease-out" }}
         >
           {/* Mockup image (real premium PNG) */}
           <div
@@ -263,7 +266,7 @@ export default function PrestigeIndustries() {
               ))}
             </ul>
           </div>
-        </div>
+        </motion.div>
        </div>
       </div>
       <style>{`
