@@ -148,7 +148,7 @@ export default function LandingNav() {
                     <span aria-hidden="true" className="empire-nav-pill-glow" />
 
                     <Icon aria-hidden="true" className="relative z-10 h-[16px] w-[16px] shrink-0 text-[hsl(178_70%_78%)] transition-colors duration-500 group-hover/pill:text-white" />
-                    <span className="relative z-10 hidden whitespace-nowrap text-[11px] font-semibold uppercase tracking-[0.08em] text-foreground/85 transition-colors duration-500 group-hover/pill:text-white lg:inline">
+                    <span className="relative z-10 hidden whitespace-nowrap text-[11px] font-semibold uppercase tracking-[0.08em] text-foreground/85 transition-colors duration-500 group-hover/pill:text-white xl:inline">
                       {l.label}
                     </span>
                   </button>
