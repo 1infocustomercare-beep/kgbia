@@ -1,7 +1,7 @@
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ArrowUpRight, ChevronDown, ChevronUp, Sparkles } from "lucide-react";
-import { motion } from "framer-motion";
+import { motion, useReducedMotion, useScroll, useSpring, useTransform } from "framer-motion";
 import IPhoneProMaxFrame from "@/components/mockups/IPhoneProMaxFrame";
 import MockupLightbox from "@/components/mockups/MockupLightbox";
 import { SECTOR_MOCKUPS, type SectorMockupVariant } from "@/data/sector-mockups";
@@ -19,6 +19,31 @@ export default function PrestigePortfolio() {
   const [filter, setFilter] = useState<string>("all");
   const [selection, setSelection] = useState<Selection>(null);
   const gridRef = useRef<HTMLDivElement>(null);
+
+  /**
+   * Effetto "deck 3D": la griglia si raddrizza entrando nel viewport.
+   * Attivo solo da desktop (>=1024px) e con motion abilitata: su mobile la
+   * rotazione causava overflow e testi deformati, quindi resta il fade-up.
+   */
+  const reduceMotion = useReducedMotion();
+  const [deck3d, setDeck3d] = useState(false);
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const mq = window.matchMedia("(min-width: 1024px) and (pointer: fine)");
+    const sync = () => setDeck3d(mq.matches);
+    sync();
+    mq.addEventListener("change", sync);
+    return () => mq.removeEventListener("change", sync);
+  }, []);
+  const { scrollYProgress } = useScroll({
+    target: gridRef,
+    offset: ["start end", "start 35%"],
+  });
+  const eased = useSpring(scrollYProgress, { stiffness: 90, damping: 24, mass: 0.4 });
+  const rotateX = useTransform(eased, [0, 1], [22, 0]);
+  const deckScale = useTransform(eased, [0, 1], [0.95, 1]);
+  const deckOpacity = useTransform(eased, [0, 0.45], [0.35, 1]);
+  const use3d = deck3d && !reduceMotion;
 
   // UNA CARD PER SETTORE — la home mostra il mockup migliore (sequenza più
   // completa) di ogni settore e rimanda al caso studio con tutti gli stili a
@@ -121,8 +146,26 @@ export default function PrestigePortfolio() {
 
 
         {/* PRIMARY GRID — cinematic 3D reveal + column parallax */}
-        <div ref={gridRef} className="mt-14">
-          <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
+        <div
+          ref={gridRef}
+          className="mt-14 overflow-hidden"
+          style={use3d ? { perspective: "1500px", perspectiveOrigin: "50% 0%" } : undefined}
+        >
+          <motion.div
+            style={
+              use3d
+                ? {
+                    rotateX,
+                    scale: deckScale,
+                    opacity: deckOpacity,
+                    transformOrigin: "center top",
+                    transformStyle: "preserve-3d",
+                    willChange: "transform, opacity",
+                  }
+                : undefined
+            }
+            className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4"
+          >
             {visible.map((h) => (
               <motion.article
                 key={h.key}
@@ -227,7 +270,7 @@ export default function PrestigePortfolio() {
                 </div>
               </motion.article>
             ))}
-          </div>
+          </motion.div>
         </div>
 
 

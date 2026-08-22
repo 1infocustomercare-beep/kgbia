@@ -1,4 +1,6 @@
-import { useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { motion } from "framer-motion";
+import { useEmpireScrollDirector } from "../ScrollDirector";
 import { UtensilsCrossed, Car, Scissors, Dumbbell, Hotel, Briefcase, Check } from "lucide-react";
 import { SECTOR_MOCKUPS } from "@/data/sector-mockups";
 
@@ -90,11 +92,64 @@ const getStudioMockupForSector = (id: string): string => {
   return variant?.screens[0]?.image ?? variant?.screen ?? SECTOR_MOCKUPS[0]?.variants[0]?.screen ?? "";
 };
 
+/** true se il device può reggere gli effetti scroll pinnati (desktop, no reduced-motion). */
+const useCinematicScroll = () => {
+  const [enabled, setEnabled] = useState(false);
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const mq = window.matchMedia(
+      "(min-width: 1024px) and (min-height: 640px) and (prefers-reduced-motion: no-preference)",
+    );
+    const sync = () => setEnabled(mq.matches);
+    sync();
+    mq.addEventListener("change", sync);
+    return () => mq.removeEventListener("change", sync);
+  }, []);
+  return enabled;
+};
+
 export default function PrestigeIndustries() {
-  // Nessun cambio pilotato dallo scroll: il contenuto cambia SOLO su clic
-  // dell'utente, così c'è tutto il tempo per leggere il settore selezionato.
   const [active, setActive] = useState("food");
-  const handleTab = (id: string) => setActive(id);
+  const cinematic = useCinematicScroll();
+  /** Dopo un clic manuale lo scroll non sovrascrive la scelta per 6 secondi. */
+  const manualUntil = useRef(0);
+  const lastAutoChange = useRef(0);
+  const activeRef = useRef(active);
+  activeRef.current = active;
+
+  const handleTab = (id: string) => {
+    manualUntil.current = Date.now() + 6000;
+    setActive(id);
+  };
+
+  /**
+   * Effetto cinematografico: il pannello resta pinnato mentre lo scroll
+   * avanza di settore in settore. Ogni step ha una finestra di scroll ampia
+   * (una schermata intera) + un cooldown minimo, così il contenuto è sempre
+   * leggibile e non "salta" mai.
+   */
+  const onScrollUpdate = useCallback(
+    ({ progress, inView }: { progress: number; inView: boolean }) => {
+      if (!inView) return;
+      const now = Date.now();
+      if (now < manualUntil.current) return;
+      if (now - lastAutoChange.current < 420) return;
+      const idx = Math.min(
+        INDUSTRIES.length - 1,
+        Math.max(0, Math.floor(progress * INDUSTRIES.length)),
+      );
+      const next = INDUSTRIES[idx]?.id;
+      if (!next || next === activeRef.current) return;
+      lastAutoChange.current = now;
+      setActive(next);
+    },
+    [],
+  );
+
+  const { ref, progress } = useEmpireScrollDirector<HTMLDivElement>("prestige-industries", {
+    steps: INDUSTRIES.length,
+    onUpdate: cinematic ? onScrollUpdate : undefined,
+  });
 
   const current = INDUSTRIES.find((i) => i.id === active)!;
   const Icon = current.icon;
@@ -104,24 +159,29 @@ export default function PrestigeIndustries() {
       data-section="prestige-industries"
       className="prestige-section prestige-dark py-16 sm:py-24 md:py-32"
     >
-      <div className="mx-auto max-w-6xl px-4 sm:px-5 lg:px-10">
+      <div
+        ref={ref}
+        className="relative mx-auto max-w-6xl px-4 sm:px-5 lg:px-10"
+        style={cinematic ? { minHeight: `${INDUSTRIES.length * 95 + 30}vh` } : undefined}
+      >
+       <div className={cinematic ? "sticky top-[3vh]" : undefined}>
         <div className="text-center">
           <div className="prestige-eyebrow" style={{ color: "hsl(var(--pr-gold-light))" }}>
             ✦ Il caso tuo
           </div>
-          <h2 className="prestige-display mt-4 text-3xl font-semibold sm:text-5xl lg:text-6xl break-words">
+          <h2 className={`prestige-display font-semibold break-words ${cinematic ? "mt-3 text-3xl sm:text-4xl lg:text-[2.75rem]" : "mt-4 text-3xl sm:text-5xl lg:text-6xl"}`}>
             Empire parla la lingua del{" "}
             <span className="prestige-gold-text italic">tuo settore</span>
           </h2>
-          <div className="prestige-divider mx-auto mt-5" />
-          <p className="mx-auto mt-5 max-w-2xl text-sm sm:text-base md:text-lg" style={{ color: "hsl(var(--pr-muted-on-dark))" }}>
+          <div className={`prestige-divider mx-auto ${cinematic ? "mt-3" : "mt-5"}`} />
+          <p className={`mx-auto max-w-2xl text-sm sm:text-base ${cinematic ? "mt-3" : "mt-5 md:text-lg"}`} style={{ color: "hsl(var(--pr-muted-on-dark))" }}>
             Tocca il tuo settore qui sotto e ti mostriamo esattamente come Empire risolve i problemi della
             tua giornata-tipo.
           </p>
         </div>
 
         {/* Tabs */}
-        <div className="mt-8 flex flex-wrap justify-center gap-1.5 sm:gap-2">
+        <div className={`flex flex-wrap justify-center gap-1.5 sm:gap-2 ${cinematic ? "mt-5" : "mt-8"}`}>
           {INDUSTRIES.map((i) => {
             const TabIcon = i.icon;
             const isActive = i.id === active;
@@ -148,16 +208,22 @@ export default function PrestigeIndustries() {
 
 
         {/* Active panel */}
-        <div
+        <motion.div
           key={current.id}
-          className="prestige-card mt-8 grid grid-cols-1 gap-6 sm:gap-8 lg:grid-cols-[280px_1fr] lg:items-center"
-          style={{ animation: "prestigeFadeIn .6s ease-out" }}
+          initial={{ opacity: 0, y: 14 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
+          className={`prestige-card grid grid-cols-1 gap-6 sm:gap-8 lg:grid-cols-[280px_1fr] lg:items-center ${cinematic ? "mt-5" : "mt-8"}`}
         >
           {/* Mockup image (real premium PNG) */}
           <div
-            className="relative mx-auto w-full max-w-[260px] overflow-hidden rounded-[2rem] lg:mx-0"
+            className="relative mx-auto w-full max-w-[230px] overflow-hidden rounded-[2rem] lg:mx-0"
             style={{
               aspectRatio: "9 / 19.5",
+              transform: cinematic
+                ? `translate3d(0, ${(0.5 - progress) * -22}px, 0)`
+                : undefined,
+              willChange: cinematic ? "transform" : undefined,
               boxShadow: "0 30px 70px -20px hsl(var(--pr-gold) / 0.35), 0 0 0 8px hsl(var(--pr-emerald-deep))",
               background: "hsl(var(--pr-emerald-deep))",
             }}
@@ -200,7 +266,8 @@ export default function PrestigeIndustries() {
               ))}
             </ul>
           </div>
-        </div>
+        </motion.div>
+       </div>
       </div>
       <style>{`
         @keyframes prestigeFadeIn {
