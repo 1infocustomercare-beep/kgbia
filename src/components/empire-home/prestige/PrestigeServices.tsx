@@ -293,6 +293,7 @@ function ServicesScrollStack() {
               aria-selected={i === active}
               aria-label={s.title}
               data-active={i === active ? "true" : undefined}
+              style={{ height: "0.5rem", width: i === active ? "1.6rem" : "0.5rem", flex: "0 0 auto", padding: 0, border: 0, borderRadius: 999 }}
               onClick={() => {
                 const el = trackRef.current;
                 if (!el) return;
