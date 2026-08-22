@@ -162,26 +162,26 @@ export default function PrestigeIndustries() {
       <div
         ref={ref}
         className="relative mx-auto max-w-6xl px-4 sm:px-5 lg:px-10"
-        style={cinematic ? { minHeight: `${INDUSTRIES.length * 78 + 40}vh` } : undefined}
+        style={cinematic ? { minHeight: `${INDUSTRIES.length * 95 + 30}vh` } : undefined}
       >
        <div className={cinematic ? "sticky top-[3vh]" : undefined}>
         <div className="text-center">
           <div className="prestige-eyebrow" style={{ color: "hsl(var(--pr-gold-light))" }}>
             ✦ Il caso tuo
           </div>
-          <h2 className="prestige-display mt-4 text-3xl font-semibold sm:text-5xl lg:text-6xl break-words">
+          <h2 className={`prestige-display font-semibold break-words ${cinematic ? "mt-3 text-3xl sm:text-4xl lg:text-[2.75rem]" : "mt-4 text-3xl sm:text-5xl lg:text-6xl"}`}>
             Empire parla la lingua del{" "}
             <span className="prestige-gold-text italic">tuo settore</span>
           </h2>
-          <div className="prestige-divider mx-auto mt-5" />
-          <p className="mx-auto mt-5 max-w-2xl text-sm sm:text-base md:text-lg" style={{ color: "hsl(var(--pr-muted-on-dark))" }}>
+          <div className={`prestige-divider mx-auto ${cinematic ? "mt-3" : "mt-5"}`} />
+          <p className={`mx-auto max-w-2xl text-sm sm:text-base ${cinematic ? "mt-3" : "mt-5 md:text-lg"}`} style={{ color: "hsl(var(--pr-muted-on-dark))" }}>
             Tocca il tuo settore qui sotto e ti mostriamo esattamente come Empire risolve i problemi della
             tua giornata-tipo.
           </p>
         </div>
 
         {/* Tabs */}
-        <div className="mt-8 flex flex-wrap justify-center gap-1.5 sm:gap-2">
+        <div className={`flex flex-wrap justify-center gap-1.5 sm:gap-2 ${cinematic ? "mt-5" : "mt-8"}`}>
           {INDUSTRIES.map((i) => {
             const TabIcon = i.icon;
             const isActive = i.id === active;
@@ -213,7 +213,7 @@ export default function PrestigeIndustries() {
           initial={{ opacity: 0, y: 14 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
-          className="prestige-card mt-6 grid grid-cols-1 gap-6 sm:gap-8 lg:grid-cols-[280px_1fr] lg:items-center"
+          className={`prestige-card grid grid-cols-1 gap-6 sm:gap-8 lg:grid-cols-[280px_1fr] lg:items-center ${cinematic ? "mt-5" : "mt-8"}`}
         >
           {/* Mockup image (real premium PNG) */}
           <div
