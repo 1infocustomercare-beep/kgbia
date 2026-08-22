@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
+import { AnimatePresence, motion, useScroll, useSpring, useTransform } from "framer-motion";
 import {
   Bot,
   Workflow,
@@ -175,11 +176,25 @@ const GOALS: Goal[] = [
 export default function PrestigeAgentStudio() {
   const [activeId, setActiveId] = useState(GOALS[0].id);
   const active = GOALS.find((g) => g.id === activeId) ?? GOALS[0];
+  const studioRef = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({ target: studioRef, offset: ["start 95%", "end 18%"] });
+  const progress = useSpring(scrollYProgress, { stiffness: 170, damping: 32, mass: 0.22 });
+  const y = useTransform(progress, [0, 0.45, 1], [42, 0, -8]);
+  const rotateY = useTransform(progress, [0, 0.5, 1], [-7, 0, 1.5]);
+  const scale = useTransform(progress, [0, 0.45, 1], [0.94, 1, 0.99]);
+  const opacity = useTransform(progress, [0, 0.28], [0.35, 1]);
 
   return (
-    <div
+    <motion.div
+      ref={studioRef}
       className="overflow-hidden rounded-[28px]"
       style={{
+        y,
+        rotateY,
+        scale,
+        opacity,
+        transformPerspective: 1200,
+        transformOrigin: "center center",
         background:
           "linear-gradient(160deg, hsl(var(--pr-emerald-mid) / 0.72), hsl(var(--pr-emerald-deep) / 0.96))",
         border: "1px solid hsl(var(--pr-gold) / 0.24)",
@@ -219,7 +234,15 @@ export default function PrestigeAgentStudio() {
         })}
       </div>
 
-      <div className="px-4 py-5 sm:px-6 sm:py-6">
+      <AnimatePresence mode="wait" initial={false}>
+      <motion.div
+        key={active.id}
+        initial={{ opacity: 0, x: 22, filter: "blur(5px)" }}
+        animate={{ opacity: 1, x: 0, filter: "blur(0px)" }}
+        exit={{ opacity: 0, x: -18, filter: "blur(4px)" }}
+        transition={{ duration: 0.38, ease: [0.22, 1, 0.36, 1] }}
+        className="px-4 py-5 sm:px-6 sm:py-6"
+      >
         <h3 className="prestige-display text-xl sm:text-2xl">{active.headline}</h3>
         <p className="mt-2 text-sm leading-relaxed" style={{ color: "hsl(var(--pr-muted-on-dark))" }}>
           {active.problem}
@@ -295,7 +318,8 @@ export default function PrestigeAgentStudio() {
           <span>Richiedi l'analisi del tuo caso</span>
           <ArrowRight size={14} />
         </button>
-      </div>
-    </div>
+      </motion.div>
+      </AnimatePresence>
+    </motion.div>
   );
 }

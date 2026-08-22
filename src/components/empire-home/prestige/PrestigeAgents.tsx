@@ -1,4 +1,5 @@
-import { Bot, CalendarCheck, MessageCircle, Mic, Star, LayoutDashboard, Languages, ShoppingCart, Workflow, Globe, Database, Code2 } from "lucide-react";
+import { Bot, CalendarCheck, MessageCircle, Mic, Star, LayoutDashboard, Languages, ShoppingCart, Workflow, Database, Code2 } from "lucide-react";
+import { motion } from "framer-motion";
 import PrestigeAgentStudio from "./PrestigeAgentStudio";
 
 const CAPABILITIES = [
@@ -69,8 +70,12 @@ export default function PrestigeAgents() {
               {CAPABILITIES.map((c) => {
                 const Icon = c.icon;
                 return (
-                  <li
+                  <motion.li
                     key={c.label}
+                    initial={{ opacity: 0, x: -24 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ once: false, amount: 0.45 }}
+                    transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
                     className="flex items-start gap-3 rounded-2xl p-3.5"
                     style={{
                       background: "hsl(var(--pr-emerald-mid) / 0.5)",
@@ -92,7 +97,7 @@ export default function PrestigeAgents() {
                         {c.desc}
                       </span>
                     </span>
-                  </li>
+                  </motion.li>
                 );
               })}
             </ul>
