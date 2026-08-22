@@ -187,6 +187,9 @@ export default function PrestigeIndustries() {
               <button
                 key={i.id}
                 onClick={() => handleTab(i.id)}
+                type="button"
+                aria-pressed={isActive}
+                data-industry-active={isActive ? "true" : undefined}
                  className="flex min-h-11 shrink-0 items-center gap-1.5 rounded-full px-3 py-2 text-[11px] font-semibold transition-all sm:gap-2 sm:px-4 sm:py-2.5 sm:text-sm max-w-full"
                 style={{
                   background: isActive

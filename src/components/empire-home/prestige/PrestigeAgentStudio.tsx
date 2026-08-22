@@ -187,7 +187,7 @@ export default function PrestigeAgentStudio() {
   return (
     <motion.div
       ref={studioRef}
-      className="overflow-hidden rounded-[28px]"
+      className="prestige-agent-studio overflow-hidden rounded-[28px]"
       style={{
         y,
         rotateY,
