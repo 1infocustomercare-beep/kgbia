@@ -1,5 +1,4 @@
-import { useEffect, useRef, useState } from "react";
-import { useEmpireScrollDirector } from "../ScrollDirector";
+import { useState } from "react";
 import { UtensilsCrossed, Car, Scissors, Dumbbell, Hotel, Briefcase, Check } from "lucide-react";
 import { SECTOR_MOCKUPS } from "@/data/sector-mockups";
 
@@ -102,7 +101,6 @@ export default function PrestigeIndustries() {
 
   return (
     <section
-      ref={ref}
       data-section="prestige-industries"
       className="prestige-section prestige-dark py-16 sm:py-24 md:py-32"
     >
