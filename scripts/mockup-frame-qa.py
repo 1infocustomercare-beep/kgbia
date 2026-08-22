@@ -194,6 +194,9 @@ def validate_frame(path: str) -> dict:
     issues: list[dict] = []
     add = lambda code, sev, msg: issues.append({"code": code, "severity": sev, "message": msg})
 
+    fallback = bool(box.get("fallback"))
+    geom_sev = "warning" if fallback else "blocker"
+
     if not portrait:
         add("landscape", "blocker", f"immagine orizzontale {W}x{H}: serve formato verticale 3:4")
     if tilt > MAX_TILT_DEG:
@@ -202,8 +205,7 @@ def validate_frame(path: str) -> dict:
         add("clipped", geom_sev, f"telefono a filo/tagliato dal bordo (margini l{ml:.3f} r{mr:.3f} t{mt:.3f} b{mb:.3f})")
     if abs(ml - mr) > SIDE_SYMMETRY_MAX:
         add("asymmetry", "warning", f"margini laterali asimmetrici ({ml:.3f} vs {mr:.3f}) → possibile prospettiva")
-    fallback = bool(box.get("fallback"))
-    geom_sev = "warning" if fallback else "blocker"
+
     if not (ASPECT_MIN <= aspect <= ASPECT_MAX):
         add("aspect", geom_sev, f"proporzioni corpo non da iPhone Pro Max (w/h {aspect:.2f})")
     if scene > SCENE_INK_MAX:
