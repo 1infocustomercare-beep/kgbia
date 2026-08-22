@@ -1,5 +1,25 @@
+import { useEffect, useRef, useState, type CSSProperties } from "react";
+import { motion, useScroll, useSpring, useTransform, useMotionValueEvent, useReducedMotion, type MotionValue } from "framer-motion";
 import { useEmpireScrollDirector } from "../ScrollDirector";
-import { Globe, Smartphone, Bot, MessageSquare, CreditCard, BarChart3 } from "lucide-react";
+import { Globe, Smartphone, Bot, MessageSquare, CreditCard, BarChart3, type LucideIcon } from "lucide-react";
+
+type Service = { icon: LucideIcon; title: string; desc: string; bullets: string[] };
+
+/** Switch mobile (stack carousel) / desktop (griglia). */
+function useIsNarrow() {
+  const [narrow, setNarrow] = useState(() =>
+    typeof window === "undefined" ? false : window.matchMedia("(max-width: 767px)").matches
+  );
+  useEffect(() => {
+    const mq = window.matchMedia("(max-width: 767px)");
+    const on = () => setNarrow(mq.matches);
+    on();
+    mq.addEventListener("change", on);
+    return () => mq.removeEventListener("change", on);
+  }, []);
+  return narrow;
+}
+
 
 const SERVICES = [
   {
@@ -63,6 +83,8 @@ const TECH_STACK = [
 
 export default function PrestigeServices() {
   const { ref } = useEmpireScrollDirector<HTMLDivElement>("prestige-services", { steps: SERVICES.length });
+  const isNarrow = useIsNarrow();
+
 
   return (
     <section
@@ -91,49 +113,23 @@ export default function PrestigeServices() {
           </div>
 
           <div className="lg:col-span-7">
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-              {SERVICES.map((s, i) => {
-                const Icon = s.icon;
-                return (
-                  <article
+            {isNarrow ? (
+              <ServicesScrollStack />
+            ) : (
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                {SERVICES.map((s, i) => (
+                  <ServiceCard
                     key={s.title}
-                    className="prestige-card group"
+                    service={s}
                     style={{
                       animation: `prestigeSlideIn .8s ${i * 0.06}s cubic-bezier(.22,1,.36,1) backwards`,
                     }}
-                  >
-                    <div
-                      className="flex h-11 w-11 items-center justify-center rounded-xl"
-                      style={{
-                        background: "linear-gradient(135deg, hsl(var(--pr-emerald) / 0.95), hsl(var(--pr-emerald-deep)))",
-                        color: "hsl(var(--pr-gold-light))",
-                        boxShadow: "inset 0 1px 0 hsl(var(--pr-gold) / 0.25)",
-                      }}
-                    >
-                      <Icon size={20} />
-                    </div>
-                    <h3 className="prestige-display mt-4 text-xl sm:text-2xl" style={{ color: "hsl(var(--pr-text-on-light))" }}>
-                      {s.title}
-                    </h3>
-                    <p className="mt-2 text-sm leading-relaxed" style={{ color: "hsl(var(--pr-muted-on-light))" }}>
-                      {s.desc}
-                    </p>
-                    <ul className="mt-4 flex flex-wrap gap-1.5">
-                      {s.bullets.map((b) => (
-                        <li
-                          key={b}
-                          className="rounded-full px-2.5 py-1 text-[11px] font-medium"
-                          style={{ background: "hsl(var(--pr-emerald) / 0.08)", color: "hsl(var(--pr-emerald))" }}
-                        >
-                          {b}
-                        </li>
-                      ))}
-                    </ul>
-                  </article>
-                );
-              })}
-            </div>
+                  />
+                ))}
+              </div>
+            )}
           </div>
+
         </div>
 
         {/* MILESTONES + TECH STACK — trasparenza di processo e stack */}
@@ -209,5 +205,172 @@ export default function PrestigeServices() {
         }
       `}</style>
     </section>
+  );
+}
+
+/** Card servizio riutilizzabile (griglia desktop + stack mobile). */
+function ServiceCard({
+  service,
+  style,
+  className = "",
+}: {
+  service: Service;
+  style?: CSSProperties;
+  className?: string;
+}) {
+  const Icon = service.icon;
+  return (
+    <article className={`prestige-card group ${className}`} style={style}>
+      <div
+        className="flex h-11 w-11 items-center justify-center rounded-xl"
+        style={{
+          background: "linear-gradient(135deg, hsl(var(--pr-emerald) / 0.95), hsl(var(--pr-emerald-deep)))",
+          color: "hsl(var(--pr-gold-light))",
+          boxShadow: "inset 0 1px 0 hsl(var(--pr-gold) / 0.25)",
+        }}
+      >
+        <Icon size={20} />
+      </div>
+      <h3 className="prestige-display mt-4 text-xl sm:text-2xl" style={{ color: "hsl(var(--pr-text-on-light))" }}>
+        {service.title}
+      </h3>
+      <p className="mt-2 text-sm leading-relaxed" style={{ color: "hsl(var(--pr-muted-on-light))" }}>
+        {service.desc}
+      </p>
+      <ul className="mt-4 flex flex-wrap gap-1.5">
+        {service.bullets.map((b) => (
+          <li
+            key={b}
+            className="rounded-full px-2.5 py-1 text-[11px] font-medium"
+            style={{ background: "hsl(var(--pr-emerald) / 0.08)", color: "hsl(var(--pr-emerald))" }}
+          >
+            {b}
+          </li>
+        ))}
+      </ul>
+    </article>
+  );
+}
+
+/**
+ * MOBILE — carosello a pila scroll-driven: le card salgono dal basso,
+ * si posano al centro e si impilano verso l'alto rimpicciolendosi.
+ * Effetto distinto dal carosello orizzontale del "metodo Empire".
+ */
+function ServicesScrollStack() {
+  const trackRef = useRef<HTMLDivElement>(null);
+  const reduce = useReducedMotion();
+  const total = SERVICES.length;
+  const { scrollYProgress } = useScroll({ target: trackRef, offset: ["start start", "end end"] });
+  const p = useSpring(scrollYProgress, { stiffness: 240, damping: 40, mass: 0.2, restDelta: 0.0005 });
+  const [active, setActive] = useState(0);
+  useMotionValueEvent(p, "change", (v) => setActive(Math.min(total - 1, Math.max(0, Math.round(v * (total - 1))))));
+
+  if (reduce) {
+    return (
+      <div className="grid grid-cols-1 gap-4">
+        {SERVICES.map((s) => (
+          <ServiceCard key={s.title} service={s} />
+        ))}
+      </div>
+    );
+  }
+
+  return (
+    <div ref={trackRef} className="prestige-svcstack-track" style={{ height: `${total * 88}svh` }}>
+      <div className="prestige-svcstack-viewport">
+        <div className="prestige-svcstack-stage">
+          {SERVICES.map((s, i) => (
+            <StackCard key={s.title} service={s} index={i} total={total} progress={p} />
+          ))}
+        </div>
+        <div className="prestige-svcstack-dots" role="tablist" aria-label="Servizi">
+          {SERVICES.map((s, i) => (
+            <button
+              key={s.title}
+              type="button"
+              role="tab"
+              aria-selected={i === active}
+              aria-label={s.title}
+              data-active={i === active ? "true" : undefined}
+              onClick={() => {
+                const el = trackRef.current;
+                if (!el) return;
+                const top = el.offsetTop + (el.offsetHeight - window.innerHeight) * (i / Math.max(1, total - 1));
+                window.scrollTo({ top, behavior: "smooth" });
+              }}
+            >
+              <span aria-hidden />
+            </button>
+          ))}
+        </div>
+      </div>
+      <style>{`
+        .prestige-svcstack-track { position: relative; }
+        .prestige-svcstack-viewport {
+          position: sticky; top: 0; height: 100svh;
+          display: flex; flex-direction: column; justify-content: center;
+          overflow: hidden;
+        }
+        .prestige-svcstack-stage {
+          position: relative; height: 44svh; perspective: 1000px;
+        }
+        .prestige-svcstack-card {
+          position: absolute; left: 0; right: 0; top: 0;
+          transform-style: preserve-3d; will-change: transform, opacity;
+          border-radius: 1.25rem;
+          background: hsl(var(--pr-ivory, 40 30% 97%));
+          box-shadow: 0 26px 60px -30px hsl(160 40% 8% / .45);
+          overflow: hidden;
+        }
+        .prestige-svcstack-card > .prestige-card {
+          border-radius: 1.25rem; background: transparent; box-shadow: none;
+        }
+        .prestige-svcstack-dots {
+          display: flex; align-items: center; gap: .45rem;
+          justify-content: center; padding-top: 1.25rem;
+        }
+        .prestige-svcstack-dots > button {
+          flex: 0 0 auto; display: flex; align-items: center; justify-content: center;
+          height: 2.75rem; width: 2rem; padding: 0; border: 0; background: none;
+        }
+        .prestige-svcstack-dots > button > span {
+          display: block; height: .5rem; width: .5rem; border-radius: 999px;
+          background: hsl(var(--pr-emerald) / .28);
+          transition: width .35s cubic-bezier(.22,1,.36,1), background .35s ease;
+        }
+        .prestige-svcstack-dots > button[data-active] > span {
+          width: 1.5rem; background: hsl(var(--pr-gold));
+        }
+
+      `}</style>
+    </div>
+  );
+}
+
+function StackCard({
+  service,
+  index,
+  total,
+  progress,
+}: {
+  service: Service;
+  index: number;
+  total: number;
+  progress: MotionValue<number>;
+}) {
+  const d = useTransform(progress, (v) => v * (total - 1) - index);
+  const y = useTransform(d, (v) => (v <= 0 ? `${-v * 105}%` : `${-v * 6}%`));
+  const scale = useTransform(d, (v) => (v <= 0 ? 1 : Math.max(0.82, 1 - v * 0.07)));
+  const rotateX = useTransform(d, (v) => (v <= 0 ? Math.max(-10, v * 10) : Math.min(8, v * 3)));
+  const opacity = useTransform(d, (v) => (v < -1.08 ? 0 : v > 2.4 ? 0 : v > 1.4 ? 0.4 : 1));
+
+  return (
+    <motion.div
+      className="prestige-svcstack-card"
+      style={{ y, scale, rotateX, opacity, zIndex: index + 1 }}
+    >
+      <ServiceCard service={service} />
+    </motion.div>
   );
 }

@@ -187,27 +187,53 @@ export default function PrestigeHorizontalScroll() {
     );
   }
 
-  /* ── MOBILE / TABLET: deck cinematografico 3D scroll-driven ──────────
-     Nessun pin, nessuno scroll orizzontale (che su touch entrava in
-     conflitto col gesto verticale e sfalsava i pannelli): ogni fase entra
-     in prospettiva, si "posa" al centro e scivola sotto la successiva.
-     Solo transform + opacity → compositing GPU, zero layout per frame. */
+  /* ── MOBILE / TABLET: carosello orizzontale pinnato scroll-driven ──────
+     Lo scroll verticale (unico gesto sul touch → zero conflitti) pilota
+     la traslazione orizzontale del rail: ogni fase entra da destra, si
+     centra ingrandendosi e esce ruotando. Solo transform + opacity. */
   if (isNarrow) {
     return (
       <section
         id="prestige-horizontal"
         data-section="prestige-horizontal"
         data-no-reveal
-        className="prestige-section prestige-dark prestige-hscroll prestige-hdeck"
+        className="prestige-section prestige-dark prestige-hscroll prestige-hmob"
         aria-label="Il metodo Empire in cinque fasi"
       >
-        <Header />
-        <div className="prestige-hdeck-stage">
-          {PANELS.map((p, i) => (
-            <MobilePhase key={p.word} panel={p} index={i} total={PANELS.length} />
-          ))}
+        <div
+          ref={wrapRef}
+          className="prestige-hscroll-track"
+          style={{ height: `${PANELS.length * 105}svh` }}
+        >
+          <div className="prestige-hscroll-viewport">
+            <Header sticky activeIdx={activeIdx} />
+
+            <motion.div
+              className="prestige-hscroll-row"
+              style={{ x, width: `${PANELS.length * 100}%` }}
+            >
+              {PANELS.map((p, i) => (
+                <div
+                  key={p.word}
+                  className="prestige-hscroll-panel"
+                  style={{ width: `${100 / PANELS.length}%` }}
+                >
+                  <MobileCarouselCard
+                    panel={p}
+                    index={i}
+                    total={PANELS.length}
+                    progress={smooth}
+                  />
+                </div>
+              ))}
+            </motion.div>
+
+            <div className="prestige-hscroll-progress" aria-hidden>
+              <motion.div style={{ width: bar }} />
+            </div>
+          </div>
         </div>
-        <div className="mx-auto w-full max-w-6xl px-4 pb-4 sm:px-6">
+        <div className="mx-auto w-full max-w-6xl px-4 pb-8 pt-6 sm:px-6">
           <button onClick={() => navigate("/demo")} className="prestige-cta w-full justify-center">
             <span>Apri i siti demo live</span>
             <ArrowUpRight size={14} />
@@ -217,6 +243,7 @@ export default function PrestigeHorizontalScroll() {
       </section>
     );
   }
+
 
   return (
     <section
@@ -265,8 +292,48 @@ export default function PrestigeHorizontalScroll() {
   );
 }
 
+/** Card del carosello mobile: scala/ruota in base alla distanza dal centro. */
+function MobileCarouselCard({
+  panel,
+  index,
+  total,
+  progress,
+}: {
+  panel: Phase;
+  index: number;
+  total: number;
+  progress: MotionValue<number>;
+}) {
+  const center = total > 1 ? index / (total - 1) : 0;
+  const span = total > 1 ? 1 / (total - 1) : 1;
+  const stops = [center - span, center, center + span];
+  const scale = useTransform(progress, stops, [0.86, 1, 0.86]);
+  const opacity = useTransform(progress, stops, [0.35, 1, 0.35]);
+  const rotateY = useTransform(progress, stops, [14, 0, -14]);
+  const glow = useTransform(progress, stops, [0, 0.6, 0]);
+
+  return (
+    <motion.article
+      className="prestige-hmob-card"
+      style={{
+        scale,
+        opacity,
+        rotateY,
+        // @ts-expect-error CSS custom property
+        "--deck-glow": glow,
+      }}
+    >
+      <span className="prestige-hdeck-step" aria-hidden>
+        {panel.n} / {String(total).padStart(2, "0")}
+      </span>
+      <PanelCard panel={panel} />
+    </motion.article>
+  );
+}
+
 /** Fase singola su mobile: entra in 3D, si posa, esce in profondità. */
 function MobilePhase({ panel, index, total }: { panel: Phase; index: number; total: number }) {
+
   const ref = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
     target: ref,
@@ -369,7 +436,25 @@ const HSCROLL_CSS = `
   }
 
   /* ── MOBILE DECK 3D ─────────────────────────────────────────────── */
+  /* ── MOBILE CAROUSEL PINNATO ────────────────────────────────────── */
+  .prestige-hmob .prestige-hscroll-row { perspective: 1200px; }
+  .prestige-hmob .prestige-hscroll-panel { padding: 0 .85rem 1.5rem; }
+  .prestige-hmob-card {
+    position: relative;
+    width: 100%;
+    max-width: 30rem;
+    margin: 0 auto;
+    transform-style: preserve-3d;
+    will-change: transform, opacity;
+    border-radius: 1.5rem;
+    box-shadow:
+      0 24px 60px -28px hsl(0 0% 0% / .85),
+      0 0 40px hsl(var(--pr-gold) / calc(var(--deck-glow, 0) * .45));
+  }
+  .prestige-hmob-card > .prestige-bento { border-radius: 1.5rem; }
+
   .prestige-hdeck { padding-bottom: 1rem; }
+
   .prestige-hdeck-stage {
     perspective: 1100px;
     perspective-origin: 50% 40%;
