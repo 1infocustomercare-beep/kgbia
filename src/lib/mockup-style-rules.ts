@@ -179,7 +179,7 @@ export type StyleRules = {
  */
 const AXES = [TYPE_SCALES, SPACING_SYSTEMS, LINE_LANGUAGES, BOX_STYLES, COMPONENT_KITS, MICRO_MOTIONS, ACCENT_USAGES, CHROME_MODES, SURFACE_MATERIALS, IMAGE_TREATMENTS, ICON_SYSTEMS] as const;
 
-const STRIDES = [1, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31];
+const STRIDES = [1, 5, 5, 7, 11, 13, 17, 19, 23, 29, 31];
 
 
 function buildRules(): Record<string, StyleRules> {
