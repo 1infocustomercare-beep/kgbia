@@ -5,14 +5,26 @@
   "style": "swiss-tight/grid-10-airy/gradient-edge/ticket-notch/media-first-editorial/ink-reveal/badge-system/large-title-collapsing",
   "family": "napoletana-doc",
   "palette": "mobile",
-  "description": "Antica Ruota: webapp su misura con 1 schermate coerenti — tipografia, palette, componenti e micro-interazioni disegnati su questo settore.",
+  "description": "Antica Ruota: webapp su misura con 5 schermate coerenti — tipografia, palette, componenti e micro-interazioni disegnati su questo settore.",
   "labels": [
-    "Catalogo"
+    "Order",
+    "Admin",
+    "Fidelity",
+    "Assistente AI",
+    "Galleria"
   ],
   "captions": [
-    "Listino completo con categorie, foto reali e prezzi in euro."
+    "Schermata order.",
+    "Pannello di gestione con metriche operative in tempo reale.",
+    "Programma fedeltà con punti e premi automatici.",
+    "Chat con l'agente AI che risponde e converte 24/7.",
+    "Galleria immersiva con contenuti editoriali."
   ],
   "features": [
-    "Catalogo"
+    "Order",
+    "Admin",
+    "Fidelity",
+    "Assistente AI",
+    "Galleria"
   ]
 }
