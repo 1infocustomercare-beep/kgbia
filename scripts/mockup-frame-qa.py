@@ -113,7 +113,7 @@ def _phone_box_by_edges(img: Image.Image) -> dict:
     y0 = lo_y + int(np.argmax(row[lo_y:hi_y]))
     y1 = int(H - 1 - hi_y) + int(np.argmax(row[H - 1 - hi_y:H - lo_y])) if hi_y < H else H - 1
     return {"x0": x0, "x1": max(x0 + 1, x1), "y0": y0, "y1": max(y0 + 1, y1),
-            "area": (x1 - x0) * (y1 - y0)}
+            "area": (x1 - x0) * (y1 - y0), "fallback": True}
 
 
 def _phone_box(img: Image.Image) -> tuple[dict, list[dict]]:
@@ -199,13 +199,15 @@ def validate_frame(path: str) -> dict:
     if tilt > MAX_TILT_DEG:
         add("tilt", "blocker", f"telefono ruotato di ~{tilt:.1f}° (max {MAX_TILT_DEG}°)")
     if min(ml, mr, mt, mb) < MIN_MARGIN_RATIO:
-        add("clipped", "blocker", f"telefono a filo/tagliato dal bordo (margini l{ml:.3f} r{mr:.3f} t{mt:.3f} b{mb:.3f})")
+        add("clipped", geom_sev, f"telefono a filo/tagliato dal bordo (margini l{ml:.3f} r{mr:.3f} t{mt:.3f} b{mb:.3f})")
     if abs(ml - mr) > SIDE_SYMMETRY_MAX:
         add("asymmetry", "warning", f"margini laterali asimmetrici ({ml:.3f} vs {mr:.3f}) → possibile prospettiva")
+    fallback = bool(box.get("fallback"))
+    geom_sev = "warning" if fallback else "blocker"
     if not (ASPECT_MIN <= aspect <= ASPECT_MAX):
-        add("aspect", "blocker", f"proporzioni corpo non da iPhone Pro Max (w/h {aspect:.2f})")
+        add("aspect", geom_sev, f"proporzioni corpo non da iPhone Pro Max (w/h {aspect:.2f})")
     if scene > SCENE_INK_MAX:
-        add("outside-ui", "blocker", f"elementi grafici/testo fuori dal display (ink scena {scene:.3f})")
+        add("outside-ui", geom_sev, f"elementi grafici/testo fuori dal display (ink scena {scene:.3f})")
     if nested > 0:
         add("nested-phone", "blocker", f"{nested} telefono/i aggiuntivo/i in scena")
 
@@ -227,6 +229,7 @@ def validate_frame(path: str) -> dict:
         "margins": {"l": round(ml, 3), "r": round(mr, 3), "t": round(mt, 3), "b": round(mb, 3)},
         "scene_ink": round(scene, 4),
         "nested": nested,
+        "scene_fullbleed": fallback,
         "issues": issues,
         "retry_hint": " · ".join(hints[i["code"]] for i in blockers) or None,
     }
