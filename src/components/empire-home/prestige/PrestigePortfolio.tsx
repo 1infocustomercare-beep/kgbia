@@ -1,8 +1,7 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ArrowUpRight, ChevronDown, ChevronUp, Sparkles } from "lucide-react";
-import { motion, useReducedMotion, useScroll, useSpring, useTransform } from "framer-motion";
-import IPhoneProMaxFrame from "@/components/mockups/IPhoneProMaxFrame";
+import { motion } from "framer-motion";
 import MockupLightbox from "@/components/mockups/MockupLightbox";
 import { SECTOR_MOCKUPS, type SectorMockupVariant } from "@/data/sector-mockups";
 
@@ -18,36 +17,7 @@ export default function PrestigePortfolio() {
   const [expanded, setExpanded] = useState(false);
   const [filter, setFilter] = useState<string>("all");
   const [selection, setSelection] = useState<Selection>(null);
-  const gridRef = useRef<HTMLDivElement>(null);
 
-  /**
-   * Effetto "deck 3D": la griglia si raddrizza entrando nel viewport.
-   * La profondità è più marcata su desktop e volutamente lieve su mobile:
-   * così l'effetto rimane visibile ovunque senza creare overflow.
-   */
-  const reduceMotion = useReducedMotion();
-  const [deck3d, setDeck3d] = useState(false);
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-    const mq = window.matchMedia("(prefers-reduced-motion: no-preference)");
-    const sync = () => setDeck3d(mq.matches);
-    sync();
-    mq.addEventListener("change", sync);
-    return () => mq.removeEventListener("change", sync);
-  }, []);
-  const { scrollYProgress } = useScroll({
-    target: gridRef,
-    offset: ["start end", "start 35%"],
-  });
-  const eased = useSpring(scrollYProgress, { stiffness: 90, damping: 24, mass: 0.4 });
-  const rotateX = useTransform(eased, [0, 1], [12, 0]);
-  const deckScale = useTransform(eased, [0, 1], [0.975, 1]);
-  const deckOpacity = useTransform(eased, [0, 0.32], [0.55, 1]);
-  const use3d = deck3d && !reduceMotion;
-
-  // UNA CARD PER SETTORE — la home mostra il mockup migliore (sequenza più
-  // completa) di ogni settore e rimanda al caso studio con tutti gli stili a
-  // confronto. Le varianti reference restano su /portfolio.
   const cards = useMemo(
     () =>
       SECTOR_MOCKUPS.map((g) => {
@@ -71,7 +41,6 @@ export default function PrestigePortfolio() {
     [],
   );
 
-
   const sectors = useMemo(
     () =>
       cards
@@ -80,19 +49,94 @@ export default function PrestigePortfolio() {
     [cards],
   );
 
-  /** Chip di filtro per settore con conteggio stili disponibili. */
   const chips = useMemo(
     () => [{ id: "all", label: "Tutti i settori", count: cards.length }, ...sectors],
     [cards, sectors],
   );
 
-
   const filtered = useMemo(
     () => (filter === "all" ? cards : cards.filter((c) => c.sectorId === filter)),
     [cards, filter],
   );
+
   const visible = expanded ? filtered : filtered.slice(0, 12);
 
+  const gallery = useMemo(() => {
+    const list = visible
+      .flatMap((c) => {
+        const items = [
+          {
+            src: c.hero.screen,
+            sectorId: c.sectorId,
+            sectorLabel: c.sectorLabel,
+            brand: c.hero.brand,
+            styleId: c.hero.id,
+            label: "Home",
+            key: `${c.key}-home`,
+          },
+          ...c.hero.screens
+            .filter((s) => !!s.image)
+            .slice(1, 4)
+            .map((s, i) => ({
+              src: s.image,
+              sectorId: c.sectorId,
+              sectorLabel: c.sectorLabel,
+              brand: c.hero.brand,
+              styleId: c.hero.id,
+              label: s.label,
+              key: `${c.key}-screen-${i + 2}`,
+            })),
+        ];
+        return items;
+      })
+      .filter((i) => i.src);
+    return list.slice(0, 15);
+  }, [visible]);
+
+  const left = gallery.filter((_, i) => [0, 3, 6, 9, 12].includes(i));
+  const middle = gallery.filter((_, i) => [1, 4, 7].includes(i));
+  const right = gallery.filter((_, i) => [2, 5, 8, 11, 14].includes(i));
+
+  const FigureCard = ({
+    item,
+    index,
+    layout,
+    tall,
+  }: {
+    item: (typeof gallery)[number];
+    index: number;
+    layout?: "left" | "right" | "center";
+    tall?: boolean;
+  }) => {
+    const delay = layout === "center" ? (index % 3) * 0.12 : (index % 5) * 0.08;
+    return (
+      <motion.figure
+        key={item.key}
+        initial={{ opacity: 0, y: 30 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, amount: 0.2 }}
+        transition={{ duration: 0.6, delay, ease: [0.22, 1, 0.36, 1] }}
+        className="group relative w-full cursor-pointer overflow-hidden rounded-2xl"
+        style={{ aspectRatio: tall ? "9 / 16" : "9 / 19.5" }}
+        onClick={() => navigate(`/portfolio/${item.sectorId}?style=${item.styleId}`)}
+      >
+        <img
+          src={item.src}
+          alt={`${item.brand} — ${item.label}`}
+          loading="lazy"
+          decoding="async"
+          className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+        />
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black/70" />
+        <div className="absolute bottom-0 left-0 right-0 p-3 sm:p-4">
+          <div className="text-[10px] font-bold uppercase tracking-widest text-white/80">
+            {item.sectorLabel}
+          </div>
+          <div className="text-sm font-semibold text-white sm:text-base">{item.brand}</div>
+        </div>
+      </motion.figure>
+    );
+  };
 
   return (
     <section
@@ -103,7 +147,10 @@ export default function PrestigePortfolio() {
       <div className="mx-auto max-w-7xl px-5 lg:px-10">
         <div className="flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-end">
           <div>
-            <div className="prestige-eyebrow flex items-center gap-2" style={{ color: "hsl(var(--pr-gold-deep))" }}>
+            <div
+              className="prestige-eyebrow flex items-center gap-2"
+              style={{ color: "hsl(var(--pr-gold-deep))" }}
+            >
               <Sparkles size={12} /> Portfolio · webapp reali su iPhone
             </div>
             <h2
@@ -115,14 +162,16 @@ export default function PrestigePortfolio() {
               <span className="pglass-aqua-text">Decine di stili per settore.</span>
             </h2>
           </div>
-          <p className="max-w-sm text-sm sm:text-base" style={{ color: "hsl(var(--pr-muted-on-light))" }}>
-            Apri un settore per vedere il caso studio completo: tutti gli stili a confronto, con la sequenza
-            integrale delle schermate su iPhone Pro Max.
-
+          <p
+            className="max-w-sm text-sm sm:text-base"
+            style={{ color: "hsl(var(--pr-muted-on-light))" }}
+          >
+            Apri un settore per vedere il caso studio completo: tutti gli stili a confronto, con la
+            sequenza integrale delle schermate su iPhone Pro Max.
           </p>
         </div>
 
-        {/* FILTRI PER SETTORE con conteggio stili */}
+        {/* FILTRI PER SETTORE */}
         <div className="mt-8 -mx-5 overflow-x-auto px-5 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden lg:mx-0 lg:px-0">
           <div className="flex w-max items-center gap-2 lg:w-auto lg:flex-wrap">
             {chips.map((c) => {
@@ -140,148 +189,93 @@ export default function PrestigePortfolio() {
                 </button>
               );
             })}
-
           </div>
         </div>
 
-
-        {/* PRIMARY GRID — cinematic 3D reveal + column parallax */}
-        <div
-          ref={gridRef}
-          className="mt-14 overflow-hidden"
-          style={use3d ? { perspective: "1500px", perspectiveOrigin: "50% 0%" } : undefined}
-        >
-          <motion.div
-            style={
-              use3d
-                ? {
-                    rotateX,
-                    scale: deckScale,
-                    opacity: deckOpacity,
-                    transformOrigin: "center top",
-                    transformStyle: "preserve-3d",
-                    willChange: "transform, opacity",
-                  }
-                : undefined
-            }
-            className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4"
-          >
-             {visible.map((h, cardIndex) => (
-              <motion.article
-                key={h.key}
-                 initial={{ opacity: 0.28, y: 34, rotateY: cardIndex % 2 === 0 ? -4 : 4 }}
-                 whileInView={{ opacity: 1, y: 0, rotateY: 0 }}
-                 viewport={{ once: true, amount: 0.08, margin: "0px 0px -3% 0px" }}
-                 transition={{ duration: 0.65, delay: (cardIndex % 4) * 0.06, ease: [0.22, 1, 0.36, 1] }}
-                className="group pglass-soft flex w-full flex-col items-center p-5"
+        {/* Mobile: flat 2-col masonry */}
+        <div className="mx-auto mt-14 max-w-7xl px-1 sm:hidden">
+          <div className="grid grid-cols-2 gap-3">
+            {gallery.map((item, i) => (
+              <motion.figure
+                key={item.key}
+                initial={{ opacity: 0, y: 24 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, amount: 0.2 }}
+                transition={{
+                  duration: 0.5,
+                  delay: (i % 4) * 0.06,
+                  ease: [0.22, 1, 0.36, 1],
+                }}
+                className="group relative w-full cursor-pointer overflow-hidden rounded-xl"
+                style={{ aspectRatio: "9 / 19.5" }}
+                onClick={() => navigate(`/portfolio/${item.sectorId}?style=${item.styleId}`)}
               >
-                <div className="relative transition-transform duration-500">
-                  <IPhoneProMaxFrame
-                    src={h.hero!.screen}
-                    alt={`${h.hero!.brand} — ${h.hero!.style}`}
-                    width={210}
-                    onClick={() => navigate(`/portfolio/${h.sectorId}?style=${h.hero!.id}`)}
-                  />
-                  <span
-                    aria-hidden
-                    className="pointer-events-none absolute bottom-4 left-1/2 -translate-x-1/2 rounded-full px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.2em] opacity-0 transition-opacity duration-300 group-hover:opacity-100"
-                    style={{
-                      background: "linear-gradient(135deg, hsl(var(--pr-aqua) / 0.95), hsl(var(--pr-aqua-deep)))",
-                      color: "hsl(0 0% 100%)",
-                      boxShadow: "0 10px 26px -12px hsl(var(--pr-aqua) / 0.8)",
-                    }}
-                  >
-                    Vedi il caso
-                  </span>
-                </div>
-
-                {/* Anteprime schermate collegate (Menu / Dettaglio / Prenota) */}
-                {h.hero!.screens?.length > 1 && (
-                  <div className="mt-4 flex items-center justify-center gap-2">
-                    {h.hero!.screens.filter((s) => !!s.image).slice(1, 4).map((s) => (
-                      <button
-                        key={s.image}
-                        type="button"
-                        title={s.label}
-                        onClick={() =>
-                          setSelection({
-                            sectorId: h.sectorId,
-                            sectorLabel: h.sectorLabel,
-                            variants: h.variants,
-                            index: h.index,
-                          })
-                        }
-                        className="overflow-hidden rounded-[12px] transition-transform duration-300 hover:-translate-y-0.5"
-                        style={{
-                          width: 46,
-                          height: 92,
-                          border: "1px solid hsl(var(--pr-aqua) / 0.3)",
-                          background: "hsl(var(--pr-emerald-deep))",
-                          boxShadow: "0 10px 22px -14px hsl(var(--pr-aqua-deep) / 0.7)",
-                        }}
-                      >
-                        <img
-                          src={s.image}
-                          alt={`${h.hero!.brand} — ${s.label}`}
-                          loading="lazy"
-                          decoding="async"
-                          className="h-full w-full object-cover object-top"
-                          onError={(e) => { (e.currentTarget.closest("button") as HTMLElement | null)?.style.setProperty("display", "none"); }}
-                        />
-                      </button>
-                    ))}
+                <img
+                  src={item.src}
+                  alt={`${item.brand} — ${item.label}`}
+                  loading="lazy"
+                  decoding="async"
+                  className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                />
+                <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black/70" />
+                <div className="absolute bottom-0 left-0 right-0 p-2.5">
+                  <div className="text-[9px] font-bold uppercase tracking-widest text-white/80">
+                    {item.sectorLabel}
                   </div>
-                )}
-
-                <div className="mt-4 flex w-full flex-col items-center text-center">
-                  <div
-                    className="text-[10px] font-bold uppercase tracking-[0.24em]"
-                    style={{ color: "hsl(var(--pr-aqua-deep))" }}
-                  >
-                    {h.sectorLabel}
-                  </div>
-                  <h3
-                    className="prestige-display mt-1 text-lg"
-                    style={{ color: "hsl(var(--pr-text-on-light))" }}
-                  >
-                    {h.hero!.brand}
-                  </h3>
-                  <p
-                    className="mt-1 text-xs leading-snug"
-                    style={{ color: "hsl(var(--pr-muted-on-light))" }}
-                  >
-                    {h.tagline}
-                  </p>
-                  <button
-                    type="button"
-                    onClick={() => navigate(`/portfolio/${h.sectorId}?style=${h.hero!.id}`)}
-                    className="mt-3 inline-flex items-center gap-1 rounded-full px-3 py-1 text-[10px] font-semibold transition-all hover:gap-2"
-                    style={{
-                      background: "hsl(var(--pr-aqua) / 0.12)",
-                      color: "hsl(var(--pr-aqua-deep))",
-                      border: "1px solid hsl(var(--pr-aqua) / 0.32)",
-                    }}
-                  >
-                    {h.variants.length > 1
-                      ? `Confronta ${h.variants.length} stili`
-                      : "Apri il caso studio"}
-                    <ArrowUpRight size={11} />
-                  </button>
+                  <div className="text-xs font-semibold text-white">{item.brand}</div>
                 </div>
-              </motion.article>
+              </motion.figure>
             ))}
-          </motion.div>
+          </div>
         </div>
 
+        {/* Desktop: sticky masonry gallery */}
+        <div className="relative mx-auto mt-14 hidden max-w-7xl grid-cols-12 gap-5 px-4 pb-16 sm:grid lg:gap-7 lg:px-8">
+          <div
+            className="pointer-events-none absolute inset-0 -z-10 opacity-20"
+            style={{
+              background:
+                "linear-gradient(to right, hsl(var(--pr-gold) / 0.10) 1px, transparent 1px), linear-gradient(to bottom, hsl(var(--pr-gold) / 0.10) 1px, transparent 1px)",
+              backgroundSize: "54px 54px",
+              maskImage: "radial-gradient(ellipse 60% 50% at 50% 0%, #000 70%, transparent 100%)",
+            }}
+          />
 
+          {/* Left column */}
+          <div className="grid gap-5 sm:col-span-4 lg:gap-7">
+            {left.map((item, i) => (
+              <FigureCard key={item.key} item={item} index={i} layout="left" tall />
+            ))}
+          </div>
+
+          {/* Middle sticky column */}
+          <div className="relative sm:col-span-4">
+            <div className="sticky top-28 grid h-[calc(100svh-8rem)] grid-rows-3 gap-5 lg:gap-7">
+              {middle.map((item, i) => (
+                <FigureCard key={item.key} item={item} index={i} layout="center" />
+              ))}
+            </div>
+          </div>
+
+          {/* Right column */}
+          <div className="grid gap-5 sm:col-span-4 lg:gap-7">
+            {right.map((item, i) => (
+              <FigureCard key={item.key} item={item} index={i} layout="right" tall />
+            ))}
+          </div>
+        </div>
 
         <div className="mt-14 flex flex-wrap items-center justify-center gap-3">
           {filtered.length > 12 && (
             <button onClick={() => setExpanded((v) => !v)} className="pglass-btn-ghost">
               {expanded ? (
-                <>Mostra meno <ChevronUp size={16} /></>
+                <>
+                  Mostra meno <ChevronUp size={16} />
+                </>
               ) : (
-                <>Vedi tutti i {filtered.length} settori <ChevronDown size={16} /></>
+                <>
+                  Vedi tutti i {filtered.length} settori <ChevronDown size={16} />
+                </>
               )}
             </button>
           )}
@@ -292,10 +286,6 @@ export default function PrestigePortfolio() {
             Siti demo live <ArrowUpRight size={16} />
           </button>
         </div>
-
-
-
-        {/* Homepage = solo studio mockups Empire. Le varianti Lowengeld/reference vivono su /portfolio. */}
       </div>
 
       <MockupLightbox
@@ -305,13 +295,6 @@ export default function PrestigePortfolio() {
         variants={selection?.variants ?? []}
         initialIndex={selection?.index ?? 0}
       />
-
-      <style>{`
-        @keyframes prestigeSlideUp {
-          from { opacity: 0; transform: translateY(32px); }
-          to { opacity: 1; transform: translateY(0); }
-        }
-      `}</style>
     </section>
   );
 }
