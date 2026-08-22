@@ -1,5 +1,6 @@
 import { ArrowRight, Phone } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { scrollToSection } from "@/lib/home-scroll";
 
 export default function PrestigeFinalCTA() {
   const navigate = useNavigate();
@@ -44,13 +45,14 @@ export default function PrestigeFinalCTA() {
           >
             <span>Inizia ora</span> <ArrowRight size={16} />
           </button>
-          <a
-            href="#lead"
+          <button
+            type="button"
+            onClick={() => scrollToSection("#prestige-lead")}
             className="prestige-cta-ghost justify-center w-full sm:w-auto"
             aria-label="Parla con un consulente"
           >
             <Phone size={14} /> <span>Parla con un consulente</span>
-          </a>
+          </button>
         </div>
         <p className="mt-6 text-xs uppercase tracking-[0.24em]" style={{ color: "hsl(var(--pr-muted-on-dark))" }}>
           Setup 7 giorni · Assistenza in italiano · Codice di tua proprietà
