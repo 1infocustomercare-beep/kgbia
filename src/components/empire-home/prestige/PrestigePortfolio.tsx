@@ -19,14 +19,7 @@ export default function PrestigePortfolio() {
   const [expanded, setExpanded] = useState(false);
   const [filter, setFilter] = useState<string>("all");
   const [selection, setSelection] = useState<Selection>(null);
-  const { ref } = useEmpireScrollDirector<HTMLDivElement>("prestige-mockups", { steps: 4 });
   const gridRef = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({
-    target: gridRef,
-    offset: ["start end", "end start"],
-  });
-  const rotateX = useTransform(scrollYProgress, [0, 0.35], [45, 0]);
-  const scale = useTransform(scrollYProgress, [0, 0.35], [0.92, 1]);
 
   // UNA CARD PER SETTORE — la home mostra il mockup migliore (sequenza più
   // completa) di ogni settore e rimanda al caso studio con tutti gli stili a
@@ -79,7 +72,6 @@ export default function PrestigePortfolio() {
 
   return (
     <section
-      ref={ref}
       id="prestige-mockups"
       data-section="prestige-mockups"
       className="prestige-section prestige-light py-24 sm:py-32"
@@ -130,22 +122,17 @@ export default function PrestigePortfolio() {
 
 
         {/* PRIMARY GRID — cinematic 3D reveal + column parallax */}
-        <div
-          ref={gridRef}
-          className="mt-14"
-          style={{ perspective: "1400px" }}
-        >
-          <motion.div
-            style={{
-              rotateX,
-              scale,
-              transformOrigin: "center top",
-              transformStyle: "preserve-3d",
-            }}
-            className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4"
-          >
+        <div ref={gridRef} className="mt-14">
+          <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
             {visible.map((h) => (
-              <article key={h.key} className="group pglass-soft flex w-full flex-col items-center p-5">
+              <motion.article
+                key={h.key}
+                initial={{ opacity: 0, y: 22 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, amount: 0.2, margin: "0px 0px -12% 0px" }}
+                transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+                className="group pglass-soft flex w-full flex-col items-center p-5"
+              >
                 <div className="relative transition-transform duration-500">
                   <IPhoneProMaxFrame
                     src={h.hero!.screen}
