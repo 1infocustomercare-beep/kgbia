@@ -317,20 +317,28 @@ function ServicesScrollStack() {
           position: absolute; left: 0; right: 0; top: 0;
           transform-style: preserve-3d; will-change: transform, opacity;
           border-radius: 1.25rem;
+          background: hsl(var(--pr-ivory, 40 30% 97%));
           box-shadow: 0 26px 60px -30px hsl(160 40% 8% / .45);
+          overflow: hidden;
         }
-        .prestige-svcstack-card > .prestige-card { border-radius: 1.25rem; }
+        .prestige-svcstack-card > .prestige-card {
+          border-radius: 1.25rem; background: transparent; box-shadow: none;
+        }
         .prestige-svcstack-dots {
-          display: flex; gap: .45rem; justify-content: center; padding-top: 1.25rem;
+          display: flex; align-items: center; gap: .45rem;
+          justify-content: center; padding-top: 1.25rem;
         }
         .prestige-svcstack-dots > button {
-          height: .5rem; width: .5rem; border-radius: 999px;
+          flex: 0 0 auto;
+          height: .5rem !important; width: .5rem; min-width: 0; padding: 0;
+          border: 0; border-radius: 999px; appearance: none;
           background: hsl(var(--pr-emerald) / .22);
           transition: width .3s ease, background .3s ease;
         }
         .prestige-svcstack-dots > button[data-active] {
           width: 1.6rem; background: hsl(var(--pr-gold));
         }
+
       `}</style>
     </div>
   );
