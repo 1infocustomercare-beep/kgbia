@@ -1,18 +1,18 @@
 {
   "identityId": "food-neo-brutalist",
   "sector": "food",
-  "brand": "Officina del Panino",
-  "style": "brutal-slab/grid-edge-to-edge/inner-glow-hairline/glass-panel/form-stepper/count-up/type-highlight/sidebar-drawer-hint",
-  "family": "neo-brutalist-industrial",
-  "palette": "mobile",
-  "description": "Officina del Panino: webapp su misura con 1 schermate coerenti — tipografia, palette, componenti e micro-interazioni disegnati su questo settore.",
+  "brand": "food-neo-brutalist",
+  "style": "Empire Studio",
+  "family": "food-neo-brutalist",
+  "palette": "Palette dedicata al settore",
+  "description": "food-neo-brutalist: webapp su misura con 1 schermate coerenti — tipografia, palette, componenti e micro-interazioni disegnati su questo settore.",
   "labels": [
-    "Catalogo"
+    "Vetrina"
   ],
   "captions": [
-    "Listino completo con categorie, foto reali e prezzi in euro."
+    "Home dell'app: identità di brand, funzioni chiave e CTA principale."
   ],
   "features": [
-    "Catalogo"
+    "Vetrina"
   ]
 }
