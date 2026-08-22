@@ -502,8 +502,9 @@ function App() {
   const handleIntroComplete = useCallback(() => setIntroCompleted(true), []);
 
   useEffect(() => {
-    disableLegacyAppShellCache();
+    void purgeLegacyAppShell();
   }, []);
+
 
   useEffect(() => {
     const startedAt = performance.now();
