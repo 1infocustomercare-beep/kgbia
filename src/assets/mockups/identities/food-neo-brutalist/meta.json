@@ -5,14 +5,17 @@
   "style": "Empire Studio",
   "family": "food-neo-brutalist",
   "palette": "Palette dedicata al settore",
-  "description": "food-neo-brutalist: webapp su misura con 1 schermate coerenti — tipografia, palette, componenti e micro-interazioni disegnati su questo settore.",
+  "description": "food-neo-brutalist: webapp su misura con 2 schermate coerenti — tipografia, palette, componenti e micro-interazioni disegnati su questo settore.",
   "labels": [
+    "Catalogo",
     "Vetrina"
   ],
   "captions": [
+    "Listino completo con categorie, foto reali e prezzi in euro.",
     "Home dell'app: identità di brand, funzioni chiave e CTA principale."
   ],
   "features": [
+    "Catalogo",
     "Vetrina"
   ]
 }
