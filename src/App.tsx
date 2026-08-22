@@ -15,6 +15,8 @@ import SetupPaidGuard from "@/components/SetupPaidGuard";
 import EmpireDNABackground from "@/components/EmpireDNABackground";
 import EmpireGlassShell from "@/components/glass/EmpireGlassShell";
 import { useReferralCapture } from "@/hooks/useReferralCapture";
+import { purgeLegacyAppShell } from "@/lib/legacy-shell-purge";
+
 
 
 // Detect mobile for tighter safety timeouts
