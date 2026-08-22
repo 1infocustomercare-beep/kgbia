@@ -98,9 +98,9 @@ export default function PrestigeAgents() {
             </ul>
           </div>
 
-          {/* ROBOT AGENTICO 3D INTERATTIVO (Spline) in livrea Empire */}
+          {/* CONFIGURATORE INTERATTIVO — sostituisce la scena 3D instabile */}
           <div className="lg:col-span-5">
-            <PrestigeAgentScene />
+            <PrestigeAgentStudio />
           </div>
         </div>
 
