@@ -292,8 +292,48 @@ export default function PrestigeHorizontalScroll() {
   );
 }
 
+/** Card del carosello mobile: scala/ruota in base alla distanza dal centro. */
+function MobileCarouselCard({
+  panel,
+  index,
+  total,
+  progress,
+}: {
+  panel: Phase;
+  index: number;
+  total: number;
+  progress: MotionValue<number>;
+}) {
+  const center = total > 1 ? index / (total - 1) : 0;
+  const span = total > 1 ? 1 / (total - 1) : 1;
+  const stops = [center - span, center, center + span];
+  const scale = useTransform(progress, stops, [0.86, 1, 0.86]);
+  const opacity = useTransform(progress, stops, [0.35, 1, 0.35]);
+  const rotateY = useTransform(progress, stops, [14, 0, -14]);
+  const glow = useTransform(progress, stops, [0, 0.6, 0]);
+
+  return (
+    <motion.article
+      className="prestige-hmob-card"
+      style={{
+        scale,
+        opacity,
+        rotateY,
+        // @ts-expect-error CSS custom property
+        "--deck-glow": glow,
+      }}
+    >
+      <span className="prestige-hdeck-step" aria-hidden>
+        {panel.n} / {String(total).padStart(2, "0")}
+      </span>
+      <PanelCard panel={panel} />
+    </motion.article>
+  );
+}
+
 /** Fase singola su mobile: entra in 3D, si posa, esce in profondità. */
 function MobilePhase({ panel, index, total }: { panel: Phase; index: number; total: number }) {
+
   const ref = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
     target: ref,
