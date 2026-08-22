@@ -2,17 +2,35 @@
   "identityId": "food-fuoco-moderno",
   "sector": "food",
   "brand": "Fuocolento",
-  "style": "couture-didone/grid-10-airy/gradient-edge/ticket-notch/list-rows-pricing/pulse-live/cta-only/no-tabbar-bottom-cta",
+  "style": "couture-didone/grid-10-airy/gradient-edge/ticket-notch/list-rows-pricing/pulse-live/duotone-photo/large-title-collapsing/warm-parchment/grain-film/duotone-icons",
   "family": "fuoco-moderno",
   "palette": "mobile",
-  "description": "Fuocolento: webapp su misura con 1 schermate coerenti — tipografia, palette, componenti e micro-interazioni disegnati su questo settore.",
+  "description": "Fuocolento: webapp su misura con 7 schermate coerenti — tipografia, palette, componenti e micro-interazioni disegnati su questo settore.",
   "labels": [
-    "Vetrina"
+    "Vetrina",
+    "Track",
+    "Cart",
+    "Admin",
+    "Order",
+    "Fidelity",
+    "Assistente AI"
   ],
   "captions": [
-    "Home dell'app: identità di brand, funzioni chiave e CTA principale."
+    "Home dell'app: identità di brand, funzioni chiave e CTA principale.",
+    "Schermata track.",
+    "Schermata cart.",
+    "Pannello di gestione con metriche operative in tempo reale.",
+    "Schermata order.",
+    "Programma fedeltà con punti e premi automatici.",
+    "Chat con l'agente AI che risponde e converte 24/7."
   ],
   "features": [
-    "Vetrina"
+    "Vetrina",
+    "Track",
+    "Cart",
+    "Admin",
+    "Order",
+    "Fidelity",
+    "Assistente AI"
   ]
 }

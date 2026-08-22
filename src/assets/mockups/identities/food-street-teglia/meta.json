@@ -2,17 +2,35 @@
   "identityId": "food-street-teglia",
   "sector": "food",
   "brand": "Teglia Urbana",
-  "style": "airy-serif/grid-10-airy/gradient-edge/ticket-notch/map-floating-sheet/sheet-drag/hairline-details/floating-frosted-tabbar",
+  "style": "airy-serif/grid-12-columnar/gradient-edge/ticket-notch/map-floating-sheet/sheet-drag/duotone-photo/large-title-collapsing/warm-parchment/grain-film/thin-line-1px",
   "family": "street-graffiti-slab",
   "palette": "mobile",
-  "description": "Teglia Urbana: webapp su misura con 1 schermate coerenti — tipografia, palette, componenti e micro-interazioni disegnati su questo settore.",
+  "description": "Teglia Urbana: webapp su misura con 7 schermate coerenti — tipografia, palette, componenti e micro-interazioni disegnati su questo settore.",
   "labels": [
-    "Vetrina"
+    "Vetrina",
+    "Build",
+    "Pickup",
+    "Admin",
+    "Order",
+    "Fidelity",
+    "Assistente AI"
   ],
   "captions": [
-    "Home dell'app: identità di brand, funzioni chiave e CTA principale."
+    "Home dell'app: identità di brand, funzioni chiave e CTA principale.",
+    "Schermata build.",
+    "Schermata pickup.",
+    "Pannello di gestione con metriche operative in tempo reale.",
+    "Schermata order.",
+    "Programma fedeltà con punti e premi automatici.",
+    "Chat con l'agente AI che risponde e converte 24/7."
   ],
   "features": [
-    "Vetrina"
+    "Vetrina",
+    "Build",
+    "Pickup",
+    "Admin",
+    "Order",
+    "Fidelity",
+    "Assistente AI"
   ]
 }

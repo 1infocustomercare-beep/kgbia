@@ -2,17 +2,35 @@
   "identityId": "food-swiss-clinical",
   "sector": "food",
   "brand": "Verde Protocollo",
-  "style": "editorial-giant/grid-edge-to-edge/inner-glow-hairline/glass-panel/calendar-slots/swipe-peek/full-flood/flat-tabbar-topline",
+  "style": "editorial-giant/grid-6-editorial/inner-glow-hairline/glass-panel/calendar-slots/swipe-peek/accent-underlay/rail-left-icons/concrete-mineral/framed-passepartout/solid-glyph",
   "family": "swiss-clinical-grid",
   "palette": "mobile",
-  "description": "Verde Protocollo: webapp su misura con 1 schermate coerenti — tipografia, palette, componenti e micro-interazioni disegnati su questo settore.",
+  "description": "Verde Protocollo: webapp su misura con 7 schermate coerenti — tipografia, palette, componenti e micro-interazioni disegnati su questo settore.",
   "labels": [
-    "Plan"
+    "Plan",
+    "Dish",
+    "Order",
+    "Progress",
+    "Fidelity",
+    "Assistente AI",
+    "Galleria"
   ],
   "captions": [
-    "Schermata plan."
+    "Schermata plan.",
+    "Schermata dish.",
+    "Schermata order.",
+    "Schermata progress.",
+    "Programma fedeltà con punti e premi automatici.",
+    "Chat con l'agente AI che risponde e converte 24/7.",
+    "Galleria immersiva con contenuti editoriali."
   ],
   "features": [
-    "Plan"
+    "Plan",
+    "Dish",
+    "Order",
+    "Progress",
+    "Fidelity",
+    "Assistente AI",
+    "Galleria"
   ]
 }
