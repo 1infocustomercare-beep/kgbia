@@ -5,14 +5,26 @@
   "style": "couture-didone/grid-10-airy/hairline-rule/chamfer-tech/list-rows-pricing/pulse-live/hairline-details/floating-frosted-tabbar",
   "family": "neo-editorial-magazine",
   "palette": "mobile",
-  "description": "Osteria Ventidue: webapp su misura con 1 schermate coerenti — tipografia, palette, componenti e micro-interazioni disegnati su questo settore.",
+  "description": "Osteria Ventidue: webapp su misura con 5 schermate coerenti — tipografia, palette, componenti e micro-interazioni disegnati su questo settore.",
   "labels": [
-    "Vetrina"
+    "Vetrina",
+    "Catalogo",
+    "Dish",
+    "Prenotazione",
+    "Admin"
   ],
   "captions": [
-    "Home dell'app: identità di brand, funzioni chiave e CTA principale."
+    "Home dell'app: identità di brand, funzioni chiave e CTA principale.",
+    "Listino completo con categorie, foto reali e prezzi in euro.",
+    "Schermata dish.",
+    "Flusso di prenotazione in pochi tap con conferma immediata.",
+    "Pannello di gestione con metriche operative in tempo reale."
   ],
   "features": [
-    "Vetrina"
+    "Vetrina",
+    "Catalogo",
+    "Dish",
+    "Prenotazione",
+    "Admin"
   ]
 }
