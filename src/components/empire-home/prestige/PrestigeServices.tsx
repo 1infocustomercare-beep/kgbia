@@ -293,14 +293,15 @@ function ServicesScrollStack() {
               aria-selected={i === active}
               aria-label={s.title}
               data-active={i === active ? "true" : undefined}
-              style={{ height: "0.5rem", width: i === active ? "1.6rem" : "0.5rem", flex: "0 0 auto", padding: 0, border: 0, borderRadius: 999 }}
               onClick={() => {
                 const el = trackRef.current;
                 if (!el) return;
                 const top = el.offsetTop + (el.offsetHeight - window.innerHeight) * (i / Math.max(1, total - 1));
                 window.scrollTo({ top, behavior: "smooth" });
               }}
-            />
+            >
+              <span aria-hidden />
+            </button>
           ))}
         </div>
       </div>
@@ -330,14 +331,16 @@ function ServicesScrollStack() {
           justify-content: center; padding-top: 1.25rem;
         }
         .prestige-svcstack-dots > button {
-          flex: 0 0 auto;
-          height: .5rem !important; width: .5rem; min-width: 0; padding: 0;
-          border: 0; border-radius: 999px; appearance: none;
-          background: hsl(var(--pr-emerald) / .22);
-          transition: width .3s ease, background .3s ease;
+          flex: 0 0 auto; display: flex; align-items: center; justify-content: center;
+          height: 2.75rem; width: 2rem; padding: 0; border: 0; background: none;
         }
-        .prestige-svcstack-dots > button[data-active] {
-          width: 1.6rem; background: hsl(var(--pr-gold));
+        .prestige-svcstack-dots > button > span {
+          display: block; height: .5rem; width: .5rem; border-radius: 999px;
+          background: hsl(var(--pr-emerald) / .28);
+          transition: width .35s cubic-bezier(.22,1,.36,1), background .35s ease;
+        }
+        .prestige-svcstack-dots > button[data-active] > span {
+          width: 1.5rem; background: hsl(var(--pr-gold));
         }
 
       `}</style>
