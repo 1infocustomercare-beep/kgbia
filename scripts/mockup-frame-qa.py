@@ -124,9 +124,12 @@ def _phone_box(img: Image.Image) -> tuple[dict, list[dict]]:
         box = _phone_box_by_edges(img)
     else:
         box = blobs[0]
-        if box["area"] > 0.80 * H * W:
+        bw = max(1, box["x1"] - box["x0"]); bh = max(1, box["y1"] - box["y0"])
+        too_wide = not (ASPECT_MIN <= bw / bh <= ASPECT_MAX)
+        if box["area"] > 0.40 * H * W and too_wide:
             # scena full-bleed: il blob principale è tutta l'immagine → usa i bordi
             box = _phone_box_by_edges(img)
+
     box.update({"W": W, "H": H,
                 "w": max(1, box["x1"] - box["x0"]),
                 "h": max(1, box["y1"] - box["y0"])})
