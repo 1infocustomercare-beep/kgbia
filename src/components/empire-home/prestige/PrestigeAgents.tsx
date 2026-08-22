@@ -30,13 +30,15 @@ export default function PrestigeAgents() {
       data-section="prestige-agents"
       className="prestige-section prestige-dark relative py-20 sm:py-28"
     >
-      {/* Spline 3D — sfondo immersivo dietro la sezione agenti */}
+      {/* Sfondo statico: nessuna scena 3D (instabile su mobile), solo veli CSS. */}
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute inset-0 z-0 opacity-40 sm:opacity-50"
-      >
-        <SplineScene sector="ai" glow={false} className="h-full w-full" />
-      </div>
+        className="pointer-events-none absolute inset-0 z-0"
+        style={{
+          background:
+            "radial-gradient(60% 45% at 18% 12%, hsl(var(--pr-emerald) / 0.22), transparent 70%), radial-gradient(50% 40% at 82% 78%, hsl(var(--pr-gold) / 0.14), transparent 72%)",
+        }}
+      />
       <div
         aria-hidden="true"
         className="pointer-events-none absolute inset-0 z-0"
