@@ -1,288 +1,174 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useMemo } from "react";
 import { motion } from "framer-motion";
-import { useEmpireScrollDirector } from "../ScrollDirector";
-import { UtensilsCrossed, Car, Scissors, Dumbbell, Hotel, Briefcase, Check } from "lucide-react";
 import { SECTOR_MOCKUPS } from "@/data/sector-mockups";
 
-const INDUSTRIES = [
-  {
-    id: "food",
-    icon: UtensilsCrossed,
-    name: "Ristoranti & Pizzerie",
-    pitch: "Il telefono squilla mentre stai impastando. WhatsApp esplode al sabato sera. Le recensioni vanno gestite. Empire fa tutto al posto tuo.",
-    wins: [
-      "Ordini WhatsApp gestiti dall'AI, anche durante il servizio",
-      "Prenotazioni tavoli automatiche con conferma e reminder",
-      "Menu sempre aggiornato su Google, social e app",
-      "Recensioni a cui rispondi con un click",
-    ],
-  },
-  {
-    id: "ncc",
-    icon: Car,
-    name: "NCC & Trasporti Luxury",
-    pitch: "Centralino che non perde mai una corsa. Preventivi istantanei, pagamenti immediati, autisti coordinati in real-time.",
-    wins: [
-      "Centralino AI che risponde in italiano, inglese, arabo",
-      "Preventivi automatici via WhatsApp in 10 secondi",
-      "App autisti con corse, pagamenti e fatture",
-      "Dashboard flotta con guadagni in tempo reale",
-    ],
-  },
-  {
-    id: "beauty",
-    icon: Scissors,
-    name: "Beauty, Estetica & Parrucchieri",
-    pitch: "Agenda sempre piena, niente più no-show. Le clienti prenotano da WhatsApp anche di notte e ricevono reminder automatici.",
-    wins: [
-      "Agenda online sincronizzata con Google Calendar",
-      "Reminder automatici il giorno prima dell'appuntamento",
-      "Cataloghi trattamenti con prezzi e foto",
-      "Programma fedeltà con punti e premi",
-    ],
-  },
-  {
-    id: "fitness",
-    icon: Dumbbell,
-    name: "Palestre & Personal Trainer",
-    pitch: "Onboarding nuovi membri 100% automatico, dalla prima chat al primo allenamento. Niente più moduli da compilare a mano.",
-    wins: [
-      "Iscrizioni online con firma digitale e pagamento",
-      "Schede allenamento personalizzate dall'AI",
-      "Prenotazione corsi con lista d'attesa intelligente",
-      "Rinnovi abbonamenti automatici via Stripe",
-    ],
-  },
-  {
-    id: "hotel",
-    icon: Hotel,
-    name: "Hotel & B&B",
-    pitch: "Concierge AI multilingua che risponde 24/7, gestisce check-in, suggerisce attività e aumenta i ricavi extra del 30%.",
-    wins: [
-      "Concierge AI in 12 lingue, sempre disponibile",
-      "Check-in digitale e card stanza via smartphone",
-      "Upselling automatico (colazione, spa, transfer)",
-      "Recensioni gestite su Booking, Airbnb, Google",
-    ],
-  },
-  {
-    id: "pro",
-    icon: Briefcase,
-    name: "Studi Professionali",
-    pitch: "Avvocati, commercialisti, consulenti: l'AI filtra le richieste, prenota appuntamenti e gestisce la prima consulenza.",
-    wins: [
-      "Filtro intelligente delle richieste in entrata",
-      "Appuntamenti con video-call e link di pagamento",
-      "Documenti raccolti via portale sicuro",
-      "Fatturazione elettronica integrata",
-    ],
-  },
-];
+const useSectorGalleryImages = () => {
+  return useMemo(() => {
+    const primaryScreens: string[] = [];
+    const companionScreens: string[] = [];
 
-const resolveVisualSectorId = (id: string) => {
-  if (id === "hotel") return "hospitality";
-  if (id === "pro") return "healthcare";
-  return id;
-};
+    SECTOR_MOCKUPS.forEach((group) => {
+      group.variants.forEach((variant) => {
+        if (variant.tier === "primary" || variant.source === "studio") {
+          primaryScreens.push(variant.screen);
+          variant.screens.slice(1).forEach((s) => companionScreens.push(s.image));
+        } else {
+          variant.screens.forEach((s) => companionScreens.push(s.image));
+        }
+      });
+    });
 
-const getStudioMockupForSector = (id: string): string => {
-  const visualId = resolveVisualSectorId(id);
-  const group = SECTOR_MOCKUPS.find((g) => g.id === visualId) ?? SECTOR_MOCKUPS[0];
-  const variant = group?.variants.find((v) => v.tier === "primary" && v.source === "studio") ?? group?.variants[0];
-  return variant?.screens[0]?.image ?? variant?.screen ?? SECTOR_MOCKUPS[0]?.variants[0]?.screen ?? "";
-};
-
-/**
- * Lo storytelling resta scroll-driven su desktop e mobile. Disattiviamo il pin
- * solo su viewport davvero troppo basse o quando l'utente chiede meno motion.
- */
-const useCinematicScroll = () => {
-  const [enabled, setEnabled] = useState(false);
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-    const mq = window.matchMedia("(min-height: 560px) and (prefers-reduced-motion: no-preference)");
-    const sync = () => setEnabled(mq.matches);
-    sync();
-    mq.addEventListener("change", sync);
-    return () => mq.removeEventListener("change", sync);
+    // Ensure we have enough images for the gallery; fill with primary if companions are short.
+    const all = [...primaryScreens, ...companionScreens];
+    while (all.length < 14 && all.length > 0) all.push(...all);
+    return {
+      primary: primaryScreens.filter(Boolean),
+      left: all.filter(Boolean).slice(0, 5),
+      middle: all.filter(Boolean).slice(5, 8),
+      right: all.filter(Boolean).slice(8, 13),
+    };
   }, []);
-  return enabled;
 };
 
 export default function PrestigeIndustries() {
-  const [active, setActive] = useState("food");
-  const cinematic = useCinematicScroll();
-  /** Dopo un clic manuale lo scroll non sovrascrive la scelta per 6 secondi. */
-  const manualUntil = useRef(0);
-  const activeRef = useRef(active);
-  activeRef.current = active;
-
-  const handleTab = (id: string) => {
-    manualUntil.current = Date.now() + 6000;
-    setActive(id);
-  };
-
-  /**
-   * Effetto cinematografico: il pannello resta pinnato mentre lo scroll
-   * avanza di settore in settore. Ogni step ha una finestra di scroll ampia
-   * (una schermata intera) + un cooldown minimo, così il contenuto è sempre
-   * leggibile e non "salta" mai.
-   */
-  const onScrollUpdate = useCallback(
-    ({ progress, inView }: { progress: number; inView: boolean }) => {
-      if (!inView) return;
-      const now = Date.now();
-      if (now < manualUntil.current) return;
-      const idx = Math.min(
-        INDUSTRIES.length - 1,
-        Math.max(0, Math.floor(progress * INDUSTRIES.length)),
-      );
-      const next = INDUSTRIES[idx]?.id;
-      if (!next || next === activeRef.current) return;
-      setActive(next);
-    },
-    [],
-  );
-
-  const { ref, progress } = useEmpireScrollDirector<HTMLDivElement>("prestige-industries", {
-    steps: INDUSTRIES.length,
-    onUpdate: cinematic ? onScrollUpdate : undefined,
-  });
-
-  const current = INDUSTRIES.find((i) => i.id === active)!;
-  const Icon = current.icon;
+  const gallery = useSectorGalleryImages();
 
   return (
     <section
       data-section="prestige-industries"
-      className="prestige-section prestige-dark py-16 sm:py-24 md:py-32"
+      className="prestige-section prestige-dark"
+      id="sectors"
     >
-      <div
-        ref={ref}
-        className="relative mx-auto max-w-6xl px-4 sm:px-5 lg:px-10"
-        style={cinematic ? { minHeight: `${INDUSTRIES.length * 88 + 38}svh` } : undefined}
-      >
-       <div className={cinematic ? "prestige-industries-stage sticky top-[4.75rem] max-h-[calc(100svh-5rem)] overflow-hidden sm:top-[3vh] sm:max-h-[94svh]" : undefined}>
-         <div className="prestige-industries-intro text-center">
+      {/* Sticky hero intro */}
+      <div className="relative mx-auto max-w-6xl px-4 pb-8 pt-16 sm:px-5 sm:pt-24 lg:px-10">
+        <div className="prestige-industries-intro text-center">
           <div className="prestige-eyebrow" style={{ color: "hsl(var(--pr-gold-light))" }}>
             ✦ Il caso tuo
           </div>
-          <h2 className={`prestige-display font-semibold break-words ${cinematic ? "mt-3 text-3xl sm:text-4xl lg:text-[2.75rem]" : "mt-4 text-3xl sm:text-5xl lg:text-6xl"}`}>
+          <h2 className="prestige-display mt-3 text-3xl font-semibold break-words sm:mt-4 sm:text-4xl lg:text-6xl">
             Empire parla la lingua del{" "}
             <span className="prestige-gold-text italic">tuo settore</span>
           </h2>
-          <div className={`prestige-divider mx-auto ${cinematic ? "mt-3" : "mt-5"}`} />
-          <p className={`mx-auto max-w-2xl text-sm sm:text-base ${cinematic ? "mt-3" : "mt-5 md:text-lg"}`} style={{ color: "hsl(var(--pr-muted-on-dark))" }}>
-            Tocca il tuo settore qui sotto e ti mostriamo esattamente come Empire risolve i problemi della
-            tua giornata-tipo.
+          <div className="prestige-divider mx-auto mt-4 sm:mt-5" />
+          <p
+            className="mx-auto mt-4 max-w-2xl text-sm sm:text-base md:text-lg"
+            style={{ color: "hsl(var(--pr-muted-on-dark))" }}
+          >
+            Scorri tra i progetti reali. Ogni mockup è un prodotto navigabile pensato per
+            risolvere i problemi della tua giornata-tipo.
           </p>
         </div>
+      </div>
 
-        {/* Tabs */}
-         <div className={`prestige-industries-tabs flex flex-nowrap justify-start gap-1.5 overflow-x-auto pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden lg:flex-wrap lg:justify-center lg:gap-2 ${cinematic ? "mt-3 sm:mt-5" : "mt-8"}`}>
-          {INDUSTRIES.map((i) => {
-            const TabIcon = i.icon;
-            const isActive = i.id === active;
-            return (
-              <button
-                key={i.id}
-                onClick={() => handleTab(i.id)}
-                type="button"
-                aria-pressed={isActive}
-                data-industry-active={isActive ? "true" : undefined}
-                 className="flex min-h-11 shrink-0 items-center gap-1.5 rounded-full px-3 py-2 text-[11px] font-semibold transition-all sm:gap-2 sm:px-4 sm:py-2.5 sm:text-sm max-w-full"
-                style={{
-                  background: isActive
-                    ? "linear-gradient(135deg, hsl(var(--pr-gold-light)), hsl(var(--pr-gold-deep)))"
-                    : "hsl(var(--pr-emerald-mid) / 0.55)",
-                  color: isActive ? "hsl(var(--pr-emerald-deep))" : "hsl(var(--pr-text-on-dark))",
-                  border: `1px solid ${isActive ? "transparent" : "hsl(var(--pr-gold) / 0.18)"}`,
-                  boxShadow: isActive ? "0 10px 30px -8px hsl(var(--pr-gold) / 0.5)" : "none",
-                }}
-              >
-                <TabIcon size={13} className="shrink-0" />
-                <span className="truncate">{i.name}</span>
-              </button>
-            );
-          })}
+      {/* Grid background */}
+      <div
+        className="pointer-events-none absolute inset-0 opacity-25"
+        style={{
+          background:
+            "linear-gradient(to right, hsl(var(--pr-gold) / 0.08) 1px, transparent 1px), linear-gradient(to bottom, hsl(var(--pr-gold) / 0.08) 1px, transparent 1px)",
+          backgroundSize: "54px 54px",
+          maskImage: "radial-gradient(ellipse 60% 50% at 50% 0%, #000 70%, transparent 100%)",
+        }}
+      />
+
+      {/* Mobile: 2-col flat masonry */}
+      <div className="mx-auto max-w-7xl px-3 pb-12 sm:hidden">
+        <div className="grid grid-cols-2 gap-3">
+          {[...gallery.left, ...gallery.middle, ...gallery.right].map((src, i) => (
+            <motion.figure
+              key={`mobile-${i}`}
+              initial={{ opacity: 0, y: 24 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.2 }}
+              transition={{ duration: 0.5, delay: (i % 4) * 0.06, ease: [0.22, 1, 0.36, 1] }}
+              className="group relative w-full overflow-hidden rounded-xl"
+              style={{ aspectRatio: "9 / 19.5" }}
+            >
+              <img
+                src={src}
+                alt={`Mockup settore ${i + 1}`}
+                loading="lazy"
+                className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+              />
+              <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black/60" />
+            </motion.figure>
+          ))}
+        </div>
+      </div>
+
+      {/* Desktop: sticky masonry gallery */}
+      <div className="mx-auto hidden max-w-7xl grid-cols-12 gap-4 px-4 pb-16 sm:grid lg:gap-6 lg:px-8">
+        {/* Left column */}
+        <div className="grid gap-4 sm:col-span-4 lg:gap-6">
+          {gallery.left.map((src, i) => (
+            <motion.figure
+              key={`left-${i}`}
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.2 }}
+              transition={{ duration: 0.6, delay: i * 0.08, ease: [0.22, 1, 0.36, 1] }}
+              className="group relative w-full overflow-hidden rounded-2xl"
+              style={{ aspectRatio: "9 / 16" }}
+            >
+              <img
+                src={src}
+                alt={`Mockup settore ${i + 1}`}
+                loading="lazy"
+                className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+              />
+              <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black/60" />
+            </motion.figure>
+          ))}
         </div>
 
+        {/* Middle sticky column */}
+        <div className="relative sm:col-span-4">
+          <div className="sticky top-28 grid h-[calc(100svh-8rem)] grid-rows-3 gap-4 lg:gap-6">
+            {gallery.middle.map((src, i) => (
+              <motion.figure
+                key={`middle-${i}`}
+                initial={{ opacity: 0, scale: 0.96 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true, amount: 0.3 }}
+                transition={{ duration: 0.7, delay: i * 0.12, ease: [0.22, 1, 0.36, 1] }}
+                className="group relative h-full w-full overflow-hidden rounded-2xl"
+              >
+                <img
+                  src={src}
+                  alt={`Mockup settore centrale ${i + 1}`}
+                  loading="lazy"
+                  className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                />
+                <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black/60" />
+              </motion.figure>
+            ))}
+          </div>
+        </div>
 
-        {/* Active panel */}
-        <motion.div
-          key={current.id}
-          initial={{ opacity: 0, y: 14 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
-           className={`prestige-card grid grid-cols-1 gap-3 sm:gap-5 lg:grid-cols-[280px_1fr] lg:items-center ${cinematic ? "mt-3 sm:mt-5 sm:grid-cols-[124px_1fr]" : "mt-8 sm:gap-8"}`}
-        >
-          {/* Mockup image (real premium PNG) */}
-          <div
-             className={`relative mx-auto w-full overflow-hidden lg:mx-0 ${cinematic ? "max-w-[96px] rounded-[1.2rem] sm:max-w-[124px] lg:max-w-[210px] lg:rounded-[2rem]" : "max-w-[230px] rounded-[2rem]"}`}
-            style={{
-              aspectRatio: "9 / 19.5",
-              transform: cinematic
-                ? `translate3d(0, ${(0.5 - progress) * -22}px, 0)`
-                : undefined,
-              willChange: cinematic ? "transform" : undefined,
-              boxShadow: "0 30px 70px -20px hsl(var(--pr-gold) / 0.35), 0 0 0 8px hsl(var(--pr-emerald-deep))",
-              background: "hsl(var(--pr-emerald-deep))",
-            }}
-          >
-            <img
-              src={getStudioMockupForSector(current.id)}
-              alt={`Mockup ${current.name}`}
-              loading="lazy"
-              className="h-full w-full object-cover"
-            />
-            <div className="pointer-events-none absolute inset-0" style={{ background: "linear-gradient(180deg, transparent 65%, hsl(var(--pr-emerald-deep) / 0.6))" }} />
-            <div
-              className="absolute bottom-3 left-3 flex h-11 w-11 items-center justify-center rounded-xl"
-              style={{
-                background: "linear-gradient(135deg, hsl(var(--pr-gold-light)), hsl(var(--pr-gold-deep)))",
-                color: "hsl(var(--pr-emerald-deep))",
-                boxShadow: "0 10px 30px -8px hsl(var(--pr-gold) / 0.6)",
-              }}
+        {/* Right column */}
+        <div className="grid gap-4 sm:col-span-4 lg:gap-6">
+          {gallery.right.map((src, i) => (
+            <motion.figure
+              key={`right-${i}`}
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.2 }}
+              transition={{ duration: 0.6, delay: i * 0.08, ease: [0.22, 1, 0.36, 1] }}
+              className="group relative w-full overflow-hidden rounded-2xl"
+              style={{ aspectRatio: "9 / 16" }}
             >
-              <Icon size={20} />
-            </div>
-          </div>
-
-          <div className="min-w-0">
-            <h3 className="prestige-display text-xl sm:text-3xl md:text-4xl break-words">{current.name}</h3>
-             <p className={`max-w-2xl leading-relaxed ${cinematic ? "mt-2 text-xs sm:text-sm lg:text-base" : "mt-3 text-sm sm:text-base md:text-lg"}`} style={{ color: "hsl(var(--pr-muted-on-dark))" }}>
-              {current.pitch}
-            </p>
-             <ul className={`grid grid-cols-1 sm:grid-cols-2 ${cinematic ? "mt-3 gap-1.5 sm:gap-2" : "mt-6 gap-3"}`}>
-              {current.wins.map((w) => (
-                 <li key={w} className={`flex items-start ${cinematic ? "gap-2 text-[11px] leading-snug sm:text-xs lg:text-sm" : "gap-3 text-sm sm:text-base"}`}>
-                  <span
-                    className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full"
-                    style={{ background: "hsl(var(--pr-gold) / 0.2)", color: "hsl(var(--pr-gold-light))" }}
-                  >
-                    <Check size={13} strokeWidth={3} />
-                  </span>
-                  <span style={{ color: "hsl(var(--pr-text-on-dark))" }}>{w}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
-        </motion.div>
-       </div>
+              <img
+                src={src}
+                alt={`Mockup settore ${i + 1}`}
+                loading="lazy"
+                className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+              />
+              <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black/60" />
+            </motion.figure>
+          ))}
+        </div>
       </div>
-      <style>{`
-        @keyframes prestigeFadeIn {
-          from { opacity: 0; transform: translateY(12px); }
-          to { opacity: 1; transform: translateY(0); }
-        }
-        @media (max-height: 700px) and (prefers-reduced-motion: no-preference) {
-          .prestige-industries-stage { top: .35rem !important; max-height: calc(100svh - .7rem) !important; }
-          .prestige-industries-intro > p { display: none; }
-          .prestige-industries-intro .prestige-divider { display: none; }
-          .prestige-industries-intro h2 { margin-top: .35rem !important; font-size: clamp(1.7rem, 4vw, 2.3rem) !important; }
-          .prestige-industries-tabs { margin-top: .65rem !important; }
-        }
-      `}</style>
     </section>
   );
+
 }
