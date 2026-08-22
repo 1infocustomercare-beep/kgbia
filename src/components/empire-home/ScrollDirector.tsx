@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
+import { peekLenis } from "@/lib/lenis-singleton";
 
 type EffectPhase = "before" | "active" | "after";
 
@@ -25,6 +26,7 @@ const clamp01 = (value: number) => Math.min(1, Math.max(0, value));
 const registry = new Map<string, RegisteredSection>();
 let raf = 0;
 let listening = false;
+let detachLenis: (() => void) | null = null;
 
 const computeMetrics = (record: RegisteredSection): ScrollMetrics => {
   const rect = record.el.getBoundingClientRect();
@@ -81,6 +83,8 @@ const ensureListeners = () => {
   window.addEventListener("touchmove", requestUpdate, { passive: true });
   window.addEventListener("resize", requestUpdate);
   window.addEventListener("orientationchange", requestUpdate);
+  const lenis = peekLenis();
+  if (lenis) detachLenis = lenis.on("scroll", requestUpdate);
   requestUpdate();
 };
 
@@ -91,6 +95,8 @@ const teardownListeners = () => {
   window.removeEventListener("touchmove", requestUpdate);
   window.removeEventListener("resize", requestUpdate);
   window.removeEventListener("orientationchange", requestUpdate);
+  detachLenis?.();
+  detachLenis = null;
   if (raf) window.cancelAnimationFrame(raf);
   raf = 0;
 };

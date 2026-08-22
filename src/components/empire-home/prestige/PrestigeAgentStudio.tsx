@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
 import {
   Bot,
   Workflow,
@@ -177,9 +178,15 @@ export default function PrestigeAgentStudio() {
   const active = GOALS.find((g) => g.id === activeId) ?? GOALS[0];
 
   return (
-    <div
-      className="overflow-hidden rounded-[28px]"
+    <motion.div
+      className="prestige-agent-studio overflow-hidden rounded-[28px]"
+      initial={{ opacity: 0.42, y: 42, rotateY: -7, scale: 0.94 }}
+      whileInView={{ opacity: 1, y: 0, rotateY: 0, scale: 1 }}
+      viewport={{ once: true, amount: 0.12 }}
+      transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
       style={{
+        transformPerspective: 1200,
+        transformOrigin: "center center",
         background:
           "linear-gradient(160deg, hsl(var(--pr-emerald-mid) / 0.72), hsl(var(--pr-emerald-deep) / 0.96))",
         border: "1px solid hsl(var(--pr-gold) / 0.24)",
@@ -219,7 +226,15 @@ export default function PrestigeAgentStudio() {
         })}
       </div>
 
-      <div className="px-4 py-5 sm:px-6 sm:py-6">
+      <AnimatePresence mode="wait" initial={false}>
+      <motion.div
+        key={active.id}
+        initial={{ opacity: 0, x: 22, filter: "blur(5px)" }}
+        animate={{ opacity: 1, x: 0, filter: "blur(0px)" }}
+        exit={{ opacity: 0, x: -18, filter: "blur(4px)" }}
+        transition={{ duration: 0.38, ease: [0.22, 1, 0.36, 1] }}
+        className="px-4 py-5 sm:px-6 sm:py-6"
+      >
         <h3 className="prestige-display text-xl sm:text-2xl">{active.headline}</h3>
         <p className="mt-2 text-sm leading-relaxed" style={{ color: "hsl(var(--pr-muted-on-dark))" }}>
           {active.problem}
@@ -295,7 +310,8 @@ export default function PrestigeAgentStudio() {
           <span>Richiedi l'analisi del tuo caso</span>
           <ArrowRight size={14} />
         </button>
-      </div>
-    </div>
+      </motion.div>
+      </AnimatePresence>
+    </motion.div>
   );
 }

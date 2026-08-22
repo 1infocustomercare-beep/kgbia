@@ -92,14 +92,15 @@ const getStudioMockupForSector = (id: string): string => {
   return variant?.screens[0]?.image ?? variant?.screen ?? SECTOR_MOCKUPS[0]?.variants[0]?.screen ?? "";
 };
 
-/** true se il device può reggere gli effetti scroll pinnati (desktop, no reduced-motion). */
+/**
+ * Lo storytelling resta scroll-driven su desktop e mobile. Disattiviamo il pin
+ * solo su viewport davvero troppo basse o quando l'utente chiede meno motion.
+ */
 const useCinematicScroll = () => {
   const [enabled, setEnabled] = useState(false);
   useEffect(() => {
     if (typeof window === "undefined") return;
-    const mq = window.matchMedia(
-      "(min-width: 1024px) and (min-height: 640px) and (prefers-reduced-motion: no-preference)",
-    );
+    const mq = window.matchMedia("(min-height: 560px) and (prefers-reduced-motion: no-preference)");
     const sync = () => setEnabled(mq.matches);
     sync();
     mq.addEventListener("change", sync);
@@ -113,7 +114,6 @@ export default function PrestigeIndustries() {
   const cinematic = useCinematicScroll();
   /** Dopo un clic manuale lo scroll non sovrascrive la scelta per 6 secondi. */
   const manualUntil = useRef(0);
-  const lastAutoChange = useRef(0);
   const activeRef = useRef(active);
   activeRef.current = active;
 
@@ -133,14 +133,12 @@ export default function PrestigeIndustries() {
       if (!inView) return;
       const now = Date.now();
       if (now < manualUntil.current) return;
-      if (now - lastAutoChange.current < 420) return;
       const idx = Math.min(
         INDUSTRIES.length - 1,
         Math.max(0, Math.floor(progress * INDUSTRIES.length)),
       );
       const next = INDUSTRIES[idx]?.id;
       if (!next || next === activeRef.current) return;
-      lastAutoChange.current = now;
       setActive(next);
     },
     [],
@@ -162,10 +160,10 @@ export default function PrestigeIndustries() {
       <div
         ref={ref}
         className="relative mx-auto max-w-6xl px-4 sm:px-5 lg:px-10"
-        style={cinematic ? { minHeight: `${INDUSTRIES.length * 95 + 30}vh` } : undefined}
+        style={cinematic ? { minHeight: `${INDUSTRIES.length * 88 + 38}svh` } : undefined}
       >
-       <div className={cinematic ? "sticky top-[3vh]" : undefined}>
-        <div className="text-center">
+       <div className={cinematic ? "prestige-industries-stage sticky top-[4.75rem] max-h-[calc(100svh-5rem)] overflow-hidden sm:top-[3vh] sm:max-h-[94svh]" : undefined}>
+         <div className="prestige-industries-intro text-center">
           <div className="prestige-eyebrow" style={{ color: "hsl(var(--pr-gold-light))" }}>
             ✦ Il caso tuo
           </div>
@@ -181,7 +179,7 @@ export default function PrestigeIndustries() {
         </div>
 
         {/* Tabs */}
-        <div className={`flex flex-wrap justify-center gap-1.5 sm:gap-2 ${cinematic ? "mt-5" : "mt-8"}`}>
+         <div className={`prestige-industries-tabs flex flex-nowrap justify-start gap-1.5 overflow-x-auto pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden lg:flex-wrap lg:justify-center lg:gap-2 ${cinematic ? "mt-3 sm:mt-5" : "mt-8"}`}>
           {INDUSTRIES.map((i) => {
             const TabIcon = i.icon;
             const isActive = i.id === active;
@@ -189,7 +187,10 @@ export default function PrestigeIndustries() {
               <button
                 key={i.id}
                 onClick={() => handleTab(i.id)}
-                className="flex items-center gap-1.5 rounded-full px-3 py-2 text-[11px] font-semibold transition-all sm:gap-2 sm:px-4 sm:py-2.5 sm:text-sm max-w-full"
+                type="button"
+                aria-pressed={isActive}
+                data-industry-active={isActive ? "true" : undefined}
+                 className="flex min-h-11 shrink-0 items-center gap-1.5 rounded-full px-3 py-2 text-[11px] font-semibold transition-all sm:gap-2 sm:px-4 sm:py-2.5 sm:text-sm max-w-full"
                 style={{
                   background: isActive
                     ? "linear-gradient(135deg, hsl(var(--pr-gold-light)), hsl(var(--pr-gold-deep)))"
@@ -213,11 +214,11 @@ export default function PrestigeIndustries() {
           initial={{ opacity: 0, y: 14 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
-          className={`prestige-card grid grid-cols-1 gap-6 sm:gap-8 lg:grid-cols-[280px_1fr] lg:items-center ${cinematic ? "mt-5" : "mt-8"}`}
+           className={`prestige-card grid grid-cols-1 gap-3 sm:gap-5 lg:grid-cols-[280px_1fr] lg:items-center ${cinematic ? "mt-3 sm:mt-5 sm:grid-cols-[124px_1fr]" : "mt-8 sm:gap-8"}`}
         >
           {/* Mockup image (real premium PNG) */}
           <div
-            className="relative mx-auto w-full max-w-[230px] overflow-hidden rounded-[2rem] lg:mx-0"
+             className={`relative mx-auto w-full overflow-hidden lg:mx-0 ${cinematic ? "max-w-[96px] rounded-[1.2rem] sm:max-w-[124px] lg:max-w-[210px] lg:rounded-[2rem]" : "max-w-[230px] rounded-[2rem]"}`}
             style={{
               aspectRatio: "9 / 19.5",
               transform: cinematic
@@ -249,12 +250,12 @@ export default function PrestigeIndustries() {
 
           <div className="min-w-0">
             <h3 className="prestige-display text-xl sm:text-3xl md:text-4xl break-words">{current.name}</h3>
-            <p className="mt-3 max-w-2xl text-sm leading-relaxed sm:text-base md:text-lg" style={{ color: "hsl(var(--pr-muted-on-dark))" }}>
+             <p className={`max-w-2xl leading-relaxed ${cinematic ? "mt-2 text-xs sm:text-sm lg:text-base" : "mt-3 text-sm sm:text-base md:text-lg"}`} style={{ color: "hsl(var(--pr-muted-on-dark))" }}>
               {current.pitch}
             </p>
-            <ul className="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-2">
+             <ul className={`grid grid-cols-1 sm:grid-cols-2 ${cinematic ? "mt-3 gap-1.5 sm:gap-2" : "mt-6 gap-3"}`}>
               {current.wins.map((w) => (
-                <li key={w} className="flex items-start gap-3 text-sm sm:text-base">
+                 <li key={w} className={`flex items-start ${cinematic ? "gap-2 text-[11px] leading-snug sm:text-xs lg:text-sm" : "gap-3 text-sm sm:text-base"}`}>
                   <span
                     className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full"
                     style={{ background: "hsl(var(--pr-gold) / 0.2)", color: "hsl(var(--pr-gold-light))" }}
@@ -273,6 +274,13 @@ export default function PrestigeIndustries() {
         @keyframes prestigeFadeIn {
           from { opacity: 0; transform: translateY(12px); }
           to { opacity: 1; transform: translateY(0); }
+        }
+        @media (max-height: 700px) and (prefers-reduced-motion: no-preference) {
+          .prestige-industries-stage { top: .35rem !important; max-height: calc(100svh - .7rem) !important; }
+          .prestige-industries-intro > p { display: none; }
+          .prestige-industries-intro .prestige-divider { display: none; }
+          .prestige-industries-intro h2 { margin-top: .35rem !important; font-size: clamp(1.7rem, 4vw, 2.3rem) !important; }
+          .prestige-industries-tabs { margin-top: .65rem !important; }
         }
       `}</style>
     </section>

@@ -22,14 +22,14 @@ export default function PrestigePortfolio() {
 
   /**
    * Effetto "deck 3D": la griglia si raddrizza entrando nel viewport.
-   * Attivo solo da desktop (>=1024px) e con motion abilitata: su mobile la
-   * rotazione causava overflow e testi deformati, quindi resta il fade-up.
+   * La profondità è più marcata su desktop e volutamente lieve su mobile:
+   * così l'effetto rimane visibile ovunque senza creare overflow.
    */
   const reduceMotion = useReducedMotion();
   const [deck3d, setDeck3d] = useState(false);
   useEffect(() => {
     if (typeof window === "undefined") return;
-    const mq = window.matchMedia("(min-width: 1024px) and (pointer: fine)");
+    const mq = window.matchMedia("(prefers-reduced-motion: no-preference)");
     const sync = () => setDeck3d(mq.matches);
     sync();
     mq.addEventListener("change", sync);
@@ -40,9 +40,9 @@ export default function PrestigePortfolio() {
     offset: ["start end", "start 35%"],
   });
   const eased = useSpring(scrollYProgress, { stiffness: 90, damping: 24, mass: 0.4 });
-  const rotateX = useTransform(eased, [0, 1], [22, 0]);
-  const deckScale = useTransform(eased, [0, 1], [0.95, 1]);
-  const deckOpacity = useTransform(eased, [0, 0.45], [0.35, 1]);
+  const rotateX = useTransform(eased, [0, 1], [12, 0]);
+  const deckScale = useTransform(eased, [0, 1], [0.975, 1]);
+  const deckOpacity = useTransform(eased, [0, 0.32], [0.55, 1]);
   const use3d = deck3d && !reduceMotion;
 
   // UNA CARD PER SETTORE — la home mostra il mockup migliore (sequenza più
@@ -166,13 +166,13 @@ export default function PrestigePortfolio() {
             }
             className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4"
           >
-            {visible.map((h) => (
+             {visible.map((h, cardIndex) => (
               <motion.article
                 key={h.key}
-                initial={{ opacity: 0, y: 22 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, amount: 0.2, margin: "0px 0px -12% 0px" }}
-                transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+                 initial={{ opacity: 0.28, y: 34, rotateY: cardIndex % 2 === 0 ? -4 : 4 }}
+                 whileInView={{ opacity: 1, y: 0, rotateY: 0 }}
+                 viewport={{ once: true, amount: 0.08, margin: "0px 0px -3% 0px" }}
+                 transition={{ duration: 0.65, delay: (cardIndex % 4) * 0.06, ease: [0.22, 1, 0.36, 1] }}
                 className="group pglass-soft flex w-full flex-col items-center p-5"
               >
                 <div className="relative transition-transform duration-500">
