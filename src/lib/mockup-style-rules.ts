@@ -287,7 +287,7 @@ export function buildScreenPrompt(identity: MockupIdentity, screenKey: string): 
     `Spaziatura: ${rules?.spacing.key} — unità ${rules?.spacing.unit}, gutter ${rules?.spacing.gutter}, ritmo ${rules?.spacing.rhythm}, padding ${rules?.spacing.padding}.`,
     `Linee: ${rules?.line.desc}. Riquadri: ${rules?.box.desc}.`,
     `Materiale delle superfici: ${rules?.material.desc}. Trattamento immagini: ${rules?.imagery.desc}. Iconografia: ${rules?.icons.desc}.`,
-    `Componenti dominanti: ${rules?.kit.desc}. Uso accento: ${rules?.accent.desc}. Chrome: ${rules?.chrome.desc}.`,
+    `Componenti dominanti (adattali allo scopo della schermata, senza tradirne il linguaggio): ${rules?.kit.desc}. Uso accento: ${rules?.accent.desc}. Chrome: ${rules?.chrome.desc}.`,
     `Micro-animazione congelata nel frame: ${rules?.motion.desc}.`,
     `Fotografia della scena: ${identity.photography}. Composizione UI: ${identity.composition}.`,
     `Vincoli di inquadratura: ${FRAMING_CONTRACT}.`,
