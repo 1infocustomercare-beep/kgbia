@@ -105,7 +105,17 @@ export default function PrestigeAgents() {
         </div>
 
 
-        <div className="prestige-agents-marquee mt-12">
+        <div className="mt-12">
+          <div className="prestige-eyebrow" style={{ color: "hsl(var(--pr-gold-light))" }}>
+            ✦ Moduli combinabili — alcuni esempi
+          </div>
+          <p className="mt-2 max-w-2xl text-sm" style={{ color: "hsl(var(--pr-muted-on-dark))" }}>
+            Ogni progetto nasce combinando solo i moduli utili al tuo obiettivo: nulla di superfluo, nessun
+            costo per funzioni che non useresti.
+          </p>
+        </div>
+
+        <div className="prestige-agents-marquee mt-5">
           <div className="prestige-agents-track">
             {LOOP.map((a, i) => {
               const Icon = a.icon;
