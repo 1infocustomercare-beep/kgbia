@@ -55,13 +55,14 @@ export default function PrestigeAgents() {
               ✦ Agenti AI, automazioni e gestionali
             </div>
             <h2 className="prestige-display mt-4 text-3xl sm:text-5xl lg:text-6xl">
-              Otto agenti.{" "}
-              <span className="prestige-italic prestige-gold-text">Un solo team che non dorme mai.</span>
+              Costruiamo il sistema che manda avanti la tua azienda{" "}
+              <span className="prestige-italic prestige-gold-text">anche quando tu non ci sei.</span>
             </h2>
             <p className="mt-5 max-w-2xl text-base sm:text-lg" style={{ color: "hsl(var(--pr-muted-on-dark))" }}>
-              Non un chatbot generico: costruiamo agenti addestrati sul tuo settore, le automazioni che
-              eliminano il lavoro manuale, il gestionale che tiene tutto in ordine e le web app che i tuoi
-              clienti usano davvero.
+              Non vendiamo pacchetti preconfezionati. Partiamo dai processi che ti rubano tempo e ricavi, poi
+              progettiamo ciò che serve al tuo caso: il team di agenti AI, le automazioni, il gestionale, il
+              sito o la web app e le integrazioni con gli strumenti che usi già. Un solo partner dalla
+              strategia al collaudo, con tempi e risultati dichiarati.
             </p>
 
             <ul className="mt-8 grid grid-cols-1 gap-3 sm:grid-cols-2">
