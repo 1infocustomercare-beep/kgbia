@@ -162,8 +162,8 @@ export default function PrestigeIndustries() {
         className="relative mx-auto max-w-6xl px-4 sm:px-5 lg:px-10"
         style={cinematic ? { minHeight: `${INDUSTRIES.length * 88 + 38}svh` } : undefined}
       >
-       <div className={cinematic ? "sticky top-[4.75rem] max-h-[calc(100svh-5rem)] overflow-hidden sm:top-[3vh] sm:max-h-[94svh]" : undefined}>
-        <div className="text-center">
+       <div className={cinematic ? "prestige-industries-stage sticky top-[4.75rem] max-h-[calc(100svh-5rem)] overflow-hidden sm:top-[3vh] sm:max-h-[94svh]" : undefined}>
+         <div className="prestige-industries-intro text-center">
           <div className="prestige-eyebrow" style={{ color: "hsl(var(--pr-gold-light))" }}>
             ✦ Il caso tuo
           </div>
@@ -179,7 +179,7 @@ export default function PrestigeIndustries() {
         </div>
 
         {/* Tabs */}
-         <div className={`flex flex-nowrap justify-start gap-1.5 overflow-x-auto pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden sm:flex-wrap sm:justify-center sm:gap-2 ${cinematic ? "mt-3 sm:mt-5" : "mt-8"}`}>
+         <div className={`prestige-industries-tabs flex flex-nowrap justify-start gap-1.5 overflow-x-auto pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden lg:flex-wrap lg:justify-center lg:gap-2 ${cinematic ? "mt-3 sm:mt-5" : "mt-8"}`}>
           {INDUSTRIES.map((i) => {
             const TabIcon = i.icon;
             const isActive = i.id === active;
@@ -271,6 +271,13 @@ export default function PrestigeIndustries() {
         @keyframes prestigeFadeIn {
           from { opacity: 0; transform: translateY(12px); }
           to { opacity: 1; transform: translateY(0); }
+        }
+        @media (max-height: 700px) and (prefers-reduced-motion: no-preference) {
+          .prestige-industries-stage { top: .35rem !important; max-height: calc(100svh - .7rem) !important; }
+          .prestige-industries-intro > p { display: none; }
+          .prestige-industries-intro .prestige-divider { display: none; }
+          .prestige-industries-intro h2 { margin-top: .35rem !important; font-size: clamp(1.7rem, 4vw, 2.3rem) !important; }
+          .prestige-industries-tabs { margin-top: .65rem !important; }
         }
       `}</style>
     </section>
