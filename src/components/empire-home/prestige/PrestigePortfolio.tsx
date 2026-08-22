@@ -1,8 +1,7 @@
 import { useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ArrowUpRight, ChevronDown, ChevronUp, Sparkles } from "lucide-react";
-import { motion, useScroll, useTransform } from "framer-motion";
-import { useEmpireScrollDirector } from "../ScrollDirector";
+import { motion } from "framer-motion";
 import IPhoneProMaxFrame from "@/components/mockups/IPhoneProMaxFrame";
 import MockupLightbox from "@/components/mockups/MockupLightbox";
 import { SECTOR_MOCKUPS, type SectorMockupVariant } from "@/data/sector-mockups";
@@ -226,10 +225,9 @@ export default function PrestigePortfolio() {
                     <ArrowUpRight size={11} />
                   </button>
                 </div>
-              </article>
+              </motion.article>
             ))}
-
-          </motion.div>
+          </div>
         </div>
 
 
