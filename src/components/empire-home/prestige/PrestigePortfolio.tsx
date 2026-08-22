@@ -171,7 +171,7 @@ export default function PrestigePortfolio() {
                 key={h.key}
                  initial={{ opacity: 0, y: 34, rotateY: cardIndex % 2 === 0 ? -4 : 4 }}
                  whileInView={{ opacity: 1, y: 0, rotateY: 0 }}
-                 viewport={{ once: false, amount: 0.16, margin: "0px 0px -6% 0px" }}
+                 viewport={{ once: true, amount: 0.08, margin: "0px 0px -3% 0px" }}
                  transition={{ duration: 0.65, delay: (cardIndex % 4) * 0.06, ease: [0.22, 1, 0.36, 1] }}
                 className="group pglass-soft flex w-full flex-col items-center p-5"
               >

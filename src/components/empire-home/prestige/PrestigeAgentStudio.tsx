@@ -1,5 +1,5 @@
-import { useRef, useState } from "react";
-import { AnimatePresence, motion, useScroll, useSpring, useTransform } from "framer-motion";
+import { useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
 import {
   Bot,
   Workflow,
@@ -176,23 +176,15 @@ const GOALS: Goal[] = [
 export default function PrestigeAgentStudio() {
   const [activeId, setActiveId] = useState(GOALS[0].id);
   const active = GOALS.find((g) => g.id === activeId) ?? GOALS[0];
-  const studioRef = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({ target: studioRef, offset: ["start 95%", "end 18%"] });
-  const progress = useSpring(scrollYProgress, { stiffness: 170, damping: 32, mass: 0.22 });
-  const y = useTransform(progress, [0, 0.45, 1], [42, 0, -8]);
-  const rotateY = useTransform(progress, [0, 0.5, 1], [-7, 0, 1.5]);
-  const scale = useTransform(progress, [0, 0.45, 1], [0.94, 1, 0.99]);
-  const opacity = useTransform(progress, [0, 0.28], [0.35, 1]);
 
   return (
     <motion.div
-      ref={studioRef}
       className="prestige-agent-studio overflow-hidden rounded-[28px]"
+      initial={{ opacity: 0, y: 42, rotateY: -7, scale: 0.94 }}
+      whileInView={{ opacity: 1, y: 0, rotateY: 0, scale: 1 }}
+      viewport={{ once: true, amount: 0.12 }}
+      transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
       style={{
-        y,
-        rotateY,
-        scale,
-        opacity,
         transformPerspective: 1200,
         transformOrigin: "center center",
         background:
