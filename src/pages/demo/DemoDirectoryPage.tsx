@@ -274,10 +274,10 @@ function PrivateJetDemoCard({ onOpen }: { onOpen: () => void }) {
     <motion.article
       initial={{ opacity: 0, y: 18 }}
       animate={{ opacity: 1, y: 0 }}
-      className="group relative mb-6 overflow-hidden rounded-[1.75rem]"
+      className="group pglass-lift relative mb-6 overflow-hidden rounded-[1.75rem]"
       style={{
-        border: "1px solid hsla(43,60%,60%,0.24)",
-        boxShadow: "0 30px 70px -35px hsla(196,70%,10%,0.75), inset 0 1px 0 hsla(43,60%,70%,0.12)",
+        border: "1px solid hsl(var(--pr-aqua) / 0.24)",
+        boxShadow: "0 30px 70px -35px hsl(196 70% 10% / 0.75), inset 0 1px 0 hsl(0 0% 100% / 0.12)",
       }}
     >
       <div className="relative aspect-[16/10] w-full sm:aspect-[21/9]">
@@ -289,13 +289,13 @@ function PrivateJetDemoCard({ onOpen }: { onOpen: () => void }) {
           className="absolute inset-0 h-full w-full object-cover object-center transition-transform duration-[1400ms] ease-out will-change-transform group-hover:scale-[1.06]"
         />
         <div className="pointer-events-none absolute inset-0"
-          style={{ background: "radial-gradient(120% 90% at 78% 26%, hsla(43,70%,60%,0.18), transparent 60%)" }} />
+          style={{ background: "radial-gradient(120% 90% at 78% 26%, hsl(var(--pr-aqua) / 0.20), transparent 60%)" }} />
         <div className="pointer-events-none absolute inset-0"
-          style={{ background: "linear-gradient(to top, hsl(196 24% 5%) 4%, hsla(196,24%,6%,0.88) 38%, hsla(196,22%,7%,0.28) 68%, transparent 100%)" }} />
+          style={{ background: "linear-gradient(to top, hsl(200 24% 5%) 4%, hsl(200 24% 6% / 0.88) 38%, hsl(200 22% 7% / 0.28) 68%, transparent 100%)" }} />
         <div className="pointer-events-none absolute inset-0 opacity-60"
-          style={{ background: "linear-gradient(100deg, hsla(196,26%,4%,0.92) 0%, hsla(196,26%,5%,0.35) 45%, transparent 70%)" }} />
+          style={{ background: "linear-gradient(100deg, hsl(200 26% 4% / 0.92) 0%, hsl(200 26% 5% / 0.35) 45%, transparent 70%)" }} />
         <div className="pointer-events-none absolute inset-x-0 top-0 h-px"
-          style={{ background: "linear-gradient(90deg, transparent, hsla(43,70%,68%,0.5), transparent)" }} />
+          style={{ background: "linear-gradient(90deg, transparent, hsl(var(--pr-aqua) / 0.55), transparent)" }} />
 
         <div className="absolute inset-0 z-10 flex flex-col justify-end p-5 sm:p-8">
           <div className="mb-3 flex items-center gap-2">
