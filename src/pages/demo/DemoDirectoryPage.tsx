@@ -593,11 +593,11 @@ export default function DemoDirectoryPage() {
         <PrivateJetDemoCard onOpen={() => navigate("/demo/aurea-jet")} />
         <button
           onClick={() => navigate("/demo/aurelia-motori")}
-          className="group relative mb-6 block w-full overflow-hidden rounded-[1.75rem] text-left"
+          className="group pglass-lift relative mb-6 block w-full overflow-hidden rounded-[1.75rem] text-left"
           style={{
-            background: "linear-gradient(135deg, hsl(220 30% 5%), hsl(168 30% 8%))",
-            border: "1px solid hsla(160,60%,45%,0.22)",
-            boxShadow: "0 30px 70px -35px hsla(160,70%,25%,0.55), inset 0 1px 0 hsla(160,60%,70%,0.12)"
+            background: "linear-gradient(135deg, hsl(200 26% 5%), hsl(190 26% 8%))",
+            border: "1px solid hsl(var(--pr-aqua) / 0.24)",
+            boxShadow: "0 30px 70px -35px hsl(196 70% 10% / 0.75), inset 0 1px 0 hsl(0 0% 100% / 0.12)"
           }}
         >
           <div className="relative aspect-[16/10] w-full sm:aspect-[21/9]">
