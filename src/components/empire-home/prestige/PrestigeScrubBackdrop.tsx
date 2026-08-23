@@ -28,6 +28,8 @@ export default function PrestigeScrubBackdrop() {
     let raf = 0;
     let dirty = true;
 
+    const coarse = window.matchMedia("(hover: none)").matches || window.innerWidth < 768;
+
     const onPointer = (e: PointerEvent) => {
       tx = e.clientX / window.innerWidth;
       ty = e.clientY / window.innerHeight;
@@ -36,7 +38,7 @@ export default function PrestigeScrubBackdrop() {
     const onScroll = () => {
       const max = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
       scroll = Math.min(1, window.scrollY / max);
-      dirty = true;
+      root.style.setProperty("--pr-scroll", scroll.toFixed(4));
     };
 
     const tick = () => {
@@ -45,16 +47,19 @@ export default function PrestigeScrubBackdrop() {
         cy += (ty - cy) * 0.06;
         root.style.setProperty("--pr-mx", cx.toFixed(4));
         root.style.setProperty("--pr-my", cy.toFixed(4));
-        root.style.setProperty("--pr-scroll", scroll.toFixed(4));
         if (Math.abs(tx - cx) < 0.0015 && Math.abs(ty - cy) < 0.0015) dirty = false;
       }
       raf = requestAnimationFrame(tick);
     };
 
     onScroll();
-    window.addEventListener("pointermove", onPointer, { passive: true });
     window.addEventListener("scroll", onScroll, { passive: true });
-    raf = requestAnimationFrame(tick);
+    // Su mobile/touch niente parallasse puntatore né loop rAF: solo scroll.
+    if (!coarse) {
+      window.addEventListener("pointermove", onPointer, { passive: true });
+      raf = requestAnimationFrame(tick);
+    }
+
 
     return () => {
       cancelAnimationFrame(raf);

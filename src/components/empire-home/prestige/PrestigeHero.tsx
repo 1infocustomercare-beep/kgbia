@@ -157,10 +157,13 @@ export default function PrestigeHero() {
         aria-hidden
         className="pointer-events-none absolute inset-0 z-0"
         style={{
+          /* Velo semi-trasparente: lascia passare lo sfondo globale così la hero
+             non appare come un blocco staccato sotto la navbar. */
           background:
-            "linear-gradient(180deg, hsl(var(--pr-bg)) 0%, hsl(var(--pr-bg)) 55%, hsl(var(--pr-surface)) 100%)",
+            "linear-gradient(180deg, hsl(var(--pr-bg) / 0) 0%, hsl(var(--pr-bg) / 0.35) 22%, hsl(var(--pr-bg) / 0.6) 60%, hsl(var(--pr-surface) / 0.7) 100%)",
         }}
       />
+
 
 
       {/* Lang toggle: vive solo nella navbar (evita doppione sovrapposto in desktop) */}
