@@ -903,9 +903,9 @@ export default function PrestigeGlassSkin() {
 
       @supports (animation-timeline: view()) {
         /* reveal morbido all'ingresso della sezione.
-           Range legato solo a `entry`: così anche le ultime sezioni della
-           pagina (che non possono mai raggiungere `cover 32%`) completano
-           l'animazione e non restano mai semi-oscurate. */
+           Range legato solo alla fase entry: così anche le ultime sezioni
+           della pagina completano l'animazione e non restano semi-oscurate. */
+
         .pglass-reveal {
           animation: pglassReveal linear both;
           animation-timeline: view();
