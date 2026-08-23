@@ -272,29 +272,61 @@ function PrivateJetDemoCard({ onOpen }: { onOpen: () => void }) {
     <motion.article
       initial={{ opacity: 0, y: 18 }}
       animate={{ opacity: 1, y: 0 }}
-      className="relative mb-8 min-h-[310px] overflow-hidden border border-primary/35 bg-card sm:min-h-[360px]"
+      className="group relative mb-6 overflow-hidden rounded-[1.75rem]"
+      style={{
+        border: "1px solid hsla(43,60%,60%,0.24)",
+        boxShadow: "0 30px 70px -35px hsla(196,70%,10%,0.75), inset 0 1px 0 hsla(43,60%,70%,0.12)",
+      }}
     >
-      <img src={privateJetHangar} alt="Aurea Jet, demo charter privato" width={1920} height={1088} className="absolute inset-0 h-full w-full object-cover object-center" />
-      <div className="absolute inset-0 bg-[linear-gradient(90deg,hsl(var(--background)/0.98)_0%,hsl(var(--background)/0.74)_48%,hsl(var(--background)/0.12)_100%)]" />
-      <div className="relative z-10 flex min-h-[310px] max-w-xl flex-col justify-end p-6 sm:min-h-[360px] sm:p-10">
-        <div className="mb-auto flex w-fit items-center gap-2 border border-primary/45 bg-background/60 px-3 py-2 backdrop-blur-xl">
-          <Plane className="h-4 w-4 text-primary" />
-          <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-primary">Nuova demo cinematografica</span>
+      <div className="relative aspect-[16/10] w-full sm:aspect-[21/9]">
+        <img
+          src={privateJetHangar}
+          alt="Aurea Jet, demo charter privato"
+          width={1920}
+          height={1088}
+          className="absolute inset-0 h-full w-full object-cover object-center transition-transform duration-[1400ms] ease-out will-change-transform group-hover:scale-[1.06]"
+        />
+        <div className="pointer-events-none absolute inset-0"
+          style={{ background: "radial-gradient(120% 90% at 78% 26%, hsla(43,70%,60%,0.18), transparent 60%)" }} />
+        <div className="pointer-events-none absolute inset-0"
+          style={{ background: "linear-gradient(to top, hsl(196 24% 5%) 4%, hsla(196,24%,6%,0.88) 38%, hsla(196,22%,7%,0.28) 68%, transparent 100%)" }} />
+        <div className="pointer-events-none absolute inset-0 opacity-60"
+          style={{ background: "linear-gradient(100deg, hsla(196,26%,4%,0.92) 0%, hsla(196,26%,5%,0.35) 45%, transparent 70%)" }} />
+        <div className="pointer-events-none absolute inset-x-0 top-0 h-px"
+          style={{ background: "linear-gradient(90deg, transparent, hsla(43,70%,68%,0.5), transparent)" }} />
+
+        <div className="absolute inset-0 z-10 flex flex-col justify-end p-5 sm:p-8">
+          <div className="mb-3 flex items-center gap-2">
+            <span className="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[9px] font-bold uppercase tracking-[0.22em] text-white"
+              style={{ background: "hsla(43,60%,45%,0.24)", border: "1px solid hsla(43,65%,62%,0.4)" }}>
+              <Plane className="h-2.5 w-2.5" />
+              Cinematic
+            </span>
+            <span className="text-[9px] font-semibold uppercase tracking-[0.26em] text-white/55">Jet Privato</span>
+          </div>
+          <h2 className="font-heading text-[1.7rem] font-semibold leading-[1.05] text-white sm:text-[2.75rem]"
+            style={{ textShadow: "0 6px 30px hsla(196,40%,2%,0.85)" }}>
+            Aurea Jet
+          </h2>
+          <p className="mt-2 max-w-lg text-[0.78rem] leading-relaxed text-white/78 sm:text-sm">
+            Noleggio jet privato · Charter globale · Concierge 24/7 — hero scroll con flyby ultrarealistico.
+          </p>
+          <div className="mt-4 flex items-center gap-2.5">
+            <button
+              onClick={onOpen}
+              className="inline-flex min-h-11 items-center gap-2 rounded-full px-4 py-2 text-[11px] font-bold uppercase tracking-[0.16em] text-white transition-transform duration-300 group-hover:translate-x-1"
+              style={{ background: "linear-gradient(135deg, hsl(43 62% 44%), hsl(35 55% 34%))", boxShadow: "0 10px 30px -12px hsla(43,80%,50%,0.65)" }}
+            >
+              Apri demo <ArrowRight className="h-3.5 w-3.5" />
+            </button>
+            <span className="hidden text-[10px] uppercase tracking-[0.2em] text-white/45 sm:inline">Webapp completa · desktop &amp; iPhone</span>
+          </div>
         </div>
-        <h2 className="font-heading text-3xl font-semibold text-foreground sm:text-5xl">Aurea Jet</h2>
-        <p className="mt-3 max-w-md text-sm leading-relaxed text-foreground/75 sm:text-base">Noleggio jet privato · Charter globale · Concierge 24/7. Hero scroll con flyby ultrarealistico.</p>
-        <motion.button
-          onClick={onOpen}
-          className="mt-6 flex min-h-11 w-fit items-center gap-2 bg-primary px-6 text-xs font-bold uppercase tracking-[0.14em] text-primary-foreground"
-          whileHover={{ x: 4 }}
-          whileTap={{ scale: 0.97 }}
-        >
-          Apri demo Jet Privato <ArrowRight className="h-4 w-4" />
-        </motion.button>
       </div>
     </motion.article>
   );
 }
+
 
 /* ═══ Mockup Gallery Component ═══ */
 function MockupGallery({ sectorId, color }: { sectorId: string; color: string }) {
