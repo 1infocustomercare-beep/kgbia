@@ -902,11 +902,14 @@ export default function PrestigeGlassSkin() {
       }
 
       @supports (animation-timeline: view()) {
-        /* reveal morbido all'ingresso della sezione */
+        /* reveal morbido all'ingresso della sezione.
+           Range legato solo alla fase entry: così anche le ultime sezioni
+           della pagina completano l'animazione e non restano semi-oscurate. */
+
         .pglass-reveal {
           animation: pglassReveal linear both;
           animation-timeline: view();
-          animation-range: entry 8% cover 32%;
+          animation-range: entry 0% entry 65%;
         }
         /* ondeggio continuo, ampiezza minima (max 8px) legato allo scroll */
         .pglass-drift {
@@ -918,6 +921,7 @@ export default function PrestigeGlassSkin() {
           animation-direction: reverse;
         }
       }
+
 
       /* Fallback senza scroll-driven animations: fade-in una volta sola */
       @supports not (animation-timeline: view()) {
