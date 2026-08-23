@@ -611,13 +611,13 @@ export default function DemoDirectoryPage() {
             />
             {/* grading cinematografico coerente con il sito demo */}
             <div className="pointer-events-none absolute inset-0"
-              style={{ background: "radial-gradient(120% 90% at 78% 30%, hsla(160,80%,45%,0.20), transparent 60%)" }} />
+              style={{ background: "radial-gradient(120% 90% at 78% 30%, hsl(var(--pr-aqua) / 0.20), transparent 60%)" }} />
             <div className="pointer-events-none absolute inset-0"
-              style={{ background: "linear-gradient(to top, hsl(220 32% 4%) 4%, hsla(220,32%,5%,0.88) 38%, hsla(220,30%,6%,0.28) 68%, transparent 100%)" }} />
+              style={{ background: "linear-gradient(to top, hsl(200 26% 4%) 4%, hsl(200 26% 5% / 0.88) 38%, hsl(200 24% 6% / 0.28) 68%, transparent 100%)" }} />
             <div className="pointer-events-none absolute inset-0 opacity-60"
-              style={{ background: "linear-gradient(100deg, hsla(220,32%,4%,0.92) 0%, hsla(220,32%,4%,0.35) 45%, transparent 70%)" }} />
+              style={{ background: "linear-gradient(100deg, hsl(200 26% 4% / 0.92) 0%, hsl(200 26% 4% / 0.35) 45%, transparent 70%)" }} />
             <div className="pointer-events-none absolute inset-x-0 top-0 h-px"
-              style={{ background: "linear-gradient(90deg, transparent, hsla(160,70%,60%,0.5), transparent)" }} />
+              style={{ background: "linear-gradient(90deg, transparent, hsl(var(--pr-aqua) / 0.55), transparent)" }} />
 
             <div className="absolute inset-0 z-10 flex flex-col justify-end p-5 sm:p-8">
               <div className="mb-3 flex items-center gap-2">
