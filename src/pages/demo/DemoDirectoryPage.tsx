@@ -129,21 +129,21 @@ const HeroPhoneShowcase = ({ navigate }: { navigate: (p: string) => void }) => {
   }, [heroImageSources.length]);
 
   return (
-    <div className="relative z-10 mx-4 mt-5 mb-6 rounded-2xl overflow-hidden"
-      style={{
-        background: "linear-gradient(160deg, hsl(220 20% 6%) 0%, hsl(240 18% 10%) 40%, hsl(196 22% 13%) 70%, hsl(220 20% 8%) 100%)",
-        boxShadow: "0 16px 60px hsla(190,50%,6%,0.7), inset 0 1px 0 hsla(190,40%,60%,0.08)",
-        border: "1px solid hsla(190,30%,30%,0.2)",
-      }}>
-      {/* Subtle noise */}
-      <div className="absolute inset-0 opacity-[0.03]" style={{
-        backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E")`,
-        backgroundSize: "128px 128px"
-      }} />
+    <div className="pglass pglass-lift relative z-10 mx-4 mt-5 mb-6 overflow-hidden rounded-[1.75rem]">
+      {/* Ambient aura Empire — aqua costante + micro tinta di settore */}
+      <div
+        className="pointer-events-none absolute top-[-30%] right-[5%] h-[220px] w-[220px] rounded-full"
+        style={{
+          background: `radial-gradient(circle, hsl(${sector.color} / 0.10), transparent 62%)`,
+          filter: "blur(60px)",
+          transition: "background 1s ease",
+        }}
+      />
+      <div
+        className="pointer-events-none absolute bottom-[-20%] left-[8%] h-[180px] w-[180px] rounded-full"
+        style={{ background: "radial-gradient(circle, hsl(var(--pr-aqua) / 0.14), transparent 62%)", filter: "blur(50px)" }}
+      />
 
-      {/* Ambient orbs */}
-      <div className="absolute top-[-30%] right-[5%] w-[200px] h-[200px] rounded-full" style={{ background: `radial-gradient(circle, hsla(${sector.color} / 0.15), transparent 60%)`, filter: "blur(60px)", transition: "background 1s ease" }} />
-      <div className="absolute bottom-[-20%] left-[10%] w-[160px] h-[160px] rounded-full" style={{ background: "radial-gradient(circle, hsla(190,50%,40%,0.12), transparent 60%)", filter: "blur(50px)" }} />
 
       <div className="relative flex flex-col sm:flex-row items-center gap-4 px-5 py-8 sm:px-10 sm:py-10" style={{ zIndex: 2 }}>
         {/* Left: Text */}
