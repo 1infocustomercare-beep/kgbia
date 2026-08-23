@@ -758,16 +758,16 @@ function SectorCard({ id, index, isExpanded, onToggle, onNavigate, isFeatured, f
             : `linear-gradient(155deg, hsla(196,22%,14%,0.55), hsla(198,20%,9%,0.52))`,
           backdropFilter: "blur(22px) saturate(150%)",
           WebkitBackdropFilter: "blur(22px) saturate(150%)",
-          border: `1px solid ${isFeatured ? `${color}40` : "hsl(178 74% 48% / 0.22)"}`,
-          boxShadow: `0 24px 60px -40px hsl(178 74% 48% / 0.5), inset 0 1px 0 hsl(0 0% 100% / 0.12)`,
-          ...(isExpanded ? { boxShadow: `0 30px 70px -38px hsl(178 74% 48% / 0.6), 0 0 0 1px ${color}30, inset 0 1px 0 hsl(0 0% 100% / 0.16)` } : {}),
+          border: `1px solid hsl(var(--pr-aqua) / ${isFeatured ? 0.34 : 0.2})`,
+          boxShadow: `0 24px 60px -40px hsl(var(--pr-aqua) / 0.5), inset 0 1px 0 hsl(0 0% 100% / 0.12)`,
+          ...(isExpanded ? { boxShadow: `0 30px 70px -38px hsl(var(--pr-aqua) / 0.6), 0 0 0 1px hsl(var(--pr-aqua) / 0.3), inset 0 1px 0 hsl(0 0% 100% / 0.16)` } : {}),
         }}>
 
 
         {/* Top accent — featured only */}
         {isFeatured && (
           <div className="absolute top-0 left-0 right-0 h-[2px]"
-            style={{ background: `linear-gradient(90deg, transparent, ${color}50, ${color}20, transparent)` }} />
+            style={{ background: "linear-gradient(90deg, transparent, hsl(var(--pr-aqua) / 0.55), hsl(var(--pr-aqua) / 0.2), transparent)" }} />
         )}
 
         {/* Main row */}
