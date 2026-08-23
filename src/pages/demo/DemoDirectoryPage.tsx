@@ -25,6 +25,9 @@ import PrestigeTheme from "@/components/empire-home/prestige/PrestigeTheme";
 
 const ALL_INDUSTRIES = Object.keys(INDUSTRY_CONFIGS) as IndustryId[];
 
+/** Accento unico Empire Liquid Glass (aqua) usato da tutta la pagina demo. */
+const EMPIRE_AQUA_HEX = "#33dccb";
+
 /* ═══ Lucide icon mapping — w-4 h-4 for compact premium nodes ═══ */
 const INDUSTRY_ICONS: Record<string, React.ReactNode> = {
   ChefHat: <ChefHat className="w-4 h-4" />,
