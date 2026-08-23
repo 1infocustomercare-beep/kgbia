@@ -309,15 +309,16 @@ export default function OnboardingPage() {
                 className={`h-2 rounded-full transition-all ${i <= step ? "w-10" : "w-6"}`}
                 style={{
                   background: i <= step
-                    ? "linear-gradient(90deg, hsl(var(--pr-gold-light)), hsl(var(--pr-gold-deep)))"
-                    : "hsl(var(--pr-emerald) / 0.15)",
+                    ? "linear-gradient(90deg, hsl(var(--pr-aqua, 174 68% 53%)), hsl(var(--pr-gold, 42 55% 52%)))"
+                    : "hsl(0 0% 100% / 0.18)",
                 }}
               />
               {i <= step && (
-                <span className="text-[10px] font-semibold hidden sm:inline" style={{ color: "hsl(var(--pr-gold-deep))" }}>
+                <span className="text-[10px] font-semibold hidden sm:inline" style={{ color: "hsl(var(--pr-aqua, 174 68% 53%))" }}>
                   {label}
                 </span>
               )}
+
             </div>
           ))}
         </div>
