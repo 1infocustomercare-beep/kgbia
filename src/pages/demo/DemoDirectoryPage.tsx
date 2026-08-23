@@ -621,9 +621,9 @@ export default function DemoDirectoryPage() {
 
             <div className="absolute inset-0 z-10 flex flex-col justify-end p-5 sm:p-8">
               <div className="mb-3 flex items-center gap-2">
-                <span className="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[9px] font-bold uppercase tracking-[0.22em] text-white"
-                  style={{ background: "hsla(160,70%,35%,0.28)", border: "1px solid hsla(160,70%,55%,0.4)" }}>
-                  <span className="h-1.5 w-1.5 animate-pulse rounded-full" style={{ background: "hsl(158 80% 55%)" }} />
+                <span className="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[9px] font-bold uppercase tracking-[0.22em] text-foreground"
+                  style={{ background: "hsl(var(--pr-aqua) / 0.20)", border: "1px solid hsl(var(--pr-aqua) / 0.42)", backdropFilter: "blur(12px)" }}>
+                  <span className="h-1.5 w-1.5 animate-pulse rounded-full" style={{ background: "hsl(var(--pr-aqua))" }} />
                   Live 360°
                 </span>
                 <span className="text-[9px] font-semibold uppercase tracking-[0.26em] text-white/55">Automotive</span>
