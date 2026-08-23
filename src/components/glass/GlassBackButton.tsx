@@ -1,4 +1,5 @@
 import * as React from "react";
+import { createPortal } from "react-dom";
 import { ArrowLeft } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { cn } from "@/lib/utils";
@@ -55,7 +56,7 @@ export default function GlassBackButton({
       )}
     >
       <ArrowLeft className="h-4 w-4" aria-hidden="true" />
-      <span>{label}</span>
+      <span className="whitespace-nowrap">{label}</span>
     </button>
   );
 
@@ -69,16 +70,22 @@ export default function GlassBackButton({
   }
 
   if (variant === "floating") {
-    return (
+    /* Portal su <body>: molte pagine hanno antenati con transform/filter
+       (prestige-root, motion.div) che rompono `position: fixed` e farebbero
+       finire la pillola in mezzo alla pagina, comprimendone la larghezza. */
+    const floating = (
       <div
         className={cn(
           "fixed left-4 z-40 md:left-6",
           belowNav ? "top-24 md:top-28" : "top-4 md:top-6",
         )}
+        style={{ maxWidth: "calc(100vw - 2rem)" }}
       >
         {button}
       </div>
     );
+    if (typeof document === "undefined") return floating;
+    return createPortal(floating, document.body);
   }
 
   return button;

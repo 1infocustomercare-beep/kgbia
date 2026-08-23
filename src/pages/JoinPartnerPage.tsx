@@ -35,21 +35,22 @@ const JoinPartnerPage = () => {
     <div className="min-h-screen landing-dark force-dark" style={{ background: "linear-gradient(180deg, hsl(228 22% 6%) 0%, hsl(230 20% 8%) 100%)" }}>
       {/* Header */}
       <header className="fixed top-0 inset-x-0 z-50 backdrop-blur-xl border-b border-border/10" style={{ background: "hsla(228,22%,6%,0.85)" }}>
-        <div className="max-w-5xl mx-auto flex items-center justify-between px-5 py-3">
-          <div className="flex items-center gap-2.5">
-            <GlassBackButton to="/" label="Home" variant="inline" className="px-3 text-xs" />
-            <img src={empireLogoNew} alt="Empire" className="w-8 h-8 rounded-full object-cover border border-primary/30" />
-            <span className="font-heading font-bold text-sm tracking-wider uppercase text-foreground">EMPIRE</span>
+        <div className="max-w-5xl mx-auto flex items-center justify-between gap-2 px-3 sm:px-5 py-2.5">
+          <div className="flex min-w-0 items-center gap-2">
+            <GlassBackButton to="/" label="Home" variant="inline" className="shrink-0 px-3 text-xs" />
+            <img src={empireLogoNew} alt="Empire" className="hidden xs:block w-8 h-8 shrink-0 rounded-full object-cover border border-primary/30" />
+            <span className="hidden sm:inline font-heading font-bold text-sm tracking-wider uppercase text-foreground whitespace-nowrap">EMPIRE</span>
           </div>
           <motion.button
             onClick={() => navigate("/vendor/signup")}
-            className="px-5 py-2 rounded-full bg-vibrant-gradient text-primary-foreground font-bold text-xs font-heading tracking-wider uppercase"
+            className="shrink-0 px-3.5 sm:px-5 py-2 min-h-[44px] rounded-full bg-vibrant-gradient text-primary-foreground font-bold text-[11px] sm:text-xs font-heading tracking-wider uppercase whitespace-nowrap"
             whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}
           >
-            Registrati Ora
+            Registrati
           </motion.button>
         </div>
       </header>
+
 
       <div className="pt-24 pb-16 px-5 max-w-5xl mx-auto">
         {/* Hero */}
