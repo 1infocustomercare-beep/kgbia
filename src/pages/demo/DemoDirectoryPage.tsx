@@ -541,7 +541,14 @@ export default function DemoDirectoryPage() {
   const getFeatured = (id: IndustryId) => FEATURED_DEMOS.find(f => f.id === id);
 
   return (
-    <div className="pglass-scope prestige-root min-h-screen relative [overflow-x:clip] landing-dark force-dark" style={{ background: "linear-gradient(180deg, hsl(196 20% 5%) 0%, hsl(196 18% 7%) 30%, hsl(196 16% 6%) 60%, hsl(196 20% 5%) 100%)" }}>
+    <div
+      className="pglass-scope pglass-app prestige-root min-h-screen relative [overflow-x:clip] landing-dark force-dark"
+      style={{
+        background: "linear-gradient(180deg, hsl(200 22% 5%) 0%, hsl(196 20% 7%) 30%, hsl(198 18% 6%) 60%, hsl(200 22% 5%) 100%)",
+        /* Safe-area iOS/notch: l'ultima sezione non resta mai coperta */
+        paddingBottom: "env(safe-area-inset-bottom)",
+      }}
+    >
       <PrestigeTheme />
       {/* ═══ PREMIUM BACKGROUND — fully opaque, no DNA bleed ═══ */}
       <div className="fixed inset-0 pointer-events-none z-0 pglass-wave">
