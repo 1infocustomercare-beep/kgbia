@@ -777,15 +777,15 @@ function SectorCard({ id, index, isExpanded, onToggle, onNavigate, isFeatured, f
             <div
               className="w-[52px] h-[52px] rounded-full overflow-hidden border-2 shadow-lg"
               style={{
-                borderColor: `${color}60`,
-                boxShadow: `0 0 16px ${color}30`,
-                background: `linear-gradient(135deg, ${color}25, ${color}10)`,
+                borderColor: "hsl(var(--pr-aqua) / 0.45)",
+                boxShadow: "0 0 18px hsl(var(--pr-aqua) / 0.22)",
+                background: "linear-gradient(135deg, hsl(var(--pr-aqua) / 0.18), hsl(0 0% 100% / 0.04))",
               }}
             >
               {previewUrl ? (
                 <img src={previewUrl} alt={label} className="w-full h-full object-cover" loading="lazy" onError={onPreviewError} />
               ) : (
-                <div className="w-full h-full flex items-center justify-center" style={{ color }}>
+                <div className="w-full h-full flex items-center justify-center" style={{ color: "hsl(var(--pr-aqua))" }}>
                   {getIcon(cfg.icon)}
                 </div>
               )}
@@ -793,14 +793,14 @@ function SectorCard({ id, index, isExpanded, onToggle, onNavigate, isFeatured, f
             {/* Always-visible icon badge */}
             <div className="absolute -bottom-0.5 -right-0.5 w-5 h-5 rounded-full flex items-center justify-center shadow-md"
               style={{
-                background: `linear-gradient(135deg, ${color}, ${color}cc)`,
-                border: "2px solid hsla(192,20%,12%,0.95)",
+                background: "linear-gradient(135deg, hsl(var(--pr-aqua)), hsl(var(--pr-aqua) / 0.7))",
+                border: "2px solid hsl(200 24% 7% / 0.95)",
               }}>
-              <span className="text-white [&_svg]:!w-2.5 [&_svg]:!h-2.5">{getIcon(cfg.icon)}</span>
+              <span className="text-[hsl(200_28%_8%)] [&_svg]:!w-2.5 [&_svg]:!h-2.5">{getIcon(cfg.icon)}</span>
             </div>
             {isFeatured && (
               <motion.div className="absolute inset-0 rounded-full pointer-events-none"
-                style={{ border: `1px solid ${color}25` }}
+                style={{ border: "1px solid hsl(var(--pr-aqua) / 0.3)" }}
                 animate={{ scale: [1, 1.3], opacity: [0.5, 0] }}
                 transition={{ duration: 2.5, repeat: Infinity }} />
             )}
