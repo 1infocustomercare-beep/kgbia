@@ -92,7 +92,7 @@ export default function VendorSignup() {
           <div>
             <label className="text-xs font-semibold block mb-1">Slug referral</label>
             <div className="flex items-center gap-2">
-              <span className="text-xs opacity-60">/?ref=</span>
+              <span className="text-xs opacity-60 whitespace-nowrap">/?ref=</span>
               <input className={inputCls} value={form.slug} onChange={e=>setForm({...form,slug:slugify(e.target.value)})} />
             </div>
           </div>
