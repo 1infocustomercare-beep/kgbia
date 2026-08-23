@@ -824,22 +824,12 @@ function SectorCard({ id, index, isExpanded, onToggle, onNavigate, isFeatured, f
           <div className="flex items-center gap-1.5 flex-shrink-0">
             <motion.button
               onClick={(e) => { e.stopPropagation(); isFeatured ? navigate(route) : onNavigate(id); }}
-              className="px-3 py-1.5 rounded-xl text-[10px] sm:text-[11px] font-semibold transition-all hidden sm:flex items-center gap-1 hover:scale-105"
-              style={isFeatured ? {
-                backgroundColor: color,
-                color: "#fff",
-                boxShadow: `0 3px 12px ${color}25`
-              } : {
-                background: "hsl(var(--secondary) / 0.82)",
-                border: "1px solid hsl(var(--border) / 0.9)",
-                color: "hsl(var(--foreground) / 0.96)"
-              }}
+              className={`${isFeatured ? "pglass-btn" : "pglass-btn-ghost"} hidden min-h-9 px-3 py-1.5 text-[10px] sm:flex sm:text-[11px]`}
               whileTap={{ scale: 0.95 }}>
               {isFeatured ? "Demo Live" : "Apri Demo"} <ArrowRight className="w-2.5 h-2.5" />
             </motion.button>
-            <div className="w-6 h-6 rounded-lg flex items-center justify-center"
-              style={{ background: "hsl(var(--secondary) / 0.72)" }}>
-              {isExpanded ? <ChevronUp className="w-3.5 h-3.5 text-foreground/85" /> : <ChevronDown className="w-3.5 h-3.5 text-foreground/85" />}
+            <div className="pglass-icon-btn h-7 w-7">
+              {isExpanded ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
             </div>
           </div>
         </div>
