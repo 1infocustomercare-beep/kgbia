@@ -316,8 +316,7 @@ function PrivateJetDemoCard({ onOpen }: { onOpen: () => void }) {
           <div className="mt-4 flex items-center gap-2.5">
             <button
               onClick={onOpen}
-              className="inline-flex min-h-11 items-center gap-2 rounded-full px-4 py-2 text-[11px] font-bold uppercase tracking-[0.16em] text-white transition-transform duration-300 group-hover:translate-x-1"
-              style={{ background: "linear-gradient(135deg, hsl(43 62% 44%), hsl(35 55% 34%))", boxShadow: "0 10px 30px -12px hsla(43,80%,50%,0.65)" }}
+              className="pglass-btn min-h-11 px-4 py-2 text-[11px] font-bold uppercase tracking-[0.16em] transition-transform duration-300 group-hover:translate-x-1"
             >
               Apri demo <ArrowRight className="h-3.5 w-3.5" />
             </button>
