@@ -372,6 +372,16 @@ export default function PrestigeTheme() {
           linear-gradient(180deg, hsl(var(--pr-emerald-deep)), hsl(var(--pr-emerald)));
       }
 
+      /* La hero non ha sfondo proprio: eredita lo sfondo interattivo globale,
+         così non si crea più la banda/blocco staccato sotto la navbar. */
+      .prestige-hero-root,
+      .prestige-hero-root.prestige-dark {
+        background: transparent !important;
+        background-image: none !important;
+      }
+
+
+
 
       /* Gold shimmer sweep on display text */
       .prestige-gold-text {
