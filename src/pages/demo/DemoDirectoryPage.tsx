@@ -588,7 +588,7 @@ export default function DemoDirectoryPage() {
       {/* ═══ HERO CTA — iPhone with rotating sector previews ═══ */}
       <HeroPhoneShowcase navigate={navigate} />
 
-      <div id="demo-list" className="max-w-5xl mx-auto px-4 py-2 relative z-10">
+      <div id="demo-list" className="max-w-5xl mx-auto px-4 pt-2 pb-[calc(6rem+env(safe-area-inset-bottom))] relative z-10">
         <PrivateJetDemoCard onOpen={() => navigate("/demo/aurea-jet")} />
         <button
           onClick={() => navigate("/demo/aurelia-motori")}
