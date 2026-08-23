@@ -227,15 +227,22 @@ export default function PrestigeTheme() {
 
       /* ── Sfondo cinematico scroll-scrubbed (sotto a TUTTO) ──────── */
       html:has(.prestige-root), body:has(.prestige-root) {
-        background-color: hsl(240 44% 7%);
+        background-color: hsl(200 24% 6%);
       }
       .prestige-scrub-backdrop {
         position: fixed;
         inset: 0;
         z-index: 0;
         pointer-events: none;
+        /* Base continua: nessuna banda/alone staccato in cima.
+           Il colore si sposta con lo scroll (teal → smeraldo → notte). */
         background:
-          radial-gradient(ellipse at 50% 0%, hsl(244 60% 14%) 0%, hsl(240 44% 7%) 55%, hsl(240 50% 5%) 100%);
+          linear-gradient(
+            180deg,
+            hsl(calc(198 - var(--pr-scroll, 0) * 24) 26% calc(8% - var(--pr-scroll, 0) * 2%)) 0%,
+            hsl(calc(196 - var(--pr-scroll, 0) * 20) 22% 6%) 55%,
+            hsl(200 24% 5%) 100%
+          );
         overflow: hidden;
       }
       .prestige-scrub-backdrop canvas {
@@ -248,39 +255,40 @@ export default function PrestigeTheme() {
       .prestige-scrub-aura {
         position: absolute;
         border-radius: 50%;
-        filter: blur(10px);
+        filter: blur(8px);
         will-change: transform, opacity;
       }
+      /* Alone alto: teal Empire, molto diffuso e fuso col fondo (mai viola) */
       .prestige-scrub-aura--violet {
-        top: -25%; left: 50%;
-        width: 110vw; height: 90vh;
+        top: -45%; left: 50%;
+        width: 130vw; height: 105vh;
         transform: translateX(-50%);
-        background: radial-gradient(ellipse 46% 42% at 50% 45%, hsl(258 70% 56% / 0.20), transparent 72%);
-        animation: prestige-breathe 20s ease-in-out infinite;
-        --pb-px: calc((var(--pr-mx, 0.5) - 0.5) * -34px);
-        --pb-py: calc((var(--pr-my, 0.35) - 0.5) * -22px);
+        background: radial-gradient(ellipse 52% 48% at 50% 50%, hsl(184 62% 44% / 0.13), transparent 76%);
+        animation: prestige-breathe 22s ease-in-out infinite;
+        --pb-px: calc((var(--pr-mx, 0.5) - 0.5) * -26px);
+        --pb-py: calc((var(--pr-my, 0.35) - 0.5) * -16px - var(--pr-scroll, 0) * 40px);
       }
       .prestige-scrub-aura--gold {
-        bottom: -30%; left: -15%;
-        width: 80vw; height: 80vh;
-        background: radial-gradient(ellipse 50% 50% at 45% 55%, hsl(44 80% 56% / 0.12), transparent 74%);
-        animation: prestige-breathe 28s ease-in-out infinite reverse;
-        --pb-px: calc((var(--pr-mx, 0.5) - 0.5) * 26px);
-        --pb-py: calc((var(--pr-my, 0.35) - 0.5) * 18px);
+        bottom: -32%; left: -15%;
+        width: 82vw; height: 82vh;
+        background: radial-gradient(ellipse 50% 50% at 45% 55%, hsl(44 78% 54% / 0.10), transparent 76%);
+        animation: prestige-breathe 30s ease-in-out infinite reverse;
+        --pb-px: calc((var(--pr-mx, 0.5) - 0.5) * 20px);
+        --pb-py: calc((var(--pr-my, 0.35) - 0.5) * 14px + var(--pr-scroll, 0) * 30px);
       }
       .prestige-scrub-grid {
         position: absolute;
         inset: -10%;
-        opacity: 0.14;
+        opacity: calc(0.10 + var(--pr-scroll, 0) * 0.05);
         background-image:
-          linear-gradient(to right, hsl(0 0% 100% / 0.12) 1px, transparent 1px),
-          linear-gradient(to bottom, hsl(0 0% 100% / 0.12) 1px, transparent 1px);
-        background-size: 80px 80px;
-        -webkit-mask-image: radial-gradient(ellipse 72% 62% at 50% 38%, black 15%, transparent 82%);
-        mask-image: radial-gradient(ellipse 72% 62% at 50% 38%, black 15%, transparent 82%);
+          linear-gradient(to right, hsl(0 0% 100% / 0.10) 1px, transparent 1px),
+          linear-gradient(to bottom, hsl(0 0% 100% / 0.10) 1px, transparent 1px);
+        background-size: 84px 84px;
+        -webkit-mask-image: radial-gradient(ellipse 74% 64% at 50% 42%, black 12%, transparent 84%);
+        mask-image: radial-gradient(ellipse 74% 64% at 50% 42%, black 12%, transparent 84%);
         transform: translate3d(
-          calc((var(--pr-mx, 0.5) - 0.5) * 18px),
-          calc((var(--pr-my, 0.35) - 0.5) * 12px - var(--pr-scroll, 0) * 40px),
+          calc((var(--pr-mx, 0.5) - 0.5) * 14px),
+          calc((var(--pr-my, 0.35) - 0.5) * 10px - var(--pr-scroll, 0) * 56px),
           0
         );
         will-change: transform;
@@ -290,9 +298,9 @@ export default function PrestigeTheme() {
         position: absolute;
         inset: 0;
         background: radial-gradient(
-          circle 38vmax at calc(var(--pr-mx, 0.5) * 100%) calc(var(--pr-my, 0.35) * 100%),
-          hsl(250 85% 70% / 0.14),
-          hsl(250 85% 70% / 0.05) 42%,
+          circle 36vmax at calc(var(--pr-mx, 0.5) * 100%) calc(var(--pr-my, 0.35) * 100%),
+          hsl(180 80% 62% / 0.10),
+          hsl(180 80% 62% / 0.04) 44%,
           transparent 70%
         );
         mix-blend-mode: screen;
@@ -300,16 +308,16 @@ export default function PrestigeTheme() {
       .prestige-scrub-vignette {
         position: absolute;
         inset: 0;
-        background: radial-gradient(ellipse at center, transparent 42%, hsl(240 55% 4% / 0.72) 100%);
+        background: radial-gradient(ellipse at center, transparent 44%, hsl(200 32% 3% / 0.70) 100%);
       }
       @keyframes prestige-breathe {
         0%, 100% {
-          opacity: 0.75;
+          opacity: 0.78;
           transform: translate(calc(var(--pb-tx, 0px) + var(--pb-px, 0px)), var(--pb-py, 0px)) scale(1);
         }
         50% {
           opacity: 1;
-          transform: translate(calc(var(--pb-tx, 0px) + var(--pb-px, 0px)), var(--pb-py, 0px)) scale(1.06);
+          transform: translate(calc(var(--pb-tx, 0px) + var(--pb-px, 0px)), var(--pb-py, 0px)) scale(1.05);
         }
       }
       .prestige-scrub-aura--violet { --pb-tx: -50%; }
@@ -317,10 +325,18 @@ export default function PrestigeTheme() {
         0% { transform: translateX(0); }
         100% { transform: translateX(300%); }
       }
+      /* Mobile / touch: sfondo leggerissimo — nessuno spotlight puntatore,
+         nessun blur costoso, solo gradiente + griglia in parallasse scroll. */
+      @media (hover: none), (max-width: 767px) {
+        .prestige-scrub-spot { display: none; }
+        .prestige-scrub-aura { filter: none; animation-duration: 34s; }
+        .prestige-scrub-grid { opacity: 0.08; background-size: 64px 64px; }
+      }
       @media (prefers-reduced-motion: reduce) {
         .prestige-scrub-aura { animation: none !important; }
         .prestige-scrub-grid { transform: none !important; }
       }
+
 
 
 
