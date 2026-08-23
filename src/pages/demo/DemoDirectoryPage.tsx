@@ -299,8 +299,8 @@ function PrivateJetDemoCard({ onOpen }: { onOpen: () => void }) {
 
         <div className="absolute inset-0 z-10 flex flex-col justify-end p-5 sm:p-8">
           <div className="mb-3 flex items-center gap-2">
-            <span className="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[9px] font-bold uppercase tracking-[0.22em] text-white"
-              style={{ background: "hsla(43,60%,45%,0.24)", border: "1px solid hsla(43,65%,62%,0.4)" }}>
+            <span className="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[9px] font-bold uppercase tracking-[0.22em] text-foreground"
+              style={{ background: "hsl(var(--pr-aqua) / 0.20)", border: "1px solid hsl(var(--pr-aqua) / 0.42)", backdropFilter: "blur(12px)" }}>
               <Plane className="h-2.5 w-2.5" />
               Cinematic
             </span>
