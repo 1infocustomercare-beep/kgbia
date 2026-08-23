@@ -811,8 +811,8 @@ function SectorCard({ id, index, isExpanded, onToggle, onNavigate, isFeatured, f
             <div className="flex items-center gap-2 mb-0.5">
               <h3 className="font-bold text-[0.8rem] sm:text-sm text-foreground font-heading truncate">{label}</h3>
               {isFeatured && (
-                <span className="text-[0.56rem] sm:text-[11px] px-2 py-0.5 rounded-full font-bold tracking-[1.4px] uppercase flex items-center gap-0.5 flex-shrink-0 text-foreground"
-                  style={{ background: `${color}30`, border: `1px solid ${color}58` }}>
+                <span className="text-[0.56rem] sm:text-[11px] px-2 py-0.5 rounded-full font-bold tracking-[1.4px] uppercase flex items-center gap-0.5 flex-shrink-0"
+                  style={{ background: "hsl(var(--pr-aqua) / 0.2)", border: "1px solid hsl(var(--pr-aqua) / 0.45)", color: "hsl(var(--pr-aqua))" }}>
                   <Crown className="w-2 h-2" /> PREMIUM
                 </span>
               )}
