@@ -250,10 +250,10 @@ const HeroPhoneShowcase = ({ navigate }: { navigate: (p: string) => void }) => {
             animate={{ opacity: 1, y: 0 }}
             className="absolute -bottom-2 left-1/2 -translate-x-1/2 px-3 py-1 rounded-full text-[10px] font-bold tracking-wider uppercase whitespace-nowrap"
             style={{
-              background: `hsla(${sector.color} / 0.2)`,
-              border: `1px solid hsla(${sector.color} / 0.4)`,
-              color: `hsl(${sector.color})`,
-              backdropFilter: "blur(10px)",
+              background: "hsl(var(--pr-aqua) / 0.18)",
+              border: "1px solid hsl(var(--pr-aqua) / 0.42)",
+              color: "hsl(var(--pr-aqua))",
+              backdropFilter: "blur(12px)",
             }}>
             {sector.label}
           </motion.div>
