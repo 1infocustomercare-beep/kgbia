@@ -25,6 +25,9 @@ import PrestigeTheme from "@/components/empire-home/prestige/PrestigeTheme";
 
 const ALL_INDUSTRIES = Object.keys(INDUSTRY_CONFIGS) as IndustryId[];
 
+/** Accento unico Empire Liquid Glass (aqua) usato da tutta la pagina demo. */
+const EMPIRE_AQUA_HEX = "#33dccb";
+
 /* ═══ Lucide icon mapping — w-4 h-4 for compact premium nodes ═══ */
 const INDUSTRY_ICONS: Record<string, React.ReactNode> = {
   ChefHat: <ChefHat className="w-4 h-4" />,
@@ -129,53 +132,54 @@ const HeroPhoneShowcase = ({ navigate }: { navigate: (p: string) => void }) => {
   }, [heroImageSources.length]);
 
   return (
-    <div className="relative z-10 mx-4 mt-5 mb-6 rounded-2xl overflow-hidden"
-      style={{
-        background: "linear-gradient(160deg, hsl(220 20% 6%) 0%, hsl(240 18% 10%) 40%, hsl(196 22% 13%) 70%, hsl(220 20% 8%) 100%)",
-        boxShadow: "0 16px 60px hsla(190,50%,6%,0.7), inset 0 1px 0 hsla(190,40%,60%,0.08)",
-        border: "1px solid hsla(190,30%,30%,0.2)",
-      }}>
-      {/* Subtle noise */}
-      <div className="absolute inset-0 opacity-[0.03]" style={{
-        backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E")`,
-        backgroundSize: "128px 128px"
-      }} />
+    <div className="pglass pglass-lift relative z-10 mx-4 mt-5 mb-6 overflow-hidden rounded-[1.75rem]">
+      {/* Ambient aura Empire — aqua costante + micro tinta di settore */}
+      <div
+        className="pointer-events-none absolute top-[-30%] right-[5%] h-[220px] w-[220px] rounded-full"
+        style={{
+          background: `radial-gradient(circle, hsl(${sector.color} / 0.10), transparent 62%)`,
+          filter: "blur(60px)",
+          transition: "background 1s ease",
+        }}
+      />
+      <div
+        className="pointer-events-none absolute bottom-[-20%] left-[8%] h-[180px] w-[180px] rounded-full"
+        style={{ background: "radial-gradient(circle, hsl(var(--pr-aqua) / 0.14), transparent 62%)", filter: "blur(50px)" }}
+      />
 
-      {/* Ambient orbs */}
-      <div className="absolute top-[-30%] right-[5%] w-[200px] h-[200px] rounded-full" style={{ background: `radial-gradient(circle, hsla(${sector.color} / 0.15), transparent 60%)`, filter: "blur(60px)", transition: "background 1s ease" }} />
-      <div className="absolute bottom-[-20%] left-[10%] w-[160px] h-[160px] rounded-full" style={{ background: "radial-gradient(circle, hsla(190,50%,40%,0.12), transparent 60%)", filter: "blur(50px)" }} />
 
       <div className="relative flex flex-col sm:flex-row items-center gap-4 px-5 py-8 sm:px-10 sm:py-10" style={{ zIndex: 2 }}>
         {/* Left: Text */}
         <div className="flex-1 text-center sm:text-left">
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full mb-3"
-            style={{ background: "hsla(174,60%,45%,0.12)", border: "1px solid hsla(174,60%,45%,0.25)" }}>
-            <Sparkles className="w-3 h-3 text-[hsl(174,60%,55%)]" />
-            <span className="text-[11px] font-bold tracking-widest uppercase text-[hsl(174,60%,65%)]">25+ Settori</span>
+          <div className="pglass-chip mb-3 inline-flex items-center gap-1.5">
+            <Sparkles className="h-3 w-3" />
+            <span className="text-[11px] font-bold uppercase tracking-widest">25+ Settori</span>
           </div>
 
-          <h2 className="text-xl sm:text-2xl font-bold text-white leading-tight mb-2" style={{ fontFamily: "'Playfair Display', serif" }}>
+          <h2 className="mb-2 font-heading text-xl font-semibold leading-tight text-foreground sm:text-2xl">
             Il tuo business,<br />
-            <span style={{ color: `hsl(${sector.color})`, transition: "color 0.8s ease" }}>digitalizzato.</span>
+            <span className="pglass-aqua-text">digitalizzato.</span>
           </h2>
-          <p className="text-xs sm:text-sm text-white/50 max-w-sm mb-5">
+          <p className="mb-5 max-w-sm text-xs text-foreground/70 sm:text-sm">
             Dashboard IA, ordini, prenotazioni e CRM — pronto in 5 minuti per ogni settore.
           </p>
 
-          {/* Sector pills */}
-          <div className="flex flex-wrap gap-1.5 justify-center sm:justify-start mb-5">
+          {/* Sector pills — vetro Empire, accento aqua sull'attivo */}
+          <div className="mb-5 flex flex-wrap justify-center gap-1.5 sm:justify-start">
             {HERO_SECTORS.map((s, i) => (
               <button key={s.id} onClick={() => setActiveIdx(i)}
-                className="px-2.5 py-1 rounded-full text-[11px] font-semibold tracking-wide transition-all duration-300"
+                className="rounded-full px-2.5 py-1 text-[11px] font-semibold tracking-wide transition-all duration-300"
                 style={{
-                  background: i === activeIdx ? `hsla(${s.color} / 0.2)` : "hsla(220,20%,20%,0.5)",
-                  border: `1px solid ${i === activeIdx ? `hsla(${s.color} / 0.5)` : "hsla(220,15%,25%,0.4)"}`,
-                  color: i === activeIdx ? `hsl(${s.color})` : "hsla(220,10%,70%,0.7)",
+                  background: i === activeIdx ? "hsl(var(--pr-aqua) / 0.18)" : "hsl(0 0% 100% / 0.05)",
+                  border: `1px solid ${i === activeIdx ? "hsl(var(--pr-aqua) / 0.5)" : "hsl(0 0% 100% / 0.12)"}`,
+                  color: i === activeIdx ? "hsl(var(--pr-aqua))" : "hsl(var(--foreground) / 0.7)",
+                  backdropFilter: "blur(14px)",
                 }}>
                 {s.label}
               </button>
             ))}
           </div>
+
 
           <div className="flex gap-2.5 justify-center sm:justify-start">
             <GlassButton size="sm" onClick={() => navigate("/auth")}>
@@ -196,20 +200,21 @@ const HeroPhoneShowcase = ({ navigate }: { navigate: (p: string) => void }) => {
         <div className="relative flex-shrink-0 w-[180px] sm:w-[200px]">
           {/* Glow behind phone */}
           <div className="absolute inset-0 rounded-[2rem]" style={{
-            background: `radial-gradient(ellipse at center, hsla(${sector.color} / 0.2), transparent 70%)`,
+            background: `radial-gradient(ellipse at center, hsl(var(--pr-aqua) / 0.18), hsl(${sector.color} / 0.10) 45%, transparent 72%)`,
             filter: "blur(30px)", transform: "scale(1.3)", transition: "background 1s ease"
           }} />
           {/* iPhone frame */}
           <div className="relative rounded-[2rem] overflow-hidden border-[3px]"
             style={{
-              borderColor: "hsla(220,15%,25%,0.6)",
-              boxShadow: `0 20px 50px hsla(0,0%,0%,0.5), 0 0 30px hsla(${sector.color} / 0.15)`,
+              borderColor: "hsl(var(--pr-aqua) / 0.28)",
+              boxShadow: "0 24px 60px -24px hsl(196 60% 3% / 0.75), 0 0 32px hsl(var(--pr-aqua) / 0.18)",
               aspectRatio: "9/19.5",
-              background: "hsl(220,20%,5%)",
+              background: "hsl(200 24% 5%)",
               transition: "box-shadow 1s ease",
             }}>
             {/* Notch */}
-            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[35%] h-[3.5%] rounded-b-xl z-20" style={{ background: "hsl(220,20%,5%)" }} />
+            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[35%] h-[3.5%] rounded-b-xl z-20" style={{ background: "hsl(200 24% 5%)" }} />
+
             {/* Screen */}
             <AnimatePresence mode="wait">
               {currentImage ? (
@@ -248,10 +253,10 @@ const HeroPhoneShowcase = ({ navigate }: { navigate: (p: string) => void }) => {
             animate={{ opacity: 1, y: 0 }}
             className="absolute -bottom-2 left-1/2 -translate-x-1/2 px-3 py-1 rounded-full text-[10px] font-bold tracking-wider uppercase whitespace-nowrap"
             style={{
-              background: `hsla(${sector.color} / 0.2)`,
-              border: `1px solid hsla(${sector.color} / 0.4)`,
-              color: `hsl(${sector.color})`,
-              backdropFilter: "blur(10px)",
+              background: "hsl(var(--pr-aqua) / 0.18)",
+              border: "1px solid hsl(var(--pr-aqua) / 0.42)",
+              color: "hsl(var(--pr-aqua))",
+              backdropFilter: "blur(12px)",
             }}>
             {sector.label}
           </motion.div>
@@ -272,10 +277,10 @@ function PrivateJetDemoCard({ onOpen }: { onOpen: () => void }) {
     <motion.article
       initial={{ opacity: 0, y: 18 }}
       animate={{ opacity: 1, y: 0 }}
-      className="group relative mb-6 overflow-hidden rounded-[1.75rem]"
+      className="group pglass-lift relative mb-6 overflow-hidden rounded-[1.75rem]"
       style={{
-        border: "1px solid hsla(43,60%,60%,0.24)",
-        boxShadow: "0 30px 70px -35px hsla(196,70%,10%,0.75), inset 0 1px 0 hsla(43,60%,70%,0.12)",
+        border: "1px solid hsl(var(--pr-aqua) / 0.24)",
+        boxShadow: "0 30px 70px -35px hsl(196 70% 10% / 0.75), inset 0 1px 0 hsl(0 0% 100% / 0.12)",
       }}
     >
       <div className="relative aspect-[16/10] w-full sm:aspect-[21/9]">
@@ -287,18 +292,18 @@ function PrivateJetDemoCard({ onOpen }: { onOpen: () => void }) {
           className="absolute inset-0 h-full w-full object-cover object-center transition-transform duration-[1400ms] ease-out will-change-transform group-hover:scale-[1.06]"
         />
         <div className="pointer-events-none absolute inset-0"
-          style={{ background: "radial-gradient(120% 90% at 78% 26%, hsla(43,70%,60%,0.18), transparent 60%)" }} />
+          style={{ background: "radial-gradient(120% 90% at 78% 26%, hsl(var(--pr-aqua) / 0.20), transparent 60%)" }} />
         <div className="pointer-events-none absolute inset-0"
-          style={{ background: "linear-gradient(to top, hsl(196 24% 5%) 4%, hsla(196,24%,6%,0.88) 38%, hsla(196,22%,7%,0.28) 68%, transparent 100%)" }} />
+          style={{ background: "linear-gradient(to top, hsl(200 24% 5%) 4%, hsl(200 24% 6% / 0.88) 38%, hsl(200 22% 7% / 0.28) 68%, transparent 100%)" }} />
         <div className="pointer-events-none absolute inset-0 opacity-60"
-          style={{ background: "linear-gradient(100deg, hsla(196,26%,4%,0.92) 0%, hsla(196,26%,5%,0.35) 45%, transparent 70%)" }} />
+          style={{ background: "linear-gradient(100deg, hsl(200 26% 4% / 0.92) 0%, hsl(200 26% 5% / 0.35) 45%, transparent 70%)" }} />
         <div className="pointer-events-none absolute inset-x-0 top-0 h-px"
-          style={{ background: "linear-gradient(90deg, transparent, hsla(43,70%,68%,0.5), transparent)" }} />
+          style={{ background: "linear-gradient(90deg, transparent, hsl(var(--pr-aqua) / 0.55), transparent)" }} />
 
         <div className="absolute inset-0 z-10 flex flex-col justify-end p-5 sm:p-8">
           <div className="mb-3 flex items-center gap-2">
-            <span className="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[9px] font-bold uppercase tracking-[0.22em] text-white"
-              style={{ background: "hsla(43,60%,45%,0.24)", border: "1px solid hsla(43,65%,62%,0.4)" }}>
+            <span className="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[9px] font-bold uppercase tracking-[0.22em] text-foreground"
+              style={{ background: "hsl(var(--pr-aqua) / 0.20)", border: "1px solid hsl(var(--pr-aqua) / 0.42)", backdropFilter: "blur(12px)" }}>
               <Plane className="h-2.5 w-2.5" />
               Cinematic
             </span>
@@ -314,8 +319,7 @@ function PrivateJetDemoCard({ onOpen }: { onOpen: () => void }) {
           <div className="mt-4 flex items-center gap-2.5">
             <button
               onClick={onOpen}
-              className="inline-flex min-h-11 items-center gap-2 rounded-full px-4 py-2 text-[11px] font-bold uppercase tracking-[0.16em] text-white transition-transform duration-300 group-hover:translate-x-1"
-              style={{ background: "linear-gradient(135deg, hsl(43 62% 44%), hsl(35 55% 34%))", boxShadow: "0 10px 30px -12px hsla(43,80%,50%,0.65)" }}
+              className="pglass-btn min-h-11 px-4 py-2 text-[11px] font-bold uppercase tracking-[0.16em] transition-transform duration-300 group-hover:translate-x-1"
             >
               Apri demo <ArrowRight className="h-3.5 w-3.5" />
             </button>
@@ -537,7 +541,14 @@ export default function DemoDirectoryPage() {
   const getFeatured = (id: IndustryId) => FEATURED_DEMOS.find(f => f.id === id);
 
   return (
-    <div className="pglass-scope prestige-root min-h-screen relative [overflow-x:clip] landing-dark force-dark" style={{ background: "linear-gradient(180deg, hsl(196 20% 5%) 0%, hsl(196 18% 7%) 30%, hsl(196 16% 6%) 60%, hsl(196 20% 5%) 100%)" }}>
+    <div
+      className="pglass-scope pglass-app prestige-root min-h-screen relative [overflow-x:clip] landing-dark force-dark"
+      style={{
+        background: "linear-gradient(180deg, hsl(200 22% 5%) 0%, hsl(196 20% 7%) 30%, hsl(198 18% 6%) 60%, hsl(200 22% 5%) 100%)",
+        /* Safe-area iOS/notch: l'ultima sezione non resta mai coperta */
+        paddingBottom: "env(safe-area-inset-bottom)",
+      }}
+    >
       <PrestigeTheme />
       {/* ═══ PREMIUM BACKGROUND — fully opaque, no DNA bleed ═══ */}
       <div className="fixed inset-0 pointer-events-none z-0 pglass-wave">
@@ -592,11 +603,11 @@ export default function DemoDirectoryPage() {
         <PrivateJetDemoCard onOpen={() => navigate("/demo/aurea-jet")} />
         <button
           onClick={() => navigate("/demo/aurelia-motori")}
-          className="group relative mb-6 block w-full overflow-hidden rounded-[1.75rem] text-left"
+          className="group pglass-lift relative mb-6 block w-full overflow-hidden rounded-[1.75rem] text-left"
           style={{
-            background: "linear-gradient(135deg, hsl(220 30% 5%), hsl(168 30% 8%))",
-            border: "1px solid hsla(160,60%,45%,0.22)",
-            boxShadow: "0 30px 70px -35px hsla(160,70%,25%,0.55), inset 0 1px 0 hsla(160,60%,70%,0.12)"
+            background: "linear-gradient(135deg, hsl(200 26% 5%), hsl(190 26% 8%))",
+            border: "1px solid hsl(var(--pr-aqua) / 0.24)",
+            boxShadow: "0 30px 70px -35px hsl(196 70% 10% / 0.75), inset 0 1px 0 hsl(0 0% 100% / 0.12)"
           }}
         >
           <div className="relative aspect-[16/10] w-full sm:aspect-[21/9]">
@@ -610,19 +621,19 @@ export default function DemoDirectoryPage() {
             />
             {/* grading cinematografico coerente con il sito demo */}
             <div className="pointer-events-none absolute inset-0"
-              style={{ background: "radial-gradient(120% 90% at 78% 30%, hsla(160,80%,45%,0.20), transparent 60%)" }} />
+              style={{ background: "radial-gradient(120% 90% at 78% 30%, hsl(var(--pr-aqua) / 0.20), transparent 60%)" }} />
             <div className="pointer-events-none absolute inset-0"
-              style={{ background: "linear-gradient(to top, hsl(220 32% 4%) 4%, hsla(220,32%,5%,0.88) 38%, hsla(220,30%,6%,0.28) 68%, transparent 100%)" }} />
+              style={{ background: "linear-gradient(to top, hsl(200 26% 4%) 4%, hsl(200 26% 5% / 0.88) 38%, hsl(200 24% 6% / 0.28) 68%, transparent 100%)" }} />
             <div className="pointer-events-none absolute inset-0 opacity-60"
-              style={{ background: "linear-gradient(100deg, hsla(220,32%,4%,0.92) 0%, hsla(220,32%,4%,0.35) 45%, transparent 70%)" }} />
+              style={{ background: "linear-gradient(100deg, hsl(200 26% 4% / 0.92) 0%, hsl(200 26% 4% / 0.35) 45%, transparent 70%)" }} />
             <div className="pointer-events-none absolute inset-x-0 top-0 h-px"
-              style={{ background: "linear-gradient(90deg, transparent, hsla(160,70%,60%,0.5), transparent)" }} />
+              style={{ background: "linear-gradient(90deg, transparent, hsl(var(--pr-aqua) / 0.55), transparent)" }} />
 
             <div className="absolute inset-0 z-10 flex flex-col justify-end p-5 sm:p-8">
               <div className="mb-3 flex items-center gap-2">
-                <span className="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[9px] font-bold uppercase tracking-[0.22em] text-white"
-                  style={{ background: "hsla(160,70%,35%,0.28)", border: "1px solid hsla(160,70%,55%,0.4)" }}>
-                  <span className="h-1.5 w-1.5 animate-pulse rounded-full" style={{ background: "hsl(158 80% 55%)" }} />
+                <span className="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[9px] font-bold uppercase tracking-[0.22em] text-foreground"
+                  style={{ background: "hsl(var(--pr-aqua) / 0.20)", border: "1px solid hsl(var(--pr-aqua) / 0.42)", backdropFilter: "blur(12px)" }}>
+                  <span className="h-1.5 w-1.5 animate-pulse rounded-full" style={{ background: "hsl(var(--pr-aqua))" }} />
                   Live 360°
                 </span>
                 <span className="text-[9px] font-semibold uppercase tracking-[0.26em] text-white/55">Automotive</span>
@@ -635,8 +646,7 @@ export default function DemoDirectoryPage() {
                 Concessionaria &amp; officina · showroom con rotazione 360° reale, test drive, permuta IA e agenda ponti.
               </p>
               <div className="mt-4 flex items-center gap-2.5">
-                <span className="inline-flex items-center gap-2 rounded-full px-4 py-2 text-[11px] font-bold uppercase tracking-[0.16em] text-white transition-transform duration-300 group-hover:translate-x-1"
-                  style={{ background: "linear-gradient(135deg, hsl(160 70% 32%), hsl(172 60% 26%))", boxShadow: "0 10px 30px -12px hsla(160,80%,40%,0.7)" }}>
+                <span className="pglass-btn px-4 py-2 text-[11px] font-bold uppercase tracking-[0.16em] transition-transform duration-300 group-hover:translate-x-1">
                   Apri demo <ArrowRight className="h-3.5 w-3.5" />
                 </span>
                 <span className="hidden text-[10px] uppercase tracking-[0.2em] text-white/45 sm:inline">Webapp completa · desktop &amp; iPhone</span>
@@ -758,16 +768,16 @@ function SectorCard({ id, index, isExpanded, onToggle, onNavigate, isFeatured, f
             : `linear-gradient(155deg, hsla(196,22%,14%,0.55), hsla(198,20%,9%,0.52))`,
           backdropFilter: "blur(22px) saturate(150%)",
           WebkitBackdropFilter: "blur(22px) saturate(150%)",
-          border: `1px solid ${isFeatured ? `${color}40` : "hsl(178 74% 48% / 0.22)"}`,
-          boxShadow: `0 24px 60px -40px hsl(178 74% 48% / 0.5), inset 0 1px 0 hsl(0 0% 100% / 0.12)`,
-          ...(isExpanded ? { boxShadow: `0 30px 70px -38px hsl(178 74% 48% / 0.6), 0 0 0 1px ${color}30, inset 0 1px 0 hsl(0 0% 100% / 0.16)` } : {}),
+          border: `1px solid hsl(var(--pr-aqua) / ${isFeatured ? 0.34 : 0.2})`,
+          boxShadow: `0 24px 60px -40px hsl(var(--pr-aqua) / 0.5), inset 0 1px 0 hsl(0 0% 100% / 0.12)`,
+          ...(isExpanded ? { boxShadow: `0 30px 70px -38px hsl(var(--pr-aqua) / 0.6), 0 0 0 1px hsl(var(--pr-aqua) / 0.3), inset 0 1px 0 hsl(0 0% 100% / 0.16)` } : {}),
         }}>
 
 
         {/* Top accent — featured only */}
         {isFeatured && (
           <div className="absolute top-0 left-0 right-0 h-[2px]"
-            style={{ background: `linear-gradient(90deg, transparent, ${color}50, ${color}20, transparent)` }} />
+            style={{ background: "linear-gradient(90deg, transparent, hsl(var(--pr-aqua) / 0.55), hsl(var(--pr-aqua) / 0.2), transparent)" }} />
         )}
 
         {/* Main row */}
@@ -777,15 +787,15 @@ function SectorCard({ id, index, isExpanded, onToggle, onNavigate, isFeatured, f
             <div
               className="w-[52px] h-[52px] rounded-full overflow-hidden border-2 shadow-lg"
               style={{
-                borderColor: `${color}60`,
-                boxShadow: `0 0 16px ${color}30`,
-                background: `linear-gradient(135deg, ${color}25, ${color}10)`,
+                borderColor: "hsl(var(--pr-aqua) / 0.45)",
+                boxShadow: "0 0 18px hsl(var(--pr-aqua) / 0.22)",
+                background: "linear-gradient(135deg, hsl(var(--pr-aqua) / 0.18), hsl(0 0% 100% / 0.04))",
               }}
             >
               {previewUrl ? (
                 <img src={previewUrl} alt={label} className="w-full h-full object-cover" loading="lazy" onError={onPreviewError} />
               ) : (
-                <div className="w-full h-full flex items-center justify-center" style={{ color }}>
+                <div className="w-full h-full flex items-center justify-center" style={{ color: "hsl(var(--pr-aqua))" }}>
                   {getIcon(cfg.icon)}
                 </div>
               )}
@@ -793,14 +803,14 @@ function SectorCard({ id, index, isExpanded, onToggle, onNavigate, isFeatured, f
             {/* Always-visible icon badge */}
             <div className="absolute -bottom-0.5 -right-0.5 w-5 h-5 rounded-full flex items-center justify-center shadow-md"
               style={{
-                background: `linear-gradient(135deg, ${color}, ${color}cc)`,
-                border: "2px solid hsla(192,20%,12%,0.95)",
+                background: "linear-gradient(135deg, hsl(var(--pr-aqua)), hsl(var(--pr-aqua) / 0.7))",
+                border: "2px solid hsl(200 24% 7% / 0.95)",
               }}>
-              <span className="text-white [&_svg]:!w-2.5 [&_svg]:!h-2.5">{getIcon(cfg.icon)}</span>
+              <span className="text-[hsl(200_28%_8%)] [&_svg]:!w-2.5 [&_svg]:!h-2.5">{getIcon(cfg.icon)}</span>
             </div>
             {isFeatured && (
               <motion.div className="absolute inset-0 rounded-full pointer-events-none"
-                style={{ border: `1px solid ${color}25` }}
+                style={{ border: "1px solid hsl(var(--pr-aqua) / 0.3)" }}
                 animate={{ scale: [1, 1.3], opacity: [0.5, 0] }}
                 transition={{ duration: 2.5, repeat: Infinity }} />
             )}
@@ -811,8 +821,8 @@ function SectorCard({ id, index, isExpanded, onToggle, onNavigate, isFeatured, f
             <div className="flex items-center gap-2 mb-0.5">
               <h3 className="font-bold text-[0.8rem] sm:text-sm text-foreground font-heading truncate">{label}</h3>
               {isFeatured && (
-                <span className="text-[0.56rem] sm:text-[11px] px-2 py-0.5 rounded-full font-bold tracking-[1.4px] uppercase flex items-center gap-0.5 flex-shrink-0 text-foreground"
-                  style={{ background: `${color}30`, border: `1px solid ${color}58` }}>
+                <span className="text-[0.56rem] sm:text-[11px] px-2 py-0.5 rounded-full font-bold tracking-[1.4px] uppercase flex items-center gap-0.5 flex-shrink-0"
+                  style={{ background: "hsl(var(--pr-aqua) / 0.2)", border: "1px solid hsl(var(--pr-aqua) / 0.45)", color: "hsl(var(--pr-aqua))" }}>
                   <Crown className="w-2 h-2" /> PREMIUM
                 </span>
               )}
@@ -824,22 +834,12 @@ function SectorCard({ id, index, isExpanded, onToggle, onNavigate, isFeatured, f
           <div className="flex items-center gap-1.5 flex-shrink-0">
             <motion.button
               onClick={(e) => { e.stopPropagation(); isFeatured ? navigate(route) : onNavigate(id); }}
-              className="px-3 py-1.5 rounded-xl text-[10px] sm:text-[11px] font-semibold transition-all hidden sm:flex items-center gap-1 hover:scale-105"
-              style={isFeatured ? {
-                backgroundColor: color,
-                color: "#fff",
-                boxShadow: `0 3px 12px ${color}25`
-              } : {
-                background: "hsl(var(--secondary) / 0.82)",
-                border: "1px solid hsl(var(--border) / 0.9)",
-                color: "hsl(var(--foreground) / 0.96)"
-              }}
+              className={`${isFeatured ? "pglass-btn" : "pglass-btn-ghost"} hidden min-h-9 px-3 py-1.5 text-[10px] sm:flex sm:text-[11px]`}
               whileTap={{ scale: 0.95 }}>
               {isFeatured ? "Demo Live" : "Apri Demo"} <ArrowRight className="w-2.5 h-2.5" />
             </motion.button>
-            <div className="w-6 h-6 rounded-lg flex items-center justify-center"
-              style={{ background: "hsl(var(--secondary) / 0.72)" }}>
-              {isExpanded ? <ChevronUp className="w-3.5 h-3.5 text-foreground/85" /> : <ChevronDown className="w-3.5 h-3.5 text-foreground/85" />}
+            <div className="pglass-icon-btn h-7 w-7">
+              {isExpanded ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
             </div>
           </div>
         </div>
@@ -851,16 +851,16 @@ function SectorCard({ id, index, isExpanded, onToggle, onNavigate, isFeatured, f
               exit={{ height: 0, opacity: 0 }} transition={{ duration: 0.3 }} className="overflow-hidden">
               <div className="px-4 pb-5 pt-1">
                 {/* Separator */}
-                <div className="h-px mb-4" style={{ background: `linear-gradient(90deg, transparent, ${color}15, transparent)` }} />
+                <div className="pglass-divider mb-4" />
 
                 {/* Mockup Gallery */}
-                <MockupGallery sectorId={id} color={color} />
+                <MockupGallery sectorId={id} color={EMPIRE_AQUA_HEX} />
 
                 {/* CTA */}
                 <div className="flex justify-center mt-4">
                   <motion.button onClick={() => isFeatured ? navigate(route) : onNavigate(id)}
-                    className="px-5 py-2.5 rounded-xl text-xs font-bold text-white flex items-center gap-2 min-h-[40px] transition-all hover:scale-105"
-                    style={{ backgroundColor: color, boxShadow: `0 4px 16px ${color}20` }} whileTap={{ scale: 0.95 }}>
+                    className="pglass-btn min-h-[44px] px-5 py-2.5 text-xs font-bold"
+                    whileTap={{ scale: 0.95 }}>
                     <Sparkles className="w-3.5 h-3.5" />
                     Apri Demo Live <ArrowRight className="w-3.5 h-3.5" />
                   </motion.button>
