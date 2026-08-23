@@ -841,16 +841,16 @@ function SectorCard({ id, index, isExpanded, onToggle, onNavigate, isFeatured, f
               exit={{ height: 0, opacity: 0 }} transition={{ duration: 0.3 }} className="overflow-hidden">
               <div className="px-4 pb-5 pt-1">
                 {/* Separator */}
-                <div className="h-px mb-4" style={{ background: `linear-gradient(90deg, transparent, ${color}15, transparent)` }} />
+                <div className="pglass-divider mb-4" />
 
                 {/* Mockup Gallery */}
-                <MockupGallery sectorId={id} color={color} />
+                <MockupGallery sectorId={id} color={EMPIRE_AQUA_HEX} />
 
                 {/* CTA */}
                 <div className="flex justify-center mt-4">
                   <motion.button onClick={() => isFeatured ? navigate(route) : onNavigate(id)}
-                    className="px-5 py-2.5 rounded-xl text-xs font-bold text-white flex items-center gap-2 min-h-[40px] transition-all hover:scale-105"
-                    style={{ backgroundColor: color, boxShadow: `0 4px 16px ${color}20` }} whileTap={{ scale: 0.95 }}>
+                    className="pglass-btn min-h-[44px] px-5 py-2.5 text-xs font-bold"
+                    whileTap={{ scale: 0.95 }}>
                     <Sparkles className="w-3.5 h-3.5" />
                     Apri Demo Live <ArrowRight className="w-3.5 h-3.5" />
                   </motion.button>
