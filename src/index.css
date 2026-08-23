@@ -3491,6 +3491,11 @@ html body input.auth-white-input.auth-white-input.auth-white-input:hover {
   caret-color: #0b1220;
   border-color: hsl(0 0% 100% / 0.45) !important;
 }
+html body .auth-field-icon,
+html body .auth-field-icon svg {
+  color: #0b1220 !important;
+  opacity: 1 !important;
+}
 html body input.auth-white-input.auth-white-input::placeholder {
   color: hsl(222 30% 12% / 0.45) !important;
 }

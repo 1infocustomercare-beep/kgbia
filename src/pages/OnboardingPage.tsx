@@ -266,12 +266,32 @@ export default function OnboardingPage() {
           color: hsl(var(--pr-emerald-deep, 158 60% 10%));
         }
         /* Color picker: keep native swatch visible */
+        /* ── Empire Liquid Glass (dark) — coerente con home/webapp ── */
+        .onboarding-scope {
+          background:
+            radial-gradient(ellipse 70% 50% at 80% 0%, hsl(var(--pr-aqua, 174 68% 53%) / 0.10), transparent 60%),
+            linear-gradient(180deg, hsl(var(--pr-emerald-deep, 158 60% 8%)), hsl(200 40% 6%));
+          color: hsl(0 0% 100% / 0.92);
+        }
+        .onboarding-scope h1, .onboarding-scope h2, .onboarding-scope h3 { color: hsl(0 0% 100% / 0.97); }
+        .onboarding-scope .text-muted-foreground { color: hsl(0 0% 100% / 0.68) !important; }
+        .onboarding-scope label { color: hsl(0 0% 100% / 0.9) !important; }
+        .onboarding-scope .border-border { border-color: hsl(0 0% 100% / 0.14) !important; }
+        .onboarding-scope button.border-2 {
+          background: hsl(0 0% 100% / 0.05);
+          backdrop-filter: blur(14px);
+          -webkit-backdrop-filter: blur(14px);
+        }
+        .onboarding-scope button.border-2:hover { background: hsl(0 0% 100% / 0.09); }
+        .onboarding-scope .text-primary { color: hsl(var(--pr-aqua, 174 68% 53%)) !important; }
+        .onboarding-scope .border-primary { border-color: hsl(var(--pr-aqua, 174 68% 53%) / 0.75) !important; }
+        .onboarding-scope .bg-primary\\/10 { background: hsl(var(--pr-aqua, 174 68% 53%) / 0.14) !important; }
         .onboarding-scope input[type="color"] {
           padding: 0 !important;
           background: transparent !important;
         }
       `}</style>
-      <div role="main" aria-label="Configurazione account" className="prestige-root prestige-section prestige-light onboarding-scope min-h-screen flex items-center justify-center p-4">
+      <div role="main" aria-label="Configurazione account" className="prestige-root prestige-section pglass-scope pglass-app onboarding-scope min-h-screen flex items-center justify-center p-4">
 
       <div className="w-full max-w-3xl">
         {/* Progress bar — 5 steps */}
@@ -289,15 +309,16 @@ export default function OnboardingPage() {
                 className={`h-2 rounded-full transition-all ${i <= step ? "w-10" : "w-6"}`}
                 style={{
                   background: i <= step
-                    ? "linear-gradient(90deg, hsl(var(--pr-gold-light)), hsl(var(--pr-gold-deep)))"
-                    : "hsl(var(--pr-emerald) / 0.15)",
+                    ? "linear-gradient(90deg, hsl(var(--pr-aqua, 174 68% 53%)), hsl(var(--pr-gold, 42 55% 52%)))"
+                    : "hsl(0 0% 100% / 0.18)",
                 }}
               />
               {i <= step && (
-                <span className="text-[10px] font-semibold hidden sm:inline" style={{ color: "hsl(var(--pr-gold-deep))" }}>
+                <span className="text-[10px] font-semibold hidden sm:inline" style={{ color: "hsl(var(--pr-aqua, 174 68% 53%))" }}>
                   {label}
                 </span>
               )}
+
             </div>
           ))}
         </div>
