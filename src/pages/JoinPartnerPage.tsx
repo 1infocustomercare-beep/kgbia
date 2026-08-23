@@ -38,7 +38,7 @@ const JoinPartnerPage = () => {
         <div className="max-w-5xl mx-auto flex items-center justify-between gap-2 px-3 sm:px-5 py-2.5">
           <div className="flex min-w-0 items-center gap-2">
             <GlassBackButton to="/" label="Home" variant="inline" className="shrink-0 px-3 text-xs" />
-            <img src={empireLogoNew} alt="Empire" className="hidden xs:block w-8 h-8 shrink-0 rounded-full object-cover border border-primary/30" />
+            <img src={empireLogoNew} alt="Empire" className="hidden sm:block w-8 h-8 shrink-0 rounded-full object-cover border border-primary/30" />
             <span className="hidden sm:inline font-heading font-bold text-sm tracking-wider uppercase text-foreground whitespace-nowrap">EMPIRE</span>
           </div>
           <motion.button
