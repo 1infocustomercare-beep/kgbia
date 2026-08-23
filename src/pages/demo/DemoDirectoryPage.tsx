@@ -148,34 +148,35 @@ const HeroPhoneShowcase = ({ navigate }: { navigate: (p: string) => void }) => {
       <div className="relative flex flex-col sm:flex-row items-center gap-4 px-5 py-8 sm:px-10 sm:py-10" style={{ zIndex: 2 }}>
         {/* Left: Text */}
         <div className="flex-1 text-center sm:text-left">
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full mb-3"
-            style={{ background: "hsla(174,60%,45%,0.12)", border: "1px solid hsla(174,60%,45%,0.25)" }}>
-            <Sparkles className="w-3 h-3 text-[hsl(174,60%,55%)]" />
-            <span className="text-[11px] font-bold tracking-widest uppercase text-[hsl(174,60%,65%)]">25+ Settori</span>
+          <div className="pglass-chip mb-3 inline-flex items-center gap-1.5">
+            <Sparkles className="h-3 w-3" />
+            <span className="text-[11px] font-bold uppercase tracking-widest">25+ Settori</span>
           </div>
 
-          <h2 className="text-xl sm:text-2xl font-bold text-white leading-tight mb-2" style={{ fontFamily: "'Playfair Display', serif" }}>
+          <h2 className="mb-2 font-heading text-xl font-semibold leading-tight text-foreground sm:text-2xl">
             Il tuo business,<br />
-            <span style={{ color: `hsl(${sector.color})`, transition: "color 0.8s ease" }}>digitalizzato.</span>
+            <span className="pglass-aqua-text">digitalizzato.</span>
           </h2>
-          <p className="text-xs sm:text-sm text-white/50 max-w-sm mb-5">
+          <p className="mb-5 max-w-sm text-xs text-foreground/70 sm:text-sm">
             Dashboard IA, ordini, prenotazioni e CRM — pronto in 5 minuti per ogni settore.
           </p>
 
-          {/* Sector pills */}
-          <div className="flex flex-wrap gap-1.5 justify-center sm:justify-start mb-5">
+          {/* Sector pills — vetro Empire, accento aqua sull'attivo */}
+          <div className="mb-5 flex flex-wrap justify-center gap-1.5 sm:justify-start">
             {HERO_SECTORS.map((s, i) => (
               <button key={s.id} onClick={() => setActiveIdx(i)}
-                className="px-2.5 py-1 rounded-full text-[11px] font-semibold tracking-wide transition-all duration-300"
+                className="rounded-full px-2.5 py-1 text-[11px] font-semibold tracking-wide transition-all duration-300"
                 style={{
-                  background: i === activeIdx ? `hsla(${s.color} / 0.2)` : "hsla(220,20%,20%,0.5)",
-                  border: `1px solid ${i === activeIdx ? `hsla(${s.color} / 0.5)` : "hsla(220,15%,25%,0.4)"}`,
-                  color: i === activeIdx ? `hsl(${s.color})` : "hsla(220,10%,70%,0.7)",
+                  background: i === activeIdx ? "hsl(var(--pr-aqua) / 0.18)" : "hsl(0 0% 100% / 0.05)",
+                  border: `1px solid ${i === activeIdx ? "hsl(var(--pr-aqua) / 0.5)" : "hsl(0 0% 100% / 0.12)"}`,
+                  color: i === activeIdx ? "hsl(var(--pr-aqua))" : "hsl(var(--foreground) / 0.7)",
+                  backdropFilter: "blur(14px)",
                 }}>
                 {s.label}
               </button>
             ))}
           </div>
+
 
           <div className="flex gap-2.5 justify-center sm:justify-start">
             <GlassButton size="sm" onClick={() => navigate("/auth")}>
