@@ -197,20 +197,21 @@ const HeroPhoneShowcase = ({ navigate }: { navigate: (p: string) => void }) => {
         <div className="relative flex-shrink-0 w-[180px] sm:w-[200px]">
           {/* Glow behind phone */}
           <div className="absolute inset-0 rounded-[2rem]" style={{
-            background: `radial-gradient(ellipse at center, hsla(${sector.color} / 0.2), transparent 70%)`,
+            background: `radial-gradient(ellipse at center, hsl(var(--pr-aqua) / 0.18), hsl(${sector.color} / 0.10) 45%, transparent 72%)`,
             filter: "blur(30px)", transform: "scale(1.3)", transition: "background 1s ease"
           }} />
           {/* iPhone frame */}
           <div className="relative rounded-[2rem] overflow-hidden border-[3px]"
             style={{
-              borderColor: "hsla(220,15%,25%,0.6)",
-              boxShadow: `0 20px 50px hsla(0,0%,0%,0.5), 0 0 30px hsla(${sector.color} / 0.15)`,
+              borderColor: "hsl(var(--pr-aqua) / 0.28)",
+              boxShadow: "0 24px 60px -24px hsl(196 60% 3% / 0.75), 0 0 32px hsl(var(--pr-aqua) / 0.18)",
               aspectRatio: "9/19.5",
-              background: "hsl(220,20%,5%)",
+              background: "hsl(200 24% 5%)",
               transition: "box-shadow 1s ease",
             }}>
             {/* Notch */}
-            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[35%] h-[3.5%] rounded-b-xl z-20" style={{ background: "hsl(220,20%,5%)" }} />
+            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[35%] h-[3.5%] rounded-b-xl z-20" style={{ background: "hsl(200 24% 5%)" }} />
+
             {/* Screen */}
             <AnimatePresence mode="wait">
               {currentImage ? (
