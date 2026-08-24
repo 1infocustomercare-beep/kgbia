@@ -256,14 +256,14 @@ export function PrestigeRoiCalculator() {
           </div>
 
           <div className="prestige-card-gilt">
-            <div className="prestige-eyebrow" style={{ color: "hsl(var(--pr-gold-light))" }}>{t({ it: "Stima mensile", en: "Monthly estimate" })}</div>
+            <div className="prestige-eyebrow" style={{ color: "hsl(var(--pr-gold-deep))" }}>{t({ it: "Stima mensile", en: "Monthly estimate" })}</div>
             <RoiRow label={t({ it: "Chiamate perse oggi", en: "Calls lost today" })} value={`${data.missed}`} tone="bad" />
             <RoiRow label={t({ it: "Recuperate da Empire (~70%)", en: "Recovered by Empire (~70%)" })} value={`${data.recovered}`} tone="good" />
             <RoiRow label={t({ it: "Fatturato extra stimato", en: "Estimated extra revenue" })} value={fmtEur(data.extraRevenue)} tone="good" />
             <RoiRow label={t({ it: "Risparmio staff (vs receptionist)", en: "Staff savings (vs receptionist)" })} value={fmtEur(data.staffSaved)} tone="good" />
             <RoiRow label={t({ it: "Abbonamento Empire (da €49/mese)", en: "Empire subscription (from €49/month)" })} value={`− ${fmtEur(data.empireCost)}`} tone="bad" />
             <div className="mt-4 border-t pt-4" style={{ borderColor: "hsl(var(--pr-gold) / 0.3)" }}>
-              <div className="text-xs uppercase tracking-widest" style={{ color: "hsl(var(--pr-text-on-dark) / 0.8)" }}>{t({ it: "Guadagno netto stimato / mese", en: "Estimated net gain / month" })}</div>
+              <div className="text-xs uppercase tracking-widest" style={{ color: "hsl(var(--pr-muted-on-light))" }}>{t({ it: "Guadagno netto stimato / mese", en: "Estimated net gain / month" })}</div>
               <div className="prestige-display mt-1 text-4xl sm:text-5xl prestige-gold-text">{fmtEur(data.netGain)}</div>
             </div>
             <button type="button" onClick={() => scrollToSection("#prestige-lead")} className="prestige-cta mt-6 w-full justify-center">
@@ -289,8 +289,8 @@ function RoiSlider({ label, value, min, max, step, onChange, suffix }: { label: 
 function RoiRow({ label, value, tone }: { label: string; value: string; tone: "good" | "bad" }) {
   return (
     <div className="mt-3 flex items-center justify-between gap-3 text-sm">
-      <span style={{ color: "hsl(var(--pr-text-on-dark) / 0.85)" }}>{label}</span>
-      <span className="font-semibold" style={{ color: tone === "good" ? "hsl(var(--pr-gold-light))" : "hsl(0 70% 70%)" }}>{value}</span>
+      <span style={{ color: "hsl(var(--pr-text-on-light))" }}>{label}</span>
+      <span className="font-semibold" style={{ color: tone === "good" ? "hsl(var(--pr-emerald))" : "hsl(0 65% 45%)" }}>{value}</span>
     </div>
   );
 }
