@@ -2,6 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { EmpireLogo, EmpireWordmark } from "@/lib/empire-brand";
 import { LEGAL, AI_DISCLAIMER_IT, legalIdentityLines } from "@/config/legal";
+import { scrollToSection } from "@/lib/home-scroll";
 
 /**
  * PrestigeFooter — footer pulito e statico per la home Empire.
@@ -10,6 +11,11 @@ import { LEGAL, AI_DISCLAIMER_IT, legalIdentityLines } from "@/config/legal";
 export default function PrestigeFooter() {
   const scrollTop = () =>
     window.scrollTo({ top: 0, behavior: "smooth" });
+
+  /** Link interno alla home: usa lo scroller unico (Lenis) invece dell'anchor nativo. */
+  const jump = (e: React.MouseEvent, hash: string) => {
+    if (window.location.pathname === "/" && scrollToSection(hash)) e.preventDefault();
+  };
 
   return (
     <footer className="prestige-dark relative w-full border-t border-white/10 bg-[#0b1410] text-white/80 overflow-hidden">
@@ -47,8 +53,7 @@ export default function PrestigeFooter() {
               Inizia ora
               <span aria-hidden="true">→</span>
             </Link>
-            <a
-              href="#lead"
+            <a href="#lead" onClick={(e) => jump(e, "#lead")}
               className="inline-flex items-center gap-2 rounded-full border border-white/25 px-7 py-3 text-sm font-semibold text-white hover:bg-white/5 transition-colors"
             >
               Parla con un consulente
@@ -63,11 +68,11 @@ export default function PrestigeFooter() {
               Piattaforma
             </h3>
             <ul className="space-y-2">
-              <li><a href="#services" className="hover:text-white">Servizi</a></li>
-              <li><a href="#sectors" className="hover:text-white">Settori</a></li>
-              <li><a href="#portfolio" className="hover:text-white">Portfolio</a></li>
-              <li><a href="#agents" className="hover:text-white">AI Agents</a></li>
-              <li><a href="#pricing" className="hover:text-white">Prezzi</a></li>
+              <li><a href="#services" onClick={(e) => jump(e, "#services")} className="hover:text-white">Servizi</a></li>
+              <li><a href="#sectors" onClick={(e) => jump(e, "#sectors")} className="hover:text-white">Settori</a></li>
+              <li><a href="#portfolio" onClick={(e) => jump(e, "#portfolio")} className="hover:text-white">Portfolio</a></li>
+              <li><a href="#agents" onClick={(e) => jump(e, "#agents")} className="hover:text-white">AI Agents</a></li>
+              <li><a href="#pricing" onClick={(e) => jump(e, "#pricing")} className="hover:text-white">Prezzi</a></li>
             </ul>
           </div>
           <div>
@@ -75,10 +80,10 @@ export default function PrestigeFooter() {
               Risorse
             </h3>
             <ul className="space-y-2">
-              <li><a href="#how" className="hover:text-white">Come funziona</a></li>
-              <li><a href="#faq" className="hover:text-white">FAQ</a></li>
+              <li><a href="#how" onClick={(e) => jump(e, "#how")} className="hover:text-white">Come funziona</a></li>
+              <li><a href="#faq" onClick={(e) => jump(e, "#faq")} className="hover:text-white">FAQ</a></li>
               <li><Link to="/join" className="hover:text-white">Diventa Partner</Link></li>
-              <li><a href="#lead" className="hover:text-white">Contatti</a></li>
+              <li><a href="#lead" onClick={(e) => jump(e, "#lead")} className="hover:text-white">Contatti</a></li>
             </ul>
           </div>
           <div>

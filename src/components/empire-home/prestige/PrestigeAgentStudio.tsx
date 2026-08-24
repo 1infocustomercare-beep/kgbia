@@ -304,7 +304,7 @@ export default function PrestigeAgentStudio() {
 
         <button
           type="button"
-          onClick={() => scrollToSection("prestige-lead")}
+          onClick={() => scrollToSection("#prestige-lead")}
           className="prestige-cta mt-5 w-full justify-center"
         >
           <span>Richiedi l'analisi del tuo caso</span>

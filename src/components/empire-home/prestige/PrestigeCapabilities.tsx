@@ -317,7 +317,7 @@ export default function PrestigeCapabilities() {
           </div>
           <div className="col-span-12 md:col-span-5 md:text-right">
             <a
-              href="#prestige-lead-form"
+              href="#prestige-lead"
               onClick={(ev) => {
                 ev.preventDefault();
                 document.getElementById("prestige-lead-form")?.scrollIntoView({ behavior: "smooth" });
