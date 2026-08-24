@@ -218,7 +218,7 @@ export default function PrestigeHero() {
               en: "Websites, web apps, backoffice and AI agents tailored to ",
             })}
             <strong className="font-semibold" style={{ color: "hsl(var(--pr-text-on-dark))" }}>
-              {t({ it: "ristoranti, idraulici, hotel, spa, immobiliari e altri 20+ settori", en: "restaurants, plumbers, hotels, spas, real-estate and 20+ industries" })}
+              {t({ it: "ristoranti, idraulici, hotel, spa, immobiliari e altri 25+ settori", en: "restaurants, plumbers, hotels, spas, real-estate and 25+ industries" })}
             </strong>
             {t({ it: ". Il tuo sistema lavora, vende e risponde al posto tuo.", en: ". Your system works, sells and replies for you." })}
           </p>

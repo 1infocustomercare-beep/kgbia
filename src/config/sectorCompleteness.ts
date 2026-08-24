@@ -328,7 +328,7 @@ const SITE_BLOCKS_BY_SECTOR: Partial<Record<string, RequiredSiteBlock[]>> = {
     { id: "classes", label: "Calendario corsi", type: "classes", critical: true },
     { id: "membership", label: "Abbonamenti", type: "membership", critical: true },
     { id: "team", label: "Trainer", type: "team", critical: true },
-    { id: "booking", label: "Free trial", type: "booking", critical: true },
+    { id: "booking", label: "Prova senza impegno", type: "booking", critical: true },
     { id: "contacts", label: "Contatti", type: "contacts", critical: true },
   ],
   hospitality: [

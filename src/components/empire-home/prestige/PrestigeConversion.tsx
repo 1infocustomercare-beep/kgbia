@@ -227,7 +227,7 @@ export function PrestigeRoiCalculator() {
     const recovered = Math.round(missed * 0.7);
     const extraRevenue = recovered * avgValue;
     const staffSaved = 1800;
-    const empireCost = 297;
+    const empireCost = 49;
     const netGain = extraRevenue + staffSaved - empireCost;
     return { missed, recovered, extraRevenue, staffSaved, empireCost, netGain };
   }, [callsPerDay, avgValue, missedRate]);
@@ -238,7 +238,7 @@ export function PrestigeRoiCalculator() {
     <section data-section="prestige-roi" className="prestige-section prestige-light py-20 sm:py-28">
       <div className="mx-auto max-w-5xl px-4 sm:px-5 lg:px-10">
         <div className="text-center max-w-2xl mx-auto">
-          <SectionEyebrow index="05">{t({ it: "Calcolatore ROI", en: "ROI Calculator" })}</SectionEyebrow>
+          <SectionEyebrow index="03">{t({ it: "Calcolatore ROI", en: "ROI Calculator" })}</SectionEyebrow>
           <h2 className="prestige-display mt-4 text-3xl sm:text-5xl" style={{ color: "hsl(var(--pr-text-on-light))" }}>
             {t({ it: "Quanto stai perdendo ", en: "How much are you losing " })}
             <span className="prestige-gold-text italic">{t({ it: "oggi?", en: "today?" })}</span>
@@ -256,14 +256,14 @@ export function PrestigeRoiCalculator() {
           </div>
 
           <div className="prestige-card-gilt">
-            <div className="prestige-eyebrow" style={{ color: "hsl(var(--pr-gold-light))" }}>{t({ it: "Stima mensile", en: "Monthly estimate" })}</div>
+            <div className="prestige-eyebrow" style={{ color: "hsl(var(--pr-gold-deep))" }}>{t({ it: "Stima mensile", en: "Monthly estimate" })}</div>
             <RoiRow label={t({ it: "Chiamate perse oggi", en: "Calls lost today" })} value={`${data.missed}`} tone="bad" />
             <RoiRow label={t({ it: "Recuperate da Empire (~70%)", en: "Recovered by Empire (~70%)" })} value={`${data.recovered}`} tone="good" />
             <RoiRow label={t({ it: "Fatturato extra stimato", en: "Estimated extra revenue" })} value={fmtEur(data.extraRevenue)} tone="good" />
             <RoiRow label={t({ it: "Risparmio staff (vs receptionist)", en: "Staff savings (vs receptionist)" })} value={fmtEur(data.staffSaved)} tone="good" />
-            <RoiRow label={t({ it: "Costo Empire", en: "Empire cost" })} value={`− ${fmtEur(data.empireCost)}`} tone="bad" />
+            <RoiRow label={t({ it: "Abbonamento Empire (da €49/mese)", en: "Empire subscription (from €49/month)" })} value={`− ${fmtEur(data.empireCost)}`} tone="bad" />
             <div className="mt-4 border-t pt-4" style={{ borderColor: "hsl(var(--pr-gold) / 0.3)" }}>
-              <div className="text-xs uppercase tracking-widest" style={{ color: "hsl(var(--pr-text-on-dark) / 0.8)" }}>{t({ it: "Guadagno netto stimato / mese", en: "Estimated net gain / month" })}</div>
+              <div className="text-xs uppercase tracking-widest" style={{ color: "hsl(var(--pr-muted-on-light))" }}>{t({ it: "Guadagno netto stimato / mese", en: "Estimated net gain / month" })}</div>
               <div className="prestige-display mt-1 text-4xl sm:text-5xl prestige-gold-text">{fmtEur(data.netGain)}</div>
             </div>
             <button type="button" onClick={() => scrollToSection("#prestige-lead")} className="prestige-cta mt-6 w-full justify-center">
@@ -289,8 +289,8 @@ function RoiSlider({ label, value, min, max, step, onChange, suffix }: { label: 
 function RoiRow({ label, value, tone }: { label: string; value: string; tone: "good" | "bad" }) {
   return (
     <div className="mt-3 flex items-center justify-between gap-3 text-sm">
-      <span style={{ color: "hsl(var(--pr-text-on-dark) / 0.85)" }}>{label}</span>
-      <span className="font-semibold" style={{ color: tone === "good" ? "hsl(var(--pr-gold-light))" : "hsl(0 70% 70%)" }}>{value}</span>
+      <span style={{ color: "hsl(var(--pr-text-on-light))" }}>{label}</span>
+      <span className="font-semibold" style={{ color: tone === "good" ? "hsl(var(--pr-emerald))" : "hsl(0 65% 45%)" }}>{value}</span>
     </div>
   );
 }
@@ -301,7 +301,8 @@ export function PrestigeComparison() {
   const rows = [
     { k: { it: "Risposta 24/7 multilingua", en: "24/7 multilingual answers" }, empire: true, agency: false, staff: false },
     { k: { it: "Setup in 7 giorni", en: "Setup in 7 days" }, empire: true, agency: false, staff: true },
-    { k: { it: "Costo mensile", en: "Monthly cost" }, empire: "€29–49", agency: "€2.500+", staff: "€1.800+" },
+    { k: { it: "Investimento iniziale", en: "Upfront investment" }, empire: "€1.997–7.997", agency: "€5.000+", staff: "—" },
+    { k: { it: "Costo mensile (abbonamento)", en: "Monthly cost (subscription)" }, empire: "€0–49", agency: "€2.500+", staff: "€1.800+" },
     { k: { it: "Ferie / malattia", en: "Holidays / sick days" }, empire: { it: "Mai", en: "Never" }, agency: "—", staff: { it: "Sì", en: "Yes" } },
     { k: { it: "Si aggiorna da sola", en: "Self-improving" }, empire: true, agency: false, staff: false },
     { k: { it: "Garanzia soddisfatti", en: "Satisfaction guarantee" }, empire: { it: "90 gg", en: "90 days" }, agency: false, staff: false },
@@ -318,7 +319,7 @@ export function PrestigeComparison() {
     <section data-section="prestige-compare" className="prestige-section prestige-dark py-20 sm:py-28">
       <div className="mx-auto max-w-5xl px-4 sm:px-5 lg:px-10">
         <div className="text-center max-w-2xl mx-auto">
-          <SectionEyebrow index="06">{t({ it: "Confronto onesto", en: "Honest comparison" })}</SectionEyebrow>
+          <SectionEyebrow index="04">{t({ it: "Confronto onesto", en: "Honest comparison" })}</SectionEyebrow>
           <h2 className="prestige-display mt-4 text-3xl sm:text-5xl">
             {t({ it: "Empire vs ", en: "Empire vs " })}
             <span className="prestige-gold-text italic">{t({ it: "il vecchio modo.", en: "the old way." })}</span>
@@ -401,13 +402,13 @@ export function PrestigePricing() {
     <section data-section="prestige-pricing" className="prestige-section prestige-light py-20 sm:py-28">
       <div className="mx-auto max-w-6xl px-4 sm:px-5 lg:px-10">
         <div className="text-center max-w-2xl mx-auto">
-          <SectionEyebrow index="07">{t({ it: "Prezzi trasparenti", en: "Transparent pricing" })}</SectionEyebrow>
+          <SectionEyebrow index="05">{t({ it: "Prezzi trasparenti", en: "Transparent pricing" })}</SectionEyebrow>
           <h2 className="prestige-display mt-4 text-3xl sm:text-5xl" style={{ color: "hsl(var(--pr-text-on-light))" }}>
             {t({ it: "Investi in un'AI, ", en: "Invest in an AI, " })}
             <span className="prestige-gold-text italic">{t({ it: "non in problemi.", en: "not in problems." })}</span>
           </h2>
           <p className="mt-3 text-sm" style={{ color: "hsl(var(--pr-muted-on-light))" }}>
-            {t({ it: "Setup in 7 giorni · Cancelli quando vuoi · Nessun vincolo", en: "7-day setup · Cancel anytime · No commitment" })}
+            {t({ it: "Setup in 7 giorni · Una tantum + abbonamento · Disdici l'abbonamento quando vuoi", en: "7-day setup · One-off + subscription · Cancel the subscription anytime" })}
           </p>
         </div>
 
@@ -446,7 +447,7 @@ export function PrestigePricing() {
               Scegli uno stile dal nostro catalogo, personalizza logo e colori, ricevi il sito.
             </p>
             <button onClick={() => navigate("/pacchetto-base")} className="prestige-cta mt-4 w-full justify-center">
-              <span>Acquista ora — €1.997</span> <ArrowRight size={16} />
+              <span>Configura il pacchetto Base</span> <ArrowRight size={16} />
             </button>
           </div>
           <div className="prestige-card p-6">
@@ -524,6 +525,8 @@ export function PrestigeFAQ() {
     { q: { it: "Quanto ci vuole davvero per partire?", en: "How long does it really take to launch?" }, a: { it: "7 giorni in media. Il primo giorno ci dai gli accessi, in una settimana sei live con sito, AI, WhatsApp e telefono.", en: "7 days on average. Day one you give us access, within a week you're live with site, AI, WhatsApp and phone." } },
     { q: { it: "I miei dati e quelli dei clienti sono sicuri?", en: "Are my and my customers' data safe?" }, a: { it: "Sì. Server in UE, crittografia at-rest, GDPR compliant, nessun dato venduto a terzi. Mai.", en: "Yes. EU servers, at-rest encryption, GDPR compliant, no data sold to third parties. Ever." } },
     { q: { it: "Posso cancellare in qualunque momento?", en: "Can I cancel anytime?" }, a: { it: "Sì, senza penali. Puoi disdire in qualunque momento, senza costi nascosti.", en: "Yes, no penalties. You can cancel anytime with no hidden fees." } },
+    { q: { it: "Quanto costa e cosa comprende?", en: "How much is it and what's included?" }, a: { it: "Tre piani chiari: Digital Start €1.997 una tantum + €49/mese, Growth AI €4.997 + €29/mese, Empire Domination €7.997 + €0/mese. Prezzi IVA esclusa, rateizzabili. Nessun costo nascosto: quello che vedi è quello che paghi.", en: "Three clear plans: Digital Start €1,997 one-off + €49/month, Growth AI €4,997 + €29/month, Empire Domination €7,997 + €0/month. VAT excluded, instalments available. No hidden fees." } },
+    { q: { it: "E se non funziona per la mia azienda?", en: "What if it doesn't work for my business?" }, a: { it: "Hai 90 giorni per valutare il sistema con noi al tuo fianco: se gli obiettivi concordati non vengono raggiunti, continuiamo a lavorarci senza costi aggiuntivi finché non ci arriviamo. L'abbonamento è disdicibile in qualunque momento, senza penali.", en: "You get 90 days to evaluate the system with us alongside you: if the agreed goals aren't met, we keep working on it at no extra cost until they are. The subscription can be cancelled anytime, no penalties." } },
     { q: { it: "Funziona anche per il mio settore?", en: "Does it work for my industry?" }, a: { it: "Empire è già attivo in 25+ settori: food, NCC, beauty, hotel, palestre, studi medici/legali, e-commerce. Lo addestriamo sul tuo specifico.", en: "Empire is live in 25+ industries: food, NCC, beauty, hotels, gyms, medical/legal practices, e-commerce. We train it on yours." } },
   ];
 
@@ -531,7 +534,7 @@ export function PrestigeFAQ() {
     <section data-section="prestige-faq" className="prestige-section prestige-dark py-20 sm:py-28">
       <div className="mx-auto max-w-3xl px-4 sm:px-5 lg:px-10">
         <div className="text-center">
-          <SectionEyebrow index="08">{t({ it: "Domande frequenti", en: "Frequently asked" })}</SectionEyebrow>
+          <SectionEyebrow index="06">{t({ it: "Domande frequenti", en: "Frequently asked" })}</SectionEyebrow>
           <h2 className="prestige-display mt-4 text-3xl sm:text-5xl">
             {t({ it: "I tuoi dubbi, ", en: "Your doubts, " })}
             <span className="prestige-gold-text italic">{t({ it: "risolti.", en: "answered." })}</span>
@@ -626,7 +629,7 @@ export function PrestigeLeadForm() {
       <div className="mx-auto max-w-4xl px-4 sm:px-5 lg:px-10">
         <div className="prestige-card-gilt p-6 sm:p-10">
           <div className="text-center">
-            <SectionEyebrow index="09">{t({ it: "Prenota la tua demo", en: "Book your demo" })}</SectionEyebrow>
+            <SectionEyebrow index="07">{t({ it: "Prenota la tua demo", en: "Book your demo" })}</SectionEyebrow>
             <h2 className="prestige-display mt-4 text-3xl sm:text-5xl">
               {t({ it: "Demo personalizzata ", en: "Personalised demo " })}
               <span className="prestige-gold-text italic">{t({ it: "30 minuti.", en: "30 minutes." })}</span>
