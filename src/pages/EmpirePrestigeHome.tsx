@@ -18,7 +18,10 @@ import PrestigeFinalCTA from "@/components/empire-home/prestige/PrestigeFinalCTA
 import PrestigeProgressBar from "@/components/empire-home/prestige/PrestigeProgressBar";
 import { PrestigeLangProvider } from "@/components/empire-home/prestige/PrestigeLang";
 import {
+  PrestigeProblem,
   PrestigeHowItWorks,
+  PrestigeRoiCalculator,
+  PrestigeComparison,
   PrestigePricing,
   PrestigeFAQ,
   PrestigeLeadForm,
@@ -95,6 +98,11 @@ function EmpirePrestigeHomeInner() {
           <PrestigeMetrics />
         </div>
 
+        {/* PROBLEMA — agitazione onesta prima della soluzione */}
+        <div id="problem">
+          <PrestigeProblem />
+        </div>
+
 
         {/* SERVIZI bento */}
         <div id="services">
@@ -126,8 +134,20 @@ function EmpirePrestigeHomeInner() {
           <PrestigeHowItWorks />
         </div>
 
+        {/* ROI — stima del valore recuperato */}
+        <div id="roi">
+          <PrestigeRoiCalculator />
+        </div>
+
+        {/* CONFRONTO onesto: Empire vs agenzia vs staff */}
+        <div id="confronto">
+          <PrestigeComparison />
+        </div>
+
         {/* AI AGENTS marquee */}
-        <PrestigeAgents />
+        <div id="agents">
+          <PrestigeAgents />
+        </div>
 
         {/* PREZZI */}
         <div id="pricing">

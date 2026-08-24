@@ -94,7 +94,7 @@ export function PrestigeHowItWorks() {
     <section data-section="prestige-how" className="prestige-section prestige-light py-20 sm:py-28">
       <div className="mx-auto max-w-6xl px-4 sm:px-5 lg:px-10">
         <div className="text-center max-w-2xl mx-auto">
-          <SectionEyebrow index="04">{t({ it: "Come funziona", en: "How it works" })}</SectionEyebrow>
+          <SectionEyebrow index="02">{t({ it: "Come funziona", en: "How it works" })}</SectionEyebrow>
           <h2 className="prestige-display mt-4 text-3xl sm:text-5xl" style={{ color: "hsl(var(--pr-text-on-light))" }}>
             {t({ it: "Tre passi. ", en: "Three steps. " })}
             <span className="prestige-gold-text italic">{t({ it: "Zero complicazioni.", en: "Zero hassle." })}</span>
@@ -238,7 +238,7 @@ export function PrestigeRoiCalculator() {
     <section data-section="prestige-roi" className="prestige-section prestige-light py-20 sm:py-28">
       <div className="mx-auto max-w-5xl px-4 sm:px-5 lg:px-10">
         <div className="text-center max-w-2xl mx-auto">
-          <SectionEyebrow index="02">{t({ it: "Calcolatore ROI", en: "ROI Calculator" })}</SectionEyebrow>
+          <SectionEyebrow index="03">{t({ it: "Calcolatore ROI", en: "ROI Calculator" })}</SectionEyebrow>
           <h2 className="prestige-display mt-4 text-3xl sm:text-5xl" style={{ color: "hsl(var(--pr-text-on-light))" }}>
             {t({ it: "Quanto stai perdendo ", en: "How much are you losing " })}
             <span className="prestige-gold-text italic">{t({ it: "oggi?", en: "today?" })}</span>
@@ -318,7 +318,7 @@ export function PrestigeComparison() {
     <section data-section="prestige-compare" className="prestige-section prestige-dark py-20 sm:py-28">
       <div className="mx-auto max-w-5xl px-4 sm:px-5 lg:px-10">
         <div className="text-center max-w-2xl mx-auto">
-          <SectionEyebrow index="03">{t({ it: "Confronto onesto", en: "Honest comparison" })}</SectionEyebrow>
+          <SectionEyebrow index="04">{t({ it: "Confronto onesto", en: "Honest comparison" })}</SectionEyebrow>
           <h2 className="prestige-display mt-4 text-3xl sm:text-5xl">
             {t({ it: "Empire vs ", en: "Empire vs " })}
             <span className="prestige-gold-text italic">{t({ it: "il vecchio modo.", en: "the old way." })}</span>
