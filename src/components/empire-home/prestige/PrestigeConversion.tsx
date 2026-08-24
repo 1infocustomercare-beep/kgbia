@@ -301,7 +301,8 @@ export function PrestigeComparison() {
   const rows = [
     { k: { it: "Risposta 24/7 multilingua", en: "24/7 multilingual answers" }, empire: true, agency: false, staff: false },
     { k: { it: "Setup in 7 giorni", en: "Setup in 7 days" }, empire: true, agency: false, staff: true },
-    { k: { it: "Costo mensile", en: "Monthly cost" }, empire: "€29–49", agency: "€2.500+", staff: "€1.800+" },
+    { k: { it: "Investimento iniziale", en: "Upfront investment" }, empire: "€1.997–7.997", agency: "€5.000+", staff: "—" },
+    { k: { it: "Costo mensile (abbonamento)", en: "Monthly cost (subscription)" }, empire: "€0–49", agency: "€2.500+", staff: "€1.800+" },
     { k: { it: "Ferie / malattia", en: "Holidays / sick days" }, empire: { it: "Mai", en: "Never" }, agency: "—", staff: { it: "Sì", en: "Yes" } },
     { k: { it: "Si aggiorna da sola", en: "Self-improving" }, empire: true, agency: false, staff: false },
     { k: { it: "Garanzia soddisfatti", en: "Satisfaction guarantee" }, empire: { it: "90 gg", en: "90 days" }, agency: false, staff: false },
