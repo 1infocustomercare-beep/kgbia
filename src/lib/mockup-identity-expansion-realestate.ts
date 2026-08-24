@@ -8,7 +8,7 @@ export const REALESTATE_EXPANSION: ExpansionRow[] = [
     "palazzine di quartiere, interni luminosi, luce diurna naturale",
     "annunci → filtri zona → visita → valutazione casa",
     "carta di mappa catastale e vernice verde bottiglia|luce diurna naturale da appartamento vuoto|bianco carta con mappa di quartiere|device su tavolo d'agenzia con mazzo di chiavi|pin di quartiere ritagliato sopra le card",
-    ["home:Annunci in zona", "catalog:Immobili disponibili", "booking:Prenota la visita", "quote:Valutazione gratuita", "D:crm:Portafoglio immobili e clienti"]),
+    ["home:Annunci in zona", "catalog:Immobili disponibili", "booking:Prenota la visita", "quote:Valutazione senza impegno", "D:crm:Portafoglio immobili e clienti"]),
 
   X("realestate", "re-ville-lusso", "ville-lusso-onice-champagne", "Ville di Lusso Onice", "Ville Onice", "Ville e proprietà esclusive.",
     "#0F0E0D,#191817,#F4F1EC,#8D8880,#C6A664,#7A8B8B", "Serif alto lusso 46px|Sans 14px|prezzi su richiesta in maiuscoletto",
