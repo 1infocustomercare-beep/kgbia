@@ -370,10 +370,41 @@ Deno.serve(async (req) => {
   try {
     const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
     const SERVICE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+    const ANON_KEY = Deno.env.get("SUPABASE_ANON_KEY")!;
     const FIRECRAWL_KEY = Deno.env.get("FIRECRAWL_API_KEY");
     const supabase = createClient(SUPABASE_URL, SERVICE_KEY);
 
-    const { lead, skip_credit_check = false, match_thresholds } = await req.json();
+    // ── AUTH OBBLIGATORIA ────────────────────────────────────────────
+    // Endpoint costoso (Firecrawl): mai raggiungibile da anonimi.
+    // Il bypass crediti è consentito SOLO ai chiamanti interni service-role
+    // (autopilot/scheduler), mai tramite flag inviato dal client.
+    const authHeader = req.headers.get("Authorization") || "";
+    const bearer = authHeader.startsWith("Bearer ") ? authHeader.slice(7) : "";
+    const isServiceCall = !!bearer && bearer === SERVICE_KEY;
+
+    let callerId: string | null = null;
+    if (!isServiceCall) {
+      if (!bearer || bearer === ANON_KEY) {
+        return new Response(JSON.stringify({ error: "unauthorized" }), {
+          status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
+      const userClient = createClient(SUPABASE_URL, ANON_KEY, {
+        global: { headers: { Authorization: `Bearer ${bearer}` } },
+      });
+      const { data: userData, error: userErr } = await userClient.auth.getUser();
+      if (userErr || !userData?.user) {
+        return new Response(JSON.stringify({ error: "unauthorized" }), {
+          status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
+      callerId = userData.user.id;
+    }
+
+    const body = await req.json();
+    const { lead, match_thresholds } = body ?? {};
+    // `skip_credit_check` accettato solo da chiamate service-role interne.
+    const skip_credit_check = isServiceCall && body?.skip_credit_check === true;
     const TH = resolveThresholds(match_thresholds);
     if (!lead?.name) {
       return new Response(JSON.stringify({ error: "lead.name required" }), {
@@ -397,24 +428,22 @@ Deno.serve(async (req) => {
       });
     }
 
-    // 2. Consuma crediti se richiesto (skip se chiamato da autopilot che già consuma)
+    // 2. Consumo crediti — sempre server-side per utenti autenticati.
     if (!skip_credit_check) {
-      const authHeader = req.headers.get("Authorization");
-      if (authHeader) {
-        const userClient = createClient(SUPABASE_URL, Deno.env.get("SUPABASE_ANON_KEY")!, {
-          global: { headers: { Authorization: authHeader } },
+      const userClient = createClient(SUPABASE_URL, ANON_KEY, {
+        global: { headers: { Authorization: `Bearer ${bearer}` } },
+      });
+      const { data: creditCheck } = await userClient.rpc("consume_seller_credits", {
+        p_action: "lead_enrichment_pro",
+        p_metadata: { lead_name: lead.name, city: lead.city, caller: callerId },
+      });
+      if (!creditCheck?.success) {
+        return new Response(JSON.stringify({ success: false, error: "insufficient_credits", details: creditCheck }), {
+          status: 402, headers: { ...corsHeaders, "Content-Type": "application/json" },
         });
-        const { data: creditCheck } = await userClient.rpc("consume_seller_credits", {
-          p_action: "lead_enrichment_pro",
-          p_metadata: { lead_name: lead.name, city: lead.city },
-        });
-        if (!creditCheck?.success) {
-          return new Response(JSON.stringify({ success: false, error: "insufficient_credits", details: creditCheck }), {
-            status: 402, headers: { ...corsHeaders, "Content-Type": "application/json" },
-          });
-        }
       }
     }
+
 
     // 3. Esegui scraping in parallelo (se Firecrawl configurato)
     const enrichment: any = {
