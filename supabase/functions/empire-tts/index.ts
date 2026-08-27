@@ -53,6 +53,18 @@ serve(async (req) => {
       });
     }
 
+    // ── Cost guard: quota oraria per chiamante (anti abuso economico) ──
+    const guard = await enforceCostGuard(req, "empire-tts", normalizedText.length, {
+      maxUnitsAnon: 12000, maxCallsAnon: 40,
+      maxUnitsAuth: 120000, maxCallsAuth: 400,
+    });
+    if (!guard.ok) {
+      return new Response(JSON.stringify({ error: guard.error }), {
+        status: guard.status, headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
+
     // Voice profiles optimized for different contexts
     // Custom voice from ElevenLabs Voice Library
     const CUSTOM_VOICE_ID = "RXoaSpLaWTEckJgPUBG3";
