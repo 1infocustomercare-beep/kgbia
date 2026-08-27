@@ -38,7 +38,28 @@ serve(async (req) => {
       });
     }
 
+    const safeText = text.trim().slice(0, 2000);
+    if (!safeText) {
+      return new Response(JSON.stringify({ error: "text required" }), {
+        status: 400,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
+    // ── Cost guard: quota oraria per chiamante (anti abuso economico) ──
+    const guard = await enforceCostGuard(req, "voice-orchestrator-tts", safeText.length, {
+      maxUnitsAnon: 12000, maxCallsAnon: 40,
+      maxUnitsAuth: 120000, maxCallsAuth: 400,
+    });
+    if (!guard.ok) {
+      return new Response(JSON.stringify({ error: guard.error }), {
+        status: guard.status,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
     const voice = (voice_id && typeof voice_id === "string") ? voice_id : DEFAULT_VOICE;
+
 
     const resp = await fetch(
       `https://api.elevenlabs.io/v1/text-to-speech/${voice}?output_format=mp3_44100_128`,
