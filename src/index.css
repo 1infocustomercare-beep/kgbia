@@ -3512,3 +3512,13 @@ html body input.auth-white-input.auth-white-input::placeholder {
 .no-scrollbar::-webkit-scrollbar {
   display: none;
 }
+
+/* ═══ iOS notch / Dynamic Island — safe-area orizzontale (landscape) ═══
+   In landscape su iPhone con notch le barre sticky a tutta larghezza
+   possono finire sotto l'isola o l'angolo arrotondato: garantiamo
+   sempre un padding laterale >= inset. Additivo, non altera il portrait. */
+.pglass-stickybar > *,
+.safe-area-x {
+  padding-left: max(env(safe-area-inset-left, 0px), 1rem);
+  padding-right: max(env(safe-area-inset-right, 0px), 1rem);
+}
