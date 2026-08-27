@@ -40,6 +40,12 @@ serve(async (req) => {
   const webhookSecret = Deno.env.get("STRIPE_WEBHOOK_SECRET");
   if (!stripeKey) return new Response("Stripe not configured", { status: 500 });
 
+  // FAIL-CLOSED: senza webhook secret non accettiamo NESSUN payload.
+  if (!webhookSecret) {
+    console.error("[stripe-webhook] STRIPE_WEBHOOK_SECRET not configured — rejecting request");
+    return new Response("Webhook not configured", { status: 503 });
+  }
+
   const stripe = new Stripe(stripeKey, { apiVersion: "2023-10-16" });
   const supabase = createClient(
     Deno.env.get("SUPABASE_URL")!,
@@ -50,26 +56,18 @@ serve(async (req) => {
 
   let event: Stripe.Event;
 
-  if (webhookSecret) {
-    const sig = req.headers.get("stripe-signature");
-    if (!sig) {
-      console.error("Missing stripe-signature header");
-      return new Response("Missing signature", { status: 400 });
-    }
-    try {
-      event = stripe.webhooks.constructEvent(body, sig, webhookSecret);
-    } catch (err: any) {
-      console.error("Webhook signature verification failed:", err.message);
-      return new Response(`Webhook Error: ${err.message}`, { status: 400 });
-    }
-  } else {
-    // Dev / test path: parse raw. NEVER use this in prod without setting STRIPE_WEBHOOK_SECRET.
-    try {
-      event = JSON.parse(body) as Stripe.Event;
-    } catch {
-      return new Response("Invalid JSON body", { status: 400 });
-    }
+  const sig = req.headers.get("stripe-signature");
+  if (!sig) {
+    console.error("Missing stripe-signature header");
+    return new Response("Missing signature", { status: 400 });
   }
+  try {
+    event = await stripe.webhooks.constructEventAsync(body, sig, webhookSecret);
+  } catch (err: any) {
+    console.error("Webhook signature verification failed:", err.message);
+    return new Response(`Webhook Error: ${err.message}`, { status: 400 });
+  }
+
 
   // ─── IDEMPOTENCY GUARD ───────────────────────────────────────────
   // Stripe retries failed webhook deliveries. We must process each event_id only once.
