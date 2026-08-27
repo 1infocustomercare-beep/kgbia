@@ -1,5 +1,6 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { encode as base64Encode } from "https://deno.land/std@0.168.0/encoding/base64.ts";
+import { enforceCostGuard } from "../_shared/cost-guard.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -37,7 +38,28 @@ serve(async (req) => {
       });
     }
 
+    const safeText = text.trim().slice(0, 2000);
+    if (!safeText) {
+      return new Response(JSON.stringify({ error: "text required" }), {
+        status: 400,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
+    // ── Cost guard: quota oraria per chiamante (anti abuso economico) ──
+    const guard = await enforceCostGuard(req, "voice-orchestrator-tts", safeText.length, {
+      maxUnitsAnon: 12000, maxCallsAnon: 40,
+      maxUnitsAuth: 120000, maxCallsAuth: 400,
+    });
+    if (!guard.ok) {
+      return new Response(JSON.stringify({ error: guard.error }), {
+        status: guard.status,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
     const voice = (voice_id && typeof voice_id === "string") ? voice_id : DEFAULT_VOICE;
+
 
     const resp = await fetch(
       `https://api.elevenlabs.io/v1/text-to-speech/${voice}?output_format=mp3_44100_128`,
@@ -48,7 +70,7 @@ serve(async (req) => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          text,
+          text: safeText,
           model_id: "eleven_multilingual_v2",
           voice_settings: {
             stability: 0.55,

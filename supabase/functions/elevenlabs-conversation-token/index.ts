@@ -1,5 +1,6 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.49.4";
+import { enforceCostGuard } from "../_shared/cost-guard.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -12,8 +13,17 @@ serve(async (req) => {
   }
 
   try {
-    // Public endpoint: voice agent is available on the landing page (anonymous users).
-    // The ElevenLabs API key stays server-side; rate limiting is handled by ElevenLabs itself.
+    // Endpoint pubblico (voice agent in landing) ma con quota anti-abuso:
+    // ogni token rilasciato genera costo ElevenLabs, quindi limitiamo per chiamante.
+    const guard = await enforceCostGuard(req, "elevenlabs-convai-token", 1, {
+      maxUnitsAnon: 10, maxCallsAnon: 10,
+      maxUnitsAuth: 60, maxCallsAuth: 60,
+    });
+    if (!guard.ok) {
+      return new Response(JSON.stringify({ error: guard.error }), {
+        status: guard.status, headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
 
     const ELEVENLABS_API_KEY = Deno.env.get("ELEVENLABS_API_KEY");
     if (!ELEVENLABS_API_KEY) {

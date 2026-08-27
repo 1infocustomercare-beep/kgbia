@@ -1,6 +1,7 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { encode as base64Encode } from "https://deno.land/std@0.168.0/encoding/base64.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { enforceCostGuard } from "../_shared/cost-guard.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -52,6 +53,18 @@ serve(async (req) => {
         status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
+
+    // ── Cost guard: quota oraria per chiamante (anti abuso economico) ──
+    const guard = await enforceCostGuard(req, "empire-tts", normalizedText.length, {
+      maxUnitsAnon: 12000, maxCallsAnon: 40,
+      maxUnitsAuth: 120000, maxCallsAuth: 400,
+    });
+    if (!guard.ok) {
+      return new Response(JSON.stringify({ error: guard.error }), {
+        status: guard.status, headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
 
     // Voice profiles optimized for different contexts
     // Custom voice from ElevenLabs Voice Library

@@ -2723,6 +2723,36 @@ export type Database = {
           },
         ]
       }
+      edge_cost_quota: {
+        Row: {
+          caller_key: string
+          calls: number
+          id: string
+          scope: string
+          units: number
+          updated_at: string
+          window_start: string
+        }
+        Insert: {
+          caller_key: string
+          calls?: number
+          id?: string
+          scope: string
+          units?: number
+          updated_at?: string
+          window_start?: string
+        }
+        Update: {
+          caller_key?: string
+          calls?: number
+          id?: string
+          scope?: string
+          units?: number
+          updated_at?: string
+          window_start?: string
+        }
+        Relationships: []
+      }
       empire_brain_agents: {
         Row: {
           ai_model: string | null
@@ -9107,6 +9137,16 @@ export type Database = {
       compute_cost_reconciliation: {
         Args: { p_period_days?: number }
         Returns: Json
+      }
+      consume_edge_quota: {
+        Args: {
+          _caller_key: string
+          _max_calls: number
+          _max_units: number
+          _scope: string
+          _units: number
+        }
+        Returns: boolean
       }
       consume_seller_credits: {
         Args: { p_action: string; p_metadata?: Json }
