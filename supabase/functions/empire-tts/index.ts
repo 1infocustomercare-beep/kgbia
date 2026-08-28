@@ -1,5 +1,4 @@
-import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
-import { encode as base64Encode } from "https://deno.land/std@0.168.0/encoding/base64.ts";
+import { encodeBase64 as base64Encode } from "jsr:@std/encoding@1/base64";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { enforceCostGuard } from "../_shared/cost-guard.ts";
 
@@ -8,7 +7,7 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
 };
 
-serve(async (req) => {
+Deno.serve(async (req) => {
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
   }
@@ -115,17 +114,20 @@ serve(async (req) => {
 
     console.log(`[empire-tts] Generating speech: profile=${voiceProfile || "arianna"}, text length=${normalizedText.length}`);
 
-    // Voci Lovable AI (femminili naturali) mappate sui profili Empire.
+    // Voci Lovable AI — SEMPRE femminili (Arianna è un personaggio femminile).
     const LOVABLE_VOICE: Record<string, string> = {
-      arianna: "shimmer",
-      splash: "sage",
+      arianna: "nova",
+      splash: "shimmer",
       sales: "coral",
     };
+    const FEMALE_HINT =
+      "Voce femminile italiana, italiano madrelingua. ";
     const LOVABLE_INSTRUCTIONS: Record<string, string> = {
-      arianna: "Parla in italiano, tono professionale, caldo e rassicurante, ritmo naturale.",
-      splash: "Parla in italiano con tono cinematografico ed elegante, ritmo lento e sicuro.",
-      sales: "Parla in italiano con tono consulenziale e coinvolgente, energia positiva ma mai aggressiva.",
+      arianna: FEMALE_HINT + "Tono professionale, caldo e rassicurante, ritmo naturale.",
+      splash: FEMALE_HINT + "Tono cinematografico ed elegante, ritmo lento e sicuro.",
+      sales: FEMALE_HINT + "Tono consulenziale e coinvolgente, energia positiva ma mai aggressiva.",
     };
+
     const key = (voiceProfile as string) in LOVABLE_VOICE ? (voiceProfile as string) : "arianna";
 
     // ── 1) Primario: Lovable AI (nessuna chiave esterna, nessun piano a pagamento) ──

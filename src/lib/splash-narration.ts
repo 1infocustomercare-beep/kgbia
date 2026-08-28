@@ -1,3 +1,4 @@
+import { getItalianFemaleVoice } from "@/lib/italian-female-voice";
 /**
  * Splash Narration — Premium ElevenLabs voice during the UnifiedIntro splash screen.
  *
@@ -155,20 +156,7 @@ function playPremiumAudio(base64Audio: string): boolean {
 let cachedVoice: SpeechSynthesisVoice | null = null;
 
 function getBestItalianVoice(): SpeechSynthesisVoice | null {
-  if (cachedVoice) return cachedVoice;
-  const voices = window.speechSynthesis?.getVoices() || [];
-  const priorities = [
-    (v: SpeechSynthesisVoice) => v.lang.startsWith("it") && /alice/i.test(v.name),
-    (v: SpeechSynthesisVoice) => v.lang.startsWith("it") && /federica/i.test(v.name),
-    (v: SpeechSynthesisVoice) => v.lang.startsWith("it") && /elsa/i.test(v.name),
-    (v: SpeechSynthesisVoice) => v.lang.startsWith("it") && /google/i.test(v.name),
-    (v: SpeechSynthesisVoice) => v.lang.startsWith("it"),
-  ];
-  for (const test of priorities) {
-    const match = voices.find(test);
-    if (match) { cachedVoice = match; return match; }
-  }
-  return null;
+  return getItalianFemaleVoice();
 }
 
 function doSpeakBrowserTTS() {
@@ -186,7 +174,7 @@ function doSpeakBrowserTTS() {
   if (voice) utterance.voice = voice;
   utterance.lang = "it-IT";
   utterance.rate = 0.95;
-  utterance.pitch = 1.05;
+  utterance.pitch = 1.15;
   utterance.volume = 1;
 
   utterance.onstart = () => {

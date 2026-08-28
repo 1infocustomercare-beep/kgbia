@@ -9,6 +9,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { stopSplashNarration, isSplashNarrationDone, isSplashNarrationSpeaking } from "@/lib/splash-narration";
 import { ARIANNA_SYSTEM_PROMPT } from "@/config/ariannaPrompt";
 import { claimVoiceAgent, releaseVoiceAgent, isVoiceAgentActive, getActiveVoiceAgent } from "@/lib/voice-agent-mutex";
+import { getItalianFemaleVoice } from "@/lib/italian-female-voice";
 import {
   loadSessionMemory,
   rememberTurn,
@@ -54,37 +55,7 @@ const normalizeTextForSpeech = (text: string) =>
 let cachedItalianVoice: SpeechSynthesisVoice | null = null;
 
 function getBestItalianFemaleVoice(): SpeechSynthesisVoice | null {
-  if (cachedItalianVoice) return cachedItalianVoice;
-  
-  const voices = window.speechSynthesis?.getVoices() || [];
-  
-  // Priority order for natural-sounding Italian female voices
-  const priorities = [
-    // iOS / macOS premium voices
-    (v: SpeechSynthesisVoice) => v.lang.startsWith("it") && /alice/i.test(v.name),
-    (v: SpeechSynthesisVoice) => v.lang.startsWith("it") && /federica/i.test(v.name),
-    (v: SpeechSynthesisVoice) => v.lang.startsWith("it") && /elsa/i.test(v.name),
-    // Google / Android premium
-    (v: SpeechSynthesisVoice) => v.lang.startsWith("it") && /google.*italiano.*female/i.test(v.name),
-    (v: SpeechSynthesisVoice) => v.lang.startsWith("it") && /google/i.test(v.name),
-    // Microsoft voices
-    (v: SpeechSynthesisVoice) => v.lang.startsWith("it") && /elsa|isabella|cosimo/i.test(v.name),
-    // Any Italian female
-    (v: SpeechSynthesisVoice) => v.lang.startsWith("it") && /femal|donna|woman/i.test(v.name),
-    // Any Italian voice
-    (v: SpeechSynthesisVoice) => v.lang.startsWith("it"),
-    // Fallback: any voice at all (better than silence)
-    (v: SpeechSynthesisVoice) => true,
-  ];
-  
-  for (const test of priorities) {
-    const match = voices.find(test);
-    if (match) {
-      cachedItalianVoice = match;
-      return match;
-    }
-  }
-  return null;
+  return getItalianFemaleVoice();
 }
 
 // Preload voices
@@ -200,7 +171,7 @@ function speakWithBrowserTTS(
         utterance.lang = "it-IT";
       }
       utterance.rate = 0.95;
-      utterance.pitch = 1.05;
+      utterance.pitch = 1.15;
       utterance.volume = 1;
 
       utterance.onstart = () => {
