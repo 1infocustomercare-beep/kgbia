@@ -250,6 +250,18 @@ export default function OnboardingPage() {
     }
   };
 
+  const fiscalStepValid = useMemo(() => {
+    if (pivaError(form.piva)) return false;
+    if (fiscalCodeError(form.fiscalCode, form.customerType)) return false;
+    if (form.customerType === "b2b") {
+      if (!normalizePiva(form.piva)) return false;
+      if (sdiError(form.sdiCode) || pecError(form.pec)) return false;
+      if (!form.sdiCode.trim() && !form.pec.trim()) return false;
+    }
+    return true;
+  }, [form.piva, form.fiscalCode, form.customerType, form.sdiCode, form.pec]);
+
+
   const selectedConfig = form.industry ? INDUSTRY_CONFIGS[form.industry as IndustryId] : null;
   const sitePrefix = "/b/";
   const generatedSlug = form.name ? form.name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "") : "mia-azienda";
