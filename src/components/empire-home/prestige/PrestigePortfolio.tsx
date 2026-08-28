@@ -295,19 +295,6 @@ export default function PrestigePortfolio() {
       <div className="mx-auto max-w-7xl px-5 lg:px-10">
 
         <div className="mt-14 flex flex-wrap items-center justify-center gap-3">
-          {filtered.length > 12 && (
-            <button onClick={() => setExpanded((v) => !v)} className="pglass-btn-ghost">
-              {expanded ? (
-                <>
-                  Mostra meno <ChevronUp size={16} />
-                </>
-              ) : (
-                <>
-                  Vedi tutti i {filtered.length} settori <ChevronDown size={16} />
-                </>
-              )}
-            </button>
-          )}
           <button onClick={() => navigate("/portfolio")} className="pglass-btn">
             Portfolio mockup completo <ArrowUpRight size={16} />
           </button>
