@@ -207,7 +207,6 @@ const CustomPreviewPublicPage = lazy(() => import("./pages/CustomPreviewPublicPa
 const PublicMockupSuitePage = lazy(() => import("./pages/PublicMockupSuitePage"));
 
 const MockupCatalogPage = lazy(() => import("./pages/MockupCatalogPage"));
-const PortfolioCasePage = lazy(() => import("./pages/PortfolioCasePage"));
 const NCCDemoPage = lazy(() => import("./pages/NCCDemoPage"));
 const BusinessPage = lazy(() => import("./pages/BusinessPage"));
 const OnboardingPage = lazy(() => importWithRetry(() => import("./pages/OnboardingPage")));
