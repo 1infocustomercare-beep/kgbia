@@ -17,6 +17,7 @@ export default function SetupPaidGuard({ children }: { children: ReactNode }) {
   const location = useLocation();
   const [paid, setPaid] = useState<boolean | null>(null);
   const [checking, setChecking] = useState(true);
+  const [pendingApproval, setPendingApproval] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
