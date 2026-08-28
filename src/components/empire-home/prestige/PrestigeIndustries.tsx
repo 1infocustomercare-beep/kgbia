@@ -124,7 +124,7 @@ export default function PrestigeIndustries() {
             {hero && (
               <button
                 type="button"
-                onClick={() => navigate(`/portfolio/${selected.id}?style=${hero.id}`)}
+                onClick={() => navigate(`/portfolio?sector=${selected.id}&style=${hero.id}`)}
                 className="pglass-btn mt-6"
               >
                 Vedi il caso studio <ArrowUpRight size={16} />
@@ -144,7 +144,7 @@ export default function PrestigeIndustries() {
                 src={hero.screen}
                 alt={`${hero.brand} — ${hero.style}`}
                 width={260}
-                onClick={() => navigate(`/portfolio/${selected.id}?style=${hero.id}`)}
+                onClick={() => navigate(`/portfolio?sector=${selected.id}&style=${hero.id}`)}
               />
             )}
           </motion.div>

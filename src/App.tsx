@@ -207,7 +207,6 @@ const CustomPreviewPublicPage = lazy(() => import("./pages/CustomPreviewPublicPa
 const PublicMockupSuitePage = lazy(() => import("./pages/PublicMockupSuitePage"));
 
 const MockupCatalogPage = lazy(() => import("./pages/MockupCatalogPage"));
-const PortfolioCasePage = lazy(() => import("./pages/PortfolioCasePage"));
 const NCCDemoPage = lazy(() => import("./pages/NCCDemoPage"));
 const BusinessPage = lazy(() => import("./pages/BusinessPage"));
 const OnboardingPage = lazy(() => importWithRetry(() => import("./pages/OnboardingPage")));
@@ -705,8 +704,8 @@ function App() {
                       
                       <Route path="/catalogo" element={<Navigate to="/portfolio" replace />} />
                       <Route path="/portfolio" element={<MockupCatalogPage />} />
-                      {/* Case study per singolo settore: tutti gli stili a confronto */}
-                      <Route path="/portfolio/:sectorId" element={<PortfolioCasePage />} />
+                      {/* I vecchi URL dei case study confluiscono nell'unico portfolio canonico. */}
+                      <Route path="/portfolio/:sectorId" element={<Navigate to="/portfolio" replace />} />
 
                       {/* Onboarding wizard PUBLIC: l'account viene richiesto solo al momento del salvataggio */}
                       <Route path="/onboarding" element={<OnboardingPage />} />
