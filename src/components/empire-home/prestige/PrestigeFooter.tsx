@@ -70,7 +70,7 @@ export default function PrestigeFooter() {
             <ul className="space-y-2">
               <li><a href="#services" onClick={(e) => jump(e, "#services")} className="hover:text-white">Servizi</a></li>
               <li><a href="#sectors" onClick={(e) => jump(e, "#sectors")} className="hover:text-white">Settori</a></li>
-              <li><a href="#portfolio" onClick={(e) => jump(e, "#portfolio")} className="hover:text-white">Portfolio</a></li>
+              <li><Link to="/portfolio" className="hover:text-white">Portfolio</Link></li>
               <li><a href="#agents" onClick={(e) => jump(e, "#agents")} className="hover:text-white">AI Agents</a></li>
               <li><a href="#pricing" onClick={(e) => jump(e, "#pricing")} className="hover:text-white">Prezzi</a></li>
             </ul>

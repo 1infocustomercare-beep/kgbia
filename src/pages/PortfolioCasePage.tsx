@@ -30,10 +30,13 @@ export default function PortfolioCasePage() {
 
   const variants = useMemo<SectorMockupVariant[]>(() => {
     if (!group) return [];
-    const studio = group.variants.filter((v) => v.source === "studio");
-    const base = studio.length ? studio : group.variants;
-    // Gli stili con la sequenza completa aprono il confronto.
-    return [...base].sort((a, b) => (b.screens?.length ?? 1) - (a.screens?.length ?? 1));
+    // La pagina settore deve mostrare TUTTO il catalogo del settore. Prima
+    // venivano esclusi gli stili extended quando era presente anche un solo
+    // progetto Studio: il click dal portfolio poteva quindi aprire una pagina vuota.
+    return [...group.variants].sort((a, b) => {
+      if (a.tier !== b.tier) return a.tier === "primary" ? -1 : 1;
+      return (b.screens?.length ?? 1) - (a.screens?.length ?? 1);
+    });
   }, [group]);
 
 
@@ -212,7 +215,7 @@ export default function PortfolioCasePage() {
       >
         <div className="mx-auto max-w-7xl overflow-x-auto px-5 py-3 [scrollbar-width:none] lg:px-10 [&::-webkit-scrollbar]:hidden">
           <div className="flex w-max items-center gap-2">
-            {[{ id: "all", label: `Tutti · ${variants.length}` }, ...variants.map((v) => ({ id: v.id, label: v.brand }))].map(
+            {[{ id: "all", label: `Tutti · ${variants.length}` }, ...variants.map((v) => ({ id: v.id, label: v.style }))].map(
               (chip) => {
                 const on = filter === chip.id;
                 return (

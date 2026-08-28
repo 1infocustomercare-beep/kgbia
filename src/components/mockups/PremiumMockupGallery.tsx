@@ -12,19 +12,12 @@
  * Nessun iPhone dentro un altro iPhone: ogni frame mostra una webapp reale.
  */
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Sparkles, Layers, Search, ArrowRight, MonitorSmartphone, X } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import IPhoneProMaxFrame from "./IPhoneProMaxFrame";
-import MockupLightbox from "./MockupLightbox";
-import { SECTOR_MOCKUPS, type SectorMockupVariant } from "@/data/sector-mockups";
+import { SECTOR_MOCKUPS } from "@/data/sector-mockups";
 import GlassBackButton from "@/components/glass/GlassBackButton";
-
-type Selection = {
-  sectorId: string;
-  sectorLabel: string;
-  variants: SectorMockupVariant[];
-  index: number;
-} | null;
 
 type TierFilter = "all" | "primary" | "extended";
 
@@ -95,10 +88,10 @@ function useSeoHead(projectCount: number, styleCount: number) {
 }
 
 export default function PremiumMockupGallery() {
+  const navigate = useNavigate();
   const [activeSector, setActiveSector] = useState<string>("all");
   const [tier, setTier] = useState<TierFilter>("all");
   const [query, setQuery] = useState("");
-  const [selection, setSelection] = useState<Selection>(null);
 
   const sectors = useMemo(
     () => [{ id: "all", label: "Tutti" }, ...SECTOR_MOCKUPS.map((s) => ({ id: s.id, label: s.label }))],
@@ -140,43 +133,9 @@ export default function PremiumMockupGallery() {
     });
   }, [allCards, activeSector, tier, query]);
 
-  const openCard = useCallback(
-    (c: (typeof allCards)[number]) => {
-      setSelection({
-        sectorId: c.sectorId,
-        sectorLabel: c.sectorLabel,
-        variants: c.group.variants,
-        index: c.index,
-      });
-      const url = new URL(window.location.href);
-      url.searchParams.set("p", `${c.sectorId}-${c.id}`);
-      window.history.replaceState(null, "", url.toString());
-    },
-    [],
-  );
-
-  const closeLightbox = useCallback(() => {
-    setSelection(null);
-    const url = new URL(window.location.href);
-    url.searchParams.delete("p");
-    window.history.replaceState(null, "", url.toString());
-  }, []);
-
-  // Deep-link: apri il progetto indicato in ?p=
-  useEffect(() => {
-    const key = new URLSearchParams(window.location.search).get("p");
-    if (!key) return;
-    const match = allCards.find((c) => `${c.sectorId}-${c.id}` === key);
-    if (match) {
-      setSelection({
-        sectorId: match.sectorId,
-        sectorLabel: match.sectorLabel,
-        variants: match.group.variants,
-        index: match.index,
-      });
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  const openCard = (c: (typeof allCards)[number]) => {
+    navigate(`/portfolio/${c.sectorId}?style=${encodeURIComponent(c.id)}`);
+  };
 
   return (
     <section className="pglass-scope pglass-bg min-h-screen pb-28 pt-28 text-white sm:pt-32">
@@ -200,9 +159,9 @@ export default function PremiumMockupGallery() {
           </h1>
 
           <p className="mt-4 max-w-2xl text-sm leading-relaxed text-white/70 md:text-base">
-            {allCards.length} progetti reali, {totalScreens} schermate disegnate una per una: colore, layout,
-            componenti e funzioni sono studiati sul settore. Tocca un progetto per aprirlo a schermo intero e
-            navigare tutte le schermate e gli stili.
+            {allCards.length} progetti, {totalScreens} schermate disegnate una per una: colore, layout,
+            componenti e funzioni sono studiati sul settore. Tocca uno stile per aprire il case study completo,
+            confrontare le interfacce e vedere l'intero flusso della webapp.
           </p>
 
           {/* Stats strip */}
@@ -427,13 +386,6 @@ export default function PremiumMockupGallery() {
         </div>
       </div>
 
-      <MockupLightbox
-        open={!!selection}
-        onClose={closeLightbox}
-        sectorLabel={selection?.sectorLabel ?? ""}
-        variants={selection?.variants ?? []}
-        initialIndex={selection?.index ?? 0}
-      />
     </section>
   );
 }

@@ -703,7 +703,7 @@ function App() {
                         </ProtectedRoute>
                       } />
                       
-                      <Route path="/catalogo" element={<MockupCatalogPage />} />
+                      <Route path="/catalogo" element={<Navigate to="/portfolio" replace />} />
                       <Route path="/portfolio" element={<MockupCatalogPage />} />
                       {/* Case study per singolo settore: tutti gli stili a confronto */}
                       <Route path="/portfolio/:sectorId" element={<PortfolioCasePage />} />
