@@ -214,6 +214,21 @@ export default function OnboardingPage() {
           }, { onConflict: "company_id" });
         } catch {}
 
+        // Dati fiscali tenant (compliance italiana)
+        try {
+          await supabase.from("company_settings" as any).upsert({
+            company_id: companyId,
+            customer_type: form.customerType,
+            vat: normalizePiva(form.piva) || null,
+            fiscal_code: form.fiscalCode.replace(/\s/g, "").toUpperCase() || null,
+            sdi_code: form.customerType === "b2b" ? (form.sdiCode.trim().toUpperCase() || null) : null,
+            pec: form.customerType === "b2b" ? (form.pec.trim() || null) : null,
+            whatsapp: form.whatsapp || form.phone || null,
+          }, { onConflict: "company_id" });
+        } catch {}
+
+
+
         // Create tenant_subscription with starter plan
         try {
           const { data: plans } = await supabase.from("subscription_plans" as any).select("id, name").order("price_monthly");
