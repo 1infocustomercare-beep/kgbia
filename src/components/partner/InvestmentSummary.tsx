@@ -171,7 +171,7 @@ const InvestmentSummary = () => {
           <span className="text-sm font-display font-bold text-foreground">Da €1.997 a €7.997</span>
         </div>
         <p className="text-xs text-muted-foreground">
-          IVA 22% inclusa • Rateizzazione disponibile • 3 rate TAN 0% o 6 rate TAN 5.9%
+          Senza applicazione IVA (art. 1 c. 54-89 L. 190/2014) • Rateizzazione disponibile • 3 rate TAN 0% o 6 rate TAN 5.9%
         </p>
         <div className="grid grid-cols-3 gap-2 mt-3">
           {[

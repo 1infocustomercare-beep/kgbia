@@ -33,7 +33,7 @@ export default function TerminiCondizioni() {
 
           <h2>4. Prezzi e pagamento</h2>
           <p>
-            I prezzi sono espressi in Euro, IVA esclusa salvo diversa indicazione. Il pagamento avviene tramite i metodi
+            I prezzi sono espressi in Euro: operazione senza applicazione dell'IVA ai sensi dell'art. 1, commi 54-89, L. 190/2014. Il pagamento avviene tramite i metodi
             indicati in fase di ordine. In caso di ritardato pagamento si applicano gli interessi di legge (D.Lgs. 231/2002).
           </p>
 
