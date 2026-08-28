@@ -1,7 +1,13 @@
-import { useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { ArrowUpRight, ChevronDown, ChevronUp, Sparkles } from "lucide-react";
-import { motion } from "framer-motion";
+import {
+  ArrowUpRight,
+  ChevronDown,
+  ChevronLeft,
+  ChevronRight,
+  ChevronUp,
+  Sparkles,
+} from "lucide-react";
 import MockupLightbox from "@/components/mockups/MockupLightbox";
 import { SECTOR_MOCKUPS, type SectorMockupVariant } from "@/data/sector-mockups";
 
@@ -93,50 +99,140 @@ export default function PrestigePortfolio() {
     return list.slice(0, 15);
   }, [visible]);
 
-  const left = gallery.filter((_, i) => [0, 3, 6, 9, 12].includes(i));
-  const middle = gallery.filter((_, i) => [1, 4, 7].includes(i));
-  const right = gallery.filter((_, i) => [2, 5, 8, 11, 14].includes(i));
+  // ---- Coverflow 3D rail (mobile + desktop, stesso effetto) ----
+  const railRef = useRef<HTMLDivElement>(null);
+  const cardRefs = useRef<Array<HTMLElement | null>>([]);
+  const rafRef = useRef<number | null>(null);
 
-  const FigureCard = ({
-    item,
-    index,
-    layout,
-    tall,
-  }: {
-    item: (typeof gallery)[number];
-    index: number;
-    layout?: "left" | "right" | "center";
-    tall?: boolean;
-  }) => {
-    const delay = layout === "center" ? (index % 3) * 0.12 : (index % 5) * 0.08;
-    return (
-      <motion.figure
-        key={item.key}
-        initial={{ opacity: 0, y: 30 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, amount: 0.2 }}
-        transition={{ duration: 0.6, delay, ease: [0.22, 1, 0.36, 1] }}
-        className="group relative w-full cursor-pointer overflow-hidden rounded-2xl"
-        style={{ aspectRatio: tall ? "9 / 16" : "9 / 19.5" }}
-        onClick={() => navigate(`/portfolio/${item.sectorId}?style=${item.styleId}`)}
-      >
-        <img
-          src={item.src}
-          alt={`${item.brand} — ${item.label}`}
-          loading="lazy"
-          decoding="async"
-          className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-        />
-        <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black/70" />
-        <div className="absolute bottom-0 left-0 right-0 p-3 sm:p-4">
-          <div className="text-[10px] font-bold uppercase tracking-widest text-white/80">
-            {item.sectorLabel}
-          </div>
-          <div className="text-sm font-semibold text-white sm:text-base">{item.brand}</div>
-        </div>
-      </motion.figure>
-    );
+  const paint = useCallback(() => {
+    const rail = railRef.current;
+    if (!rail) return;
+    const railCenter = rail.scrollLeft + rail.clientWidth / 2;
+    cardRefs.current.forEach((el) => {
+      if (!el) return;
+      const cardCenter = el.offsetLeft + el.offsetWidth / 2;
+      const raw = (cardCenter - railCenter) / (rail.clientWidth * 0.5);
+      const d = Math.max(-1.6, Math.min(1.6, raw));
+      const abs = Math.abs(d);
+      const rotate = -d * 16;
+      const scale = 1 - Math.min(abs, 1) * 0.14;
+      const depth = -Math.min(abs, 1.6) * 120;
+      el.style.transform = `perspective(1400px) translateZ(${depth}px) rotateY(${rotate}deg) scale(${scale})`;
+      el.style.opacity = String(Math.max(0.35, 1 - abs * 0.45));
+      el.style.zIndex = String(100 - Math.round(abs * 50));
+      const glow = el.querySelector<HTMLElement>("[data-glow]");
+      if (glow) glow.style.opacity = String(Math.max(0, 1 - abs * 1.6));
+    });
+  }, []);
+
+  const schedulePaint = useCallback(() => {
+    if (rafRef.current != null) return;
+    rafRef.current = requestAnimationFrame(() => {
+      rafRef.current = null;
+      paint();
+    });
+  }, [paint]);
+
+  useEffect(() => {
+    const rl = railRef.current;
+    const first = cardRefs.current[0];
+    if (rl && first) {
+      rl.scrollLeft = first.offsetLeft + first.offsetWidth / 2 - rl.clientWidth / 2;
+    }
+    schedulePaint();
+    window.addEventListener("resize", schedulePaint);
+    return () => {
+      window.removeEventListener("resize", schedulePaint);
+      if (rafRef.current != null) cancelAnimationFrame(rafRef.current);
+    };
+  }, [schedulePaint, gallery.length]);
+
+  const nudge = (dir: 1 | -1) => {
+    const rail = railRef.current;
+    if (!rail) return;
+    const step = (cardRefs.current[0]?.offsetWidth ?? 280) + 28;
+    rail.scrollBy({ left: dir * step, behavior: "smooth" });
   };
+
+  const rail = (
+    <div className="relative mt-12">
+      <div
+        ref={railRef}
+        onScroll={schedulePaint}
+        className="flex snap-x snap-mandatory gap-6 overflow-x-auto overscroll-x-contain px-[12vw] pb-8 pt-4 [scrollbar-width:none] sm:gap-8 sm:px-[26vw] [&::-webkit-scrollbar]:hidden"
+        style={{ perspective: "1400px", scrollBehavior: "smooth" }}
+      >
+        {gallery.map((item, i) => (
+          <figure
+            key={item.key}
+            ref={(el) => {
+              cardRefs.current[i] = el;
+            }}
+            className="group relative h-[58svh] max-h-[560px] min-h-[380px] w-auto flex-none cursor-pointer snap-center overflow-hidden rounded-[2rem] shadow-2xl will-change-transform"
+            style={{
+              aspectRatio: "9 / 19.5",
+              transformStyle: "preserve-3d",
+              transition: "transform 220ms linear, opacity 220ms linear",
+            }}
+            onClick={() => navigate(`/portfolio/${item.sectorId}?style=${item.styleId}`)}
+          >
+            <img
+              src={item.src}
+              alt={`${item.brand} — ${item.label}`}
+              loading="lazy"
+              decoding="async"
+              className="h-full w-full object-cover"
+            />
+            <div
+              data-glow
+              className="pointer-events-none absolute inset-0 rounded-[2rem] ring-1 ring-inset"
+              style={{
+                boxShadow: "0 0 60px hsl(var(--pr-gold) / 0.28)",
+                // @ts-expect-error css var ring color
+                "--tw-ring-color": "hsl(var(--pr-gold) / 0.45)",
+              }}
+            />
+            <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black/75" />
+            <div className="absolute bottom-0 left-0 right-0 p-4">
+              <div className="text-[10px] font-bold uppercase tracking-widest text-white/80">
+                {item.sectorLabel}
+              </div>
+              <div className="text-sm font-semibold text-white sm:text-base">{item.brand}</div>
+              <div className="mt-1 text-[10px] uppercase tracking-widest text-white/60">
+                {item.label}
+              </div>
+            </div>
+          </figure>
+        ))}
+      </div>
+
+      {/* Controlli */}
+      <div className="mt-2 flex items-center justify-center gap-3">
+        <button
+          type="button"
+          aria-label="Mockup precedente"
+          onClick={() => nudge(-1)}
+          className="pglass-btn-ghost !h-11 !w-11 !min-w-11 !rounded-full !p-0"
+        >
+          <ChevronLeft size={18} />
+        </button>
+        <span
+          className="text-[11px] uppercase tracking-[0.2em]"
+          style={{ color: "hsl(var(--pr-muted-on-light))" }}
+        >
+          Scorri · {gallery.length} schermate
+        </span>
+        <button
+          type="button"
+          aria-label="Mockup successivo"
+          onClick={() => nudge(1)}
+          className="pglass-btn-ghost !h-11 !w-11 !min-w-11 !rounded-full !p-0"
+        >
+          <ChevronRight size={18} />
+        </button>
+      </div>
+    </div>
+  );
 
   return (
     <section
@@ -191,79 +287,12 @@ export default function PrestigePortfolio() {
             })}
           </div>
         </div>
+      </div>
 
-        {/* Mobile: flat 2-col masonry */}
-        <div className="mx-auto mt-14 max-w-7xl px-1 sm:hidden">
-          <div className="grid grid-cols-2 gap-3">
-            {gallery.map((item, i) => (
-              <motion.figure
-                key={item.key}
-                initial={{ opacity: 0, y: 24 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, amount: 0.2 }}
-                transition={{
-                  duration: 0.5,
-                  delay: (i % 4) * 0.06,
-                  ease: [0.22, 1, 0.36, 1],
-                }}
-                className="group relative w-full cursor-pointer overflow-hidden rounded-xl"
-                style={{ aspectRatio: "9 / 19.5" }}
-                onClick={() => navigate(`/portfolio/${item.sectorId}?style=${item.styleId}`)}
-              >
-                <img
-                  src={item.src}
-                  alt={`${item.brand} — ${item.label}`}
-                  loading="lazy"
-                  decoding="async"
-                  className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-                />
-                <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black/70" />
-                <div className="absolute bottom-0 left-0 right-0 p-2.5">
-                  <div className="text-[9px] font-bold uppercase tracking-widest text-white/80">
-                    {item.sectorLabel}
-                  </div>
-                  <div className="text-xs font-semibold text-white">{item.brand}</div>
-                </div>
-              </motion.figure>
-            ))}
-          </div>
-        </div>
+      {/* COVERFLOW 3D — full-bleed */}
+      {rail}
 
-        {/* Desktop: sticky masonry gallery */}
-        <div className="relative mx-auto mt-14 hidden max-w-7xl grid-cols-12 gap-5 px-4 pb-16 sm:grid lg:gap-7 lg:px-8">
-          <div
-            className="pointer-events-none absolute inset-0 -z-10 opacity-20"
-            style={{
-              background:
-                "linear-gradient(to right, hsl(var(--pr-gold) / 0.10) 1px, transparent 1px), linear-gradient(to bottom, hsl(var(--pr-gold) / 0.10) 1px, transparent 1px)",
-              backgroundSize: "54px 54px",
-              maskImage: "radial-gradient(ellipse 60% 50% at 50% 0%, #000 70%, transparent 100%)",
-            }}
-          />
-
-          {/* Left column */}
-          <div className="grid gap-5 sm:col-span-4 lg:gap-7">
-            {left.map((item, i) => (
-              <FigureCard key={item.key} item={item} index={i} layout="left" tall />
-            ))}
-          </div>
-
-          {/* Middle sticky column */}
-          <div className="relative sm:col-span-4">
-            <div className="sticky top-28 grid h-[calc(100svh-8rem)] grid-rows-3 gap-5 lg:gap-7">
-              {middle.map((item, i) => (
-                <FigureCard key={item.key} item={item} index={i} layout="center" />
-              ))}
-            </div>
-          </div>
-
-          {/* Right column */}
-          <div className="grid gap-5 sm:col-span-4 lg:gap-7">
-            {right.map((item, i) => (
-              <FigureCard key={item.key} item={item} index={i} layout="right" tall />
-            ))}
-          </div>
-        </div>
+      <div className="mx-auto max-w-7xl px-5 lg:px-10">
 
         <div className="mt-14 flex flex-wrap items-center justify-center gap-3">
           {filtered.length > 12 && (
