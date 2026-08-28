@@ -53,6 +53,37 @@ const normalizeOnboardingPlan = (plan: string | undefined) => {
   return "smart_ia";
 };
 
+// ── Compliance fiscale italiana ──
+const normalizePiva = (v: string) => v.replace(/\s/g, "").toUpperCase().replace(/^IT/, "");
+const pivaError = (raw: string): string | null => {
+  const v = normalizePiva(raw);
+  if (!v) return null;
+  if (/[^0-9]/.test(v)) return "La P.IVA può contenere solo 11 cifre (prefisso IT opzionale).";
+  if (v.length !== 11) return `La P.IVA italiana deve avere 11 cifre (inserite ${v.length}).`;
+  return null;
+};
+const fiscalCodeError = (raw: string, customerType: "b2b" | "b2c"): string | null => {
+  const v = raw.replace(/\s/g, "").toUpperCase();
+  if (!v) return customerType === "b2c" ? "Il Codice Fiscale è obbligatorio per i clienti privati." : null;
+  const isPersona = /^[A-Z]{6}\d{2}[A-Z]\d{2}[A-Z]\d{3}[A-Z]$/.test(v);
+  const isAzienda = /^\d{11}$/.test(v);
+  if (!isPersona && !isAzienda) return "Codice Fiscale non valido: 16 caratteri (persona fisica) o 11 cifre (azienda).";
+  return null;
+};
+const sdiError = (raw: string): string | null => {
+  const v = raw.replace(/\s/g, "").toUpperCase();
+  if (!v) return null;
+  if (!/^[A-Z0-9]{7}$/.test(v)) return "Il Codice Destinatario SDI deve essere di 7 caratteri alfanumerici.";
+  return null;
+};
+const pecError = (raw: string): string | null => {
+  const v = raw.trim();
+  if (!v) return null;
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v)) return "Indirizzo PEC non valido.";
+  return null;
+};
+
+
 export default function OnboardingPage() {
   const { user } = useAuth();
   const navigate = useNavigate();
@@ -75,6 +106,10 @@ export default function OnboardingPage() {
     email: "",
     whatsapp: "",
     piva: "",
+    customerType: "b2b" as "b2b" | "b2c",
+    fiscalCode: "",
+    sdiCode: "",
+    pec: "",
     plan: signupPlan,
     primaryColor: "#C8963E",
     fontFamily: "Inter",
@@ -179,6 +214,21 @@ export default function OnboardingPage() {
           }, { onConflict: "company_id" });
         } catch {}
 
+        // Dati fiscali tenant (compliance italiana)
+        try {
+          await supabase.from("company_settings" as any).upsert({
+            company_id: companyId,
+            customer_type: form.customerType,
+            vat: normalizePiva(form.piva) || null,
+            fiscal_code: form.fiscalCode.replace(/\s/g, "").toUpperCase() || null,
+            sdi_code: form.customerType === "b2b" ? (form.sdiCode.trim().toUpperCase() || null) : null,
+            pec: form.customerType === "b2b" ? (form.pec.trim() || null) : null,
+            whatsapp: form.whatsapp || form.phone || null,
+          }, { onConflict: "company_id" });
+        } catch {}
+
+
+
         // Create tenant_subscription with starter plan
         try {
           const { data: plans } = await supabase.from("subscription_plans" as any).select("id, name").order("price_monthly");
@@ -214,6 +264,18 @@ export default function OnboardingPage() {
       setLoading(false);
     }
   };
+
+  const fiscalStepValid = useMemo(() => {
+    if (pivaError(form.piva)) return false;
+    if (fiscalCodeError(form.fiscalCode, form.customerType)) return false;
+    if (form.customerType === "b2b") {
+      if (!normalizePiva(form.piva)) return false;
+      if (sdiError(form.sdiCode) || pecError(form.pec)) return false;
+      if (!form.sdiCode.trim() && !form.pec.trim()) return false;
+    }
+    return true;
+  }, [form.piva, form.fiscalCode, form.customerType, form.sdiCode, form.pec]);
+
 
   const selectedConfig = form.industry ? INDUSTRY_CONFIGS[form.industry as IndustryId] : null;
   const sitePrefix = "/b/";
@@ -390,7 +452,58 @@ export default function OnboardingPage() {
               <p className="text-center text-muted-foreground mb-6">Inserisci le informazioni della tua attività</p>
               <div className="space-y-3">
                 <div><Label>Nome Azienda *</Label><Input aria-label="Nome Azienda" value={form.name} onChange={e => setForm(p => ({ ...p, name: e.target.value }))} placeholder="Es. Transfer Roma Luxury" className="h-11 min-h-[44px]" /></div>
-                <div><Label>P.IVA</Label><Input aria-label="P.IVA" value={form.piva} onChange={e => setForm(p => ({ ...p, piva: e.target.value }))} placeholder="IT01234567890" className="h-11 min-h-[44px]" /></div>
+
+                {/* Tipo cliente */}
+                <div>
+                  <Label>Tipo cliente *</Label>
+                  <div className="grid grid-cols-2 gap-3 mt-1">
+                    {([{ id: "b2b", label: "Azienda (B2B)" }, { id: "b2c", label: "Privato (B2C)" }] as const).map(opt => (
+                      <button
+                        key={opt.id}
+                        type="button"
+                        aria-pressed={form.customerType === opt.id}
+                        onClick={() => setForm(p => ({ ...p, customerType: opt.id }))}
+                        className={`h-11 min-h-[44px] rounded-md border text-sm font-medium transition-colors ${form.customerType === opt.id ? "border-primary bg-primary/10 text-foreground" : "border-border text-muted-foreground hover:border-primary/50"}`}
+                      >
+                        {opt.label}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                <div>
+                  <Label>P.IVA {form.customerType === "b2b" ? "*" : "(opzionale)"}</Label>
+                  <Input aria-label="P.IVA" value={form.piva} onChange={e => setForm(p => ({ ...p, piva: e.target.value }))} placeholder="IT01234567890" className="h-11 min-h-[44px]" />
+                  {pivaError(form.piva) && <p className="text-xs text-destructive mt-1">{pivaError(form.piva)}</p>}
+                </div>
+
+                <div>
+                  <Label>Codice Fiscale {form.customerType === "b2c" ? "*" : "(opzionale se coincide con la P.IVA)"}</Label>
+                  <Input aria-label="Codice Fiscale" value={form.fiscalCode} onChange={e => setForm(p => ({ ...p, fiscalCode: e.target.value.toUpperCase() }))} placeholder={form.customerType === "b2c" ? "RSSMRA80A01H501U" : "01234567890"} className="h-11 min-h-[44px]" />
+                  {fiscalCodeError(form.fiscalCode, form.customerType) && form.fiscalCode !== "" && <p className="text-xs text-destructive mt-1">{fiscalCodeError(form.fiscalCode, form.customerType)}</p>}
+                </div>
+
+                {form.customerType === "b2b" && (
+                  <div className="space-y-3">
+                    <p className="text-xs text-muted-foreground">Fatturazione elettronica: indica il Codice Destinatario SDI oppure la PEC (almeno uno dei due).</p>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                      <div>
+                        <Label>Codice Destinatario SDI</Label>
+                        <Input aria-label="Codice Destinatario SDI" maxLength={7} value={form.sdiCode} onChange={e => setForm(p => ({ ...p, sdiCode: e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, "") }))} placeholder="ABC1234" className="h-11 min-h-[44px]" />
+                        {sdiError(form.sdiCode) && <p className="text-xs text-destructive mt-1">{sdiError(form.sdiCode)}</p>}
+                      </div>
+                      <div>
+                        <Label>PEC</Label>
+                        <Input aria-label="PEC" type="email" value={form.pec} onChange={e => setForm(p => ({ ...p, pec: e.target.value }))} placeholder="azienda@pec.it" className="h-11 min-h-[44px]" />
+                        {pecError(form.pec) && <p className="text-xs text-destructive mt-1">{pecError(form.pec)}</p>}
+                      </div>
+                    </div>
+                    {!form.sdiCode.trim() && !form.pec.trim() && (
+                      <p className="text-xs text-destructive">Inserisci almeno il Codice Destinatario SDI o la PEC per la fatturazione elettronica.</p>
+                    )}
+                  </div>
+                )}
+
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div><Label>Indirizzo</Label><Input aria-label="Indirizzo" value={form.address} onChange={e => setForm(p => ({ ...p, address: e.target.value }))} placeholder="Via Roma 1" className="h-11 min-h-[44px]" /></div>
                   <div><Label>Città</Label><Input aria-label="Città" value={form.city} onChange={e => setForm(p => ({ ...p, city: e.target.value }))} placeholder="Roma" className="h-11 min-h-[44px]" /></div>
@@ -402,7 +515,8 @@ export default function OnboardingPage() {
                 <div><Label>WhatsApp</Label><Input aria-label="WhatsApp" value={form.whatsapp} onChange={e => setForm(p => ({ ...p, whatsapp: e.target.value }))} placeholder="+39 333..." className="h-11 min-h-[44px]" /></div>
                 <div className="flex gap-3 mt-4">
                   <Button variant="outline" onClick={() => setStep(0)} className="flex-1 h-11 min-h-[44px]"><ArrowLeft className="w-4 h-4 mr-2" /> Indietro</Button>
-                  <Button onClick={() => setStep(2)} disabled={!form.name} className="flex-1 h-11 min-h-[44px]">Continua <ArrowRight className="w-4 h-4 ml-2" /></Button>
+                  <Button onClick={() => setStep(2)} disabled={!form.name || !fiscalStepValid} className="flex-1 h-11 min-h-[44px]">Continua <ArrowRight className="w-4 h-4 ml-2" /></Button>
+
                 </div>
               </div>
             </motion.div>

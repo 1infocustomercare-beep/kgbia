@@ -1880,13 +1880,17 @@ export type Database = {
           confirmation_message: string | null
           created_at: string
           currency: string | null
+          customer_type: string
           deposit_percentage: number | null
           email_template: string | null
           facebook_url: string | null
+          fiscal_code: string | null
           hours: string | null
           id: string
           instagram_url: string | null
+          pec: string | null
           require_deposit: boolean | null
+          sdi_code: string | null
           updated_at: string
           vat: string | null
           whatsapp: string | null
@@ -1897,13 +1901,17 @@ export type Database = {
           confirmation_message?: string | null
           created_at?: string
           currency?: string | null
+          customer_type?: string
           deposit_percentage?: number | null
           email_template?: string | null
           facebook_url?: string | null
+          fiscal_code?: string | null
           hours?: string | null
           id?: string
           instagram_url?: string | null
+          pec?: string | null
           require_deposit?: boolean | null
+          sdi_code?: string | null
           updated_at?: string
           vat?: string | null
           whatsapp?: string | null
@@ -1914,13 +1922,17 @@ export type Database = {
           confirmation_message?: string | null
           created_at?: string
           currency?: string | null
+          customer_type?: string
           deposit_percentage?: number | null
           email_template?: string | null
           facebook_url?: string | null
+          fiscal_code?: string | null
           hours?: string | null
           id?: string
           instagram_url?: string | null
+          pec?: string | null
           require_deposit?: boolean | null
+          sdi_code?: string | null
           updated_at?: string
           vat?: string | null
           whatsapp?: string | null
