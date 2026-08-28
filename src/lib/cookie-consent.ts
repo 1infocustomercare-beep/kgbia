@@ -23,6 +23,11 @@ export function readConsent(): CookieConsentState | null {
     const raw = localStorage.getItem(CONSENT_KEY);
     if (!raw) return null;
     const parsed = JSON.parse(raw);
+    // Consenso valido max 13 mesi (Provv. Garante 10/06/2021).
+    if (parsed.savedAt && Date.now() - Number(parsed.savedAt) > 13 * 30 * 24 * 60 * 60 * 1000) {
+      localStorage.removeItem(CONSENT_KEY);
+      return null;
+    }
     return {
       necessary: true,
       analytics: !!parsed.analytics,

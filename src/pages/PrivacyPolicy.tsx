@@ -14,8 +14,39 @@ const PrivacyPolicy = () => {
 
       <div className="max-w-2xl mx-auto px-5 py-8 space-y-6 text-sm text-muted-foreground leading-relaxed">
         <section>
-          <h2 className="text-base font-display font-bold text-foreground mb-2">1. Titolare del Trattamento</h2>
-          <p>Il Titolare del trattamento dei dati personali è il singolo ristorante che utilizza la piattaforma Empire come intermediario tecnico. I dati di contatto del Titolare sono disponibili nella sezione "Contatti" del menu digitale del ristorante.</p>
+          <h2 className="text-base font-display font-bold text-foreground mb-2">Titolare per il sito Empire.AI</h2>
+          <p>
+            Per i dati raccolti tramite il sito Empire.AI (visitatori, lead commerciali, form di contatto
+            e onboarding dei clienti) il Titolare del trattamento è <strong className="text-foreground">Empire AI Group</strong>,
+            contattabile all'indirizzo email indicato nella sezione Contatti del sito.
+          </p>
+          <ul className="list-disc pl-5 mt-2 space-y-1">
+            <li>
+              <strong className="text-foreground">Dati trattati:</strong> nome e cognome, ragione sociale, email, telefono,
+              settore e città dell'attività, messaggi inviati, dati fiscali forniti in fase di onboarding
+              (P.IVA, Codice Fiscale, Codice SDI o PEC), dati tecnici di navigazione (IP anonimizzato, cookie).
+            </li>
+            <li>
+              <strong className="text-foreground">Base giuridica:</strong> consenso (art. 6.1.a) per richieste informative,
+              newsletter e cookie non tecnici; esecuzione di misure precontrattuali e del contratto (art. 6.1.b) per
+              preventivi, Setup, Sviluppo Architettura e Canone Manutenzione; obbligo legale (art. 6.1.c) per fatturazione
+              e adempimenti fiscali; legittimo interesse (art. 6.1.f) per sicurezza e prevenzione abusi.
+            </li>
+            <li>
+              <strong className="text-foreground">Conservazione:</strong> lead e richieste di contatto non convertite 24 mesi;
+              dati dei clienti per la durata del rapporto e 24 mesi successivi; documenti fiscali 10 anni (art. 2220 c.c.);
+              cookie analitici e consenso cookie massimo 13 mesi.
+            </li>
+            <li>
+              <strong className="text-foreground">Diritti:</strong> puoi esercitare in ogni momento i diritti di cui agli
+              artt. 15-22 GDPR (accesso, rettifica, cancellazione, limitazione, opposizione, portabilità) scrivendo a Empire AI Group.
+            </li>
+          </ul>
+        </section>
+
+        <section>
+          <h2 className="text-base font-display font-bold text-foreground mb-2">1. Titolare del Trattamento (menu digitali dei ristoranti)</h2>
+          <p>Per i dati raccolti tramite i menu digitali e le webapp dei locali clienti, il Titolare del trattamento dei dati personali è il singolo ristorante che utilizza la piattaforma Empire come intermediario tecnico (Responsabile del trattamento). I dati di contatto del Titolare sono disponibili nella sezione "Contatti" del menu digitale del ristorante.</p>
         </section>
 
         <section>

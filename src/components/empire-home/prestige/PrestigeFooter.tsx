@@ -125,7 +125,7 @@ export default function PrestigeFooter() {
             <a className="underline hover:text-white" href={`mailto:${LEGAL.email}`}>{LEGAL.email}</a>.
           </p>
           <p>
-            Prezzi indicati IVA 22% esclusa. Le stime di risultato mostrate nel sito sono indicative e non
+            Prezzi indicati: operazione senza applicazione dell'IVA ai sensi dell'art. 1, commi 54-89, L. 190/2014. Le stime di risultato mostrate nel sito sono indicative e non
             costituiscono garanzia di rendimento.
           </p>
         </div>

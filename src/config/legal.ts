@@ -39,7 +39,7 @@ export const LEGAL = {
 
 /** Nota IVA/recesso da mostrare sotto i prezzi. */
 export const PRICING_LEGAL_NOTE_IT =
-  "Prezzi in euro, IVA 22% esclusa. Fatturazione elettronica. Per i consumatori si applica il diritto di recesso di 14 giorni ai sensi degli artt. 52 e ss. del Codice del Consumo; per i servizi digitali attivati immediatamente il recesso decade su richiesta esplicita del cliente. Nessun rinnovo automatico non comunicato.";
+  "Prezzi in euro: operazione senza applicazione dell'IVA ai sensi dell'art. 1, commi 54-89, L. 190/2014. Fatturazione elettronica. Per i consumatori si applica il diritto di recesso di 14 giorni ai sensi degli artt. 52 e ss. del Codice del Consumo; per i servizi digitali attivati immediatamente il recesso decade su richiesta esplicita del cliente. Nessun rinnovo automatico non comunicato.";
 
 export const PRICING_LEGAL_NOTE_EN =
   "Prices in euro, excluding 22% Italian VAT. Electronic invoicing. Consumers have a 14-day right of withdrawal under Italian Consumer Code; for digital services started immediately, withdrawal lapses upon the customer's explicit request. No undisclosed auto-renewal.";
