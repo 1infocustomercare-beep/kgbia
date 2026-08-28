@@ -13,7 +13,7 @@ const NAV_LINKS = [
   { label: "Settori", href: "#sectors", icon: Grid3x3, from: "#0d6c7e", to: "#2ec4b6" },
   { label: "Servizi", href: "#services", icon: Sparkles, from: "#118a8f", to: "#4fd8c8" },
   { label: "Siti Demo", href: "/demo", icon: MonitorSmartphone, from: "#0a5f74", to: "#38bdf8" },
-  { label: "Portfolio", href: "#portfolio", icon: LayoutGrid, from: "#0f7f8c", to: "#5ee7d5" },
+  { label: "Portfolio", href: "/portfolio", icon: LayoutGrid, from: "#0f7f8c", to: "#5ee7d5" },
   { label: "Prezzi", href: "#pricing", icon: Tag, from: "#0d6c7e", to: "#43cfc0" },
   { label: "AI Agents", href: "#agents", icon: Bot, from: "#0a5f74", to: "#2ec4b6", secondary: true },
   { label: "FAQ", href: "#faq", icon: HelpCircle, from: "#116b7d", to: "#7fe3d6", secondary: true },

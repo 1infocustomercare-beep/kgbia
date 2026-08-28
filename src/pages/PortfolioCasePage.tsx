@@ -30,10 +30,13 @@ export default function PortfolioCasePage() {
 
   const variants = useMemo<SectorMockupVariant[]>(() => {
     if (!group) return [];
-    const studio = group.variants.filter((v) => v.source === "studio");
-    const base = studio.length ? studio : group.variants;
-    // Gli stili con la sequenza completa aprono il confronto.
-    return [...base].sort((a, b) => (b.screens?.length ?? 1) - (a.screens?.length ?? 1));
+    // La pagina settore deve mostrare TUTTO il catalogo del settore. Prima
+    // venivano esclusi gli stili extended quando era presente anche un solo
+    // progetto Studio: il click dal portfolio poteva quindi aprire una pagina vuota.
+    return [...group.variants].sort((a, b) => {
+      if (a.tier !== b.tier) return a.tier === "primary" ? -1 : 1;
+      return (b.screens?.length ?? 1) - (a.screens?.length ?? 1);
+    });
   }, [group]);
 
 
@@ -107,6 +110,7 @@ export default function PortfolioCasePage() {
   }
 
   const lead = variants[0];
+  const featured = filter === "all" ? lead : variants.find((v) => v.id === filter) ?? lead;
   const totalScreens = variants.reduce((n, v) => n + (v.screens?.length || 1), 0);
   const otherSectors = SECTOR_MOCKUPS.filter(
     (g) => g.id !== group.id && g.variants.some((v) => v.source === "studio"),
@@ -212,7 +216,7 @@ export default function PortfolioCasePage() {
       >
         <div className="mx-auto max-w-7xl overflow-x-auto px-5 py-3 [scrollbar-width:none] lg:px-10 [&::-webkit-scrollbar]:hidden">
           <div className="flex w-max items-center gap-2">
-            {[{ id: "all", label: `Tutti · ${variants.length}` }, ...variants.map((v) => ({ id: v.id, label: v.brand }))].map(
+            {[{ id: "all", label: `Tutti · ${variants.length}` }, ...variants.map((v) => ({ id: v.id, label: v.style }))].map(
               (chip) => {
                 const on = filter === chip.id;
                 return (
@@ -237,26 +241,26 @@ export default function PortfolioCasePage() {
         <div className="pglass overflow-hidden p-5 sm:p-8">
           <div className="grid items-center gap-8 lg:grid-cols-[1.35fr_0.65fr]">
             <DesktopBrowserFrame
-              src={lead.screens?.[0]?.image ?? lead.screen}
-              alt={`${lead.brand} — versione desktop`}
-              label={`${lead.brand.toLowerCase().replace(/[^a-z0-9]+/g, "")}.it`}
-              onClick={() => setLightbox({ index: 0 })}
+              src={featured.screens?.[0]?.image ?? featured.screen}
+              alt={`${featured.brand} — versione desktop`}
+              label={`${featured.brand.toLowerCase().replace(/[^a-z0-9]+/g, "")}.it`}
+              onClick={() => setLightbox({ index: variants.findIndex((v) => v.id === featured.id) })}
             />
             <div className="mx-auto w-[62%] max-w-[240px] lg:w-full">
               <IPhoneProMaxFrame
-                src={lead.screens?.[1]?.image ?? lead.screens?.[0]?.image ?? lead.screen}
-                alt={`${lead.brand} — versione mobile`}
+                src={featured.screens?.[1]?.image ?? featured.screens?.[0]?.image ?? featured.screen}
+                alt={`${featured.brand} — versione mobile`}
                 width={230}
                 className="mx-auto !w-full"
                 style={{ width: "100%", height: "auto", aspectRatio: "9 / 19.5" }}
-                onClick={() => setLightbox({ index: 0 })}
+                onClick={() => setLightbox({ index: variants.findIndex((v) => v.id === featured.id) })}
               />
             </div>
           </div>
           <div className="mt-6 flex flex-wrap items-center gap-2 text-[10px] font-bold uppercase tracking-[0.22em]">
             <span className="pglass-tag pglass-tag-accent">Desktop + mobile 1:1</span>
-            <span className="pglass-tag">{lead.brand}</span>
-            <span className="pglass-tag">{lead.palette}</span>
+            <span className="pglass-tag">{featured.brand}</span>
+            <span className="pglass-tag">{featured.palette}</span>
           </div>
         </div>
       </section>
