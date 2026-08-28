@@ -32,7 +32,18 @@ const CookieBanner = ({ restaurantId }: { restaurantId?: string }) => {
 
   useEffect(() => {
     const saved = localStorage.getItem(CONSENT_KEY);
-    if (!saved) {
+    let expired = false;
+    try {
+      const parsed = saved ? JSON.parse(saved) : null;
+      // Il consenso scade dopo 13 mesi (Provv. Garante 10/06/2021).
+      expired =
+        !!parsed?.savedAt &&
+        Date.now() - Number(parsed.savedAt) > 13 * 30 * 24 * 60 * 60 * 1000;
+      if (expired) localStorage.removeItem(CONSENT_KEY);
+    } catch {
+      expired = true;
+    }
+    if (!saved || expired) {
       setVisible(true);
     }
     const reopen = () => {
@@ -45,7 +56,7 @@ const CookieBanner = ({ restaurantId }: { restaurantId?: string }) => {
   }, []);
 
   const saveConsent = async (c: CookieConsent) => {
-    localStorage.setItem(CONSENT_KEY, JSON.stringify(c));
+    localStorage.setItem(CONSENT_KEY, JSON.stringify({ ...c, savedAt: Date.now() }));
     setVisible(false);
 
     // Persist to DB
@@ -165,7 +176,7 @@ const CookieBanner = ({ restaurantId }: { restaurantId?: string }) => {
               onClick={acceptNecessary}
               className="flex-1 py-2.5 rounded-xl bg-secondary text-secondary-foreground text-xs font-medium"
             >
-              Solo necessari
+              Rifiuta non essenziali
             </button>
             <button
               onClick={acceptAll}
