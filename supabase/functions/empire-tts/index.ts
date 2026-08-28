@@ -34,7 +34,6 @@ serve(async (req) => {
 
     const { text, voiceProfile } = await req.json();
     const ELEVENLABS_API_KEY = Deno.env.get("ELEVENLABS_API_KEY");
-    if (!ELEVENLABS_API_KEY) throw new Error("Voice service not configured");
 
     if (!text || text.trim().length === 0) {
       return new Response(JSON.stringify({ error: "No text provided" }), {
