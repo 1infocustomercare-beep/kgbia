@@ -34,7 +34,6 @@ serve(async (req) => {
 
     const { text, voiceProfile } = await req.json();
     const ELEVENLABS_API_KEY = Deno.env.get("ELEVENLABS_API_KEY");
-    if (!ELEVENLABS_API_KEY) throw new Error("Voice service not configured");
 
     if (!text || text.trim().length === 0) {
       return new Response(JSON.stringify({ error: "No text provided" }), {
@@ -116,49 +115,95 @@ serve(async (req) => {
 
     console.log(`[empire-tts] Generating speech: profile=${voiceProfile || "arianna"}, text length=${normalizedText.length}`);
 
-    const response = await fetch(
-      `https://api.elevenlabs.io/v1/text-to-speech/${profile.voiceId}?output_format=mp3_44100_128`,
-      {
-        method: "POST",
-        headers: {
-          "xi-api-key": ELEVENLABS_API_KEY,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          text: normalizedText,
-          model_id: "eleven_multilingual_v2",
-          voice_settings: profile.settings,
-        }),
-      }
-    );
+    // Voci Lovable AI (femminili naturali) mappate sui profili Empire.
+    const LOVABLE_VOICE: Record<string, string> = {
+      arianna: "shimmer",
+      splash: "sage",
+      sales: "coral",
+    };
+    const LOVABLE_INSTRUCTIONS: Record<string, string> = {
+      arianna: "Parla in italiano, tono professionale, caldo e rassicurante, ritmo naturale.",
+      splash: "Parla in italiano con tono cinematografico ed elegante, ritmo lento e sicuro.",
+      sales: "Parla in italiano con tono consulenziale e coinvolgente, energia positiva ma mai aggressiva.",
+    };
+    const key = (voiceProfile as string) in LOVABLE_VOICE ? (voiceProfile as string) : "arianna";
 
-    if (!response.ok) {
-      const errText = await response.text();
-      console.error("ElevenLabs TTS error:", response.status, errText);
-      // Always return 200 with fallback flag so client can degrade to browser TTS
-      // instead of crashing on quota/auth/payment/server errors.
-      return new Response(
-        JSON.stringify({
-          error: `tts_failed_${response.status}`,
-          fallback: true,
-          detail: errText.slice(0, 300),
-        }),
-        { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } },
-      );
+    // ── 1) Primario: Lovable AI (nessuna chiave esterna, nessun piano a pagamento) ──
+    const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
+    if (LOVABLE_API_KEY) {
+      try {
+        const aiResp = await fetch("https://ai.gateway.lovable.dev/v1/audio/speech", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Lovable-API-Key": LOVABLE_API_KEY,
+          },
+          body: JSON.stringify({
+            model: "openai/gpt-4o-mini-tts",
+            input: normalizedText,
+            voice: LOVABLE_VOICE[key],
+            instructions: LOVABLE_INSTRUCTIONS[key],
+            response_format: "mp3",
+            stream_format: "audio",
+          }),
+        });
+
+        if (aiResp.ok) {
+          const buf = await aiResp.arrayBuffer();
+          console.log(`[empire-tts] ✅ Lovable AI audio: ${(buf.byteLength / 1024).toFixed(1)}KB`);
+          return new Response(JSON.stringify({ audioContent: base64Encode(buf), provider: "lovable-ai" }), {
+            headers: { ...corsHeaders, "Content-Type": "application/json" },
+          });
+        }
+        console.error("[empire-tts] Lovable AI TTS error:", aiResp.status, (await aiResp.text()).slice(0, 300));
+      } catch (aiErr) {
+        console.error("[empire-tts] Lovable AI TTS exception:", aiErr);
+      }
     }
 
-    const audioBuffer = await response.arrayBuffer();
-    const base64Audio = base64Encode(audioBuffer);
+    // ── 2) Secondario: ElevenLabs (solo se la chiave è configurata) ──
+    if (ELEVENLABS_API_KEY) {
+      try {
+        const response = await fetch(
+          `https://api.elevenlabs.io/v1/text-to-speech/${profile.voiceId}?output_format=mp3_44100_128`,
+          {
+            method: "POST",
+            headers: {
+              "xi-api-key": ELEVENLABS_API_KEY,
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              text: normalizedText,
+              model_id: "eleven_multilingual_v2",
+              voice_settings: profile.settings,
+            }),
+          },
+        );
 
-    console.log(`[empire-tts] ✅ Audio generated successfully: ${(audioBuffer.byteLength / 1024).toFixed(1)}KB`);
+        if (response.ok) {
+          const audioBuffer = await response.arrayBuffer();
+          console.log(`[empire-tts] ✅ ElevenLabs audio: ${(audioBuffer.byteLength / 1024).toFixed(1)}KB`);
+          return new Response(
+            JSON.stringify({ audioContent: base64Encode(audioBuffer), provider: "elevenlabs" }),
+            { headers: { ...corsHeaders, "Content-Type": "application/json" } },
+          );
+        }
+        console.error("[empire-tts] ElevenLabs error:", response.status, (await response.text()).slice(0, 300));
+      } catch (elErr) {
+        console.error("[empire-tts] ElevenLabs exception:", elErr);
+      }
+    }
 
-    return new Response(JSON.stringify({ audioContent: base64Audio }), {
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
-    });
+    // ── 3) Degrado silenzioso: il client usa il TTS del browser ──
+    return new Response(
+      JSON.stringify({ success: false, fallback: true, error: "tts_unavailable" }),
+      { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } },
+    );
   } catch (e) {
     console.error("empire-tts error:", e);
-    return new Response(JSON.stringify({ error: e instanceof Error ? e.message : "Unknown error", fallback: true }), {
-      status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" },
+    // Mai 5xx: qualsiasi errore TTS degrada al fallback browser senza bloccare la UI.
+    return new Response(JSON.stringify({ fallback: true, error: "tts_unavailable" }), {
+      status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
   }
 });
