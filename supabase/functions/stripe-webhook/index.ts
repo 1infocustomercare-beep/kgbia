@@ -251,6 +251,8 @@ serve(async (req) => {
             .update({
               setup_paid: true,
               setup_paid_at: new Date().toISOString(),
+              // HOLD & APPROVE: il pagamento NON attiva l'app.
+              approval_status: "pending_approval",
             })
             .eq("id", cid);
         }
@@ -306,7 +308,12 @@ serve(async (req) => {
       if (!wasAlreadyPaid) {
         await supabase
           .from("restaurants")
-          .update({ setup_paid: true, setup_paid_at: new Date().toISOString() })
+          .update({
+            setup_paid: true,
+            setup_paid_at: new Date().toISOString(),
+            // HOLD & APPROVE: il pagamento NON attiva l'app.
+            approval_status: "pending_approval",
+          })
           .eq("id", restaurantId);
       }
 

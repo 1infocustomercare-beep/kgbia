@@ -11,7 +11,9 @@ type Action =
   | { action: "update_profile"; user_id: string; full_name?: string; phone?: string; city?: string; demo_section_enabled?: boolean }
   | { action: "set_role"; user_id: string; role: string }
   | { action: "delete_user"; user_id: string }
-  | { action: "toggle_tenant_block"; tenant_kind: "company" | "restaurant"; tenant_id: string; blocked: boolean };
+  | { action: "toggle_tenant_block"; tenant_kind: "company" | "restaurant"; tenant_id: string; blocked: boolean }
+  | { action: "list_pending_approvals" }
+  | { action: "approve_tenant"; tenant_kind: "company" | "restaurant"; tenant_id: string };
 
 function json(body: unknown, status = 200) {
   return new Response(JSON.stringify(body), {
@@ -221,6 +223,57 @@ Deno.serve(async (req) => {
           .eq("id", payload.tenant_id);
         if (error) throw error;
         return json({ ok: true });
+      }
+
+      // HOLD & APPROVE — nessuna attivazione automatica dopo il pagamento Setup
+      case "list_pending_approvals": {
+        const [companiesRes, restaurantsRes] = await Promise.all([
+          admin
+            .from("companies")
+            .select("id, name, slug, owner_id, setup_paid, approval_status, created_at")
+            .eq("approval_status", "pending_approval")
+            .order("created_at", { ascending: false }),
+          admin
+            .from("restaurants")
+            .select("id, name, slug, owner_id, setup_paid, approval_status, created_at")
+            .eq("approval_status", "pending_approval")
+            .order("created_at", { ascending: false }),
+        ]);
+        if (companiesRes.error) throw companiesRes.error;
+        if (restaurantsRes.error) throw restaurantsRes.error;
+
+        const pending = [
+          ...(companiesRes.data ?? []).map((c: any) => ({ ...c, kind: "company" })),
+          ...(restaurantsRes.data ?? []).map((r: any) => ({ ...r, kind: "restaurant" })),
+        ].sort((a: any, b: any) => String(b.created_at ?? "").localeCompare(String(a.created_at ?? "")));
+
+        return json({ pending });
+      }
+
+      case "approve_tenant": {
+        if (payload.tenant_kind !== "company" && payload.tenant_kind !== "restaurant") {
+          return json({ error: "invalid_tenant_kind" }, 400);
+        }
+        if (!payload.tenant_id || typeof payload.tenant_id !== "string") {
+          return json({ error: "invalid_tenant_id" }, 400);
+        }
+        const table = payload.tenant_kind === "company" ? "companies" : "restaurants";
+        const { data, error } = await admin
+          .from(table)
+          .update({
+            approval_status: "approved",
+            approved_at: new Date().toISOString(),
+            approved_by: callerId,
+            is_active: true,
+            is_blocked: false,
+            blocked_reason: null,
+          })
+          .eq("id", payload.tenant_id)
+          .select("id, approval_status")
+          .maybeSingle();
+        if (error) throw error;
+        if (!data) return json({ error: "tenant_not_found" }, 404);
+        return json({ ok: true, tenant: data });
       }
     }
   } catch (e) {
