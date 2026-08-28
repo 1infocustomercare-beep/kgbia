@@ -75,7 +75,7 @@ const INDUSTRY_NAV: Record<string, { title: string; icon: string; url: string }[
     { title: "Corsi", icon: "Calendar", url: "/app/appointments" },
     { title: "Membri", icon: "Users", url: "/app/clients" },
     { title: "Staff Trainer", icon: "UserCog", url: "/app/staff" },
-    { title: "Abbonamenti", icon: "CreditCard", url: "/app/subscription" },
+    { title: "Piano", icon: "CreditCard", url: "/app/subscription" },
     { title: "Recensioni", icon: "Star", url: "/app/reviews" },
     { title: "Sito Web", icon: "Store", url: "/app/webhub" },
   ],
@@ -255,7 +255,7 @@ const COMMON_NAV = [
   { title: "Payroll", icon: "Receipt", url: "/app/payroll" },
   { title: "Finanza", icon: "BarChart3", url: "/app/finance" },
   { title: "Social", icon: "PenTool", url: "/app/social" },
-  { title: "Abbonamento", icon: "CreditCard", url: "/app/subscription" },
+  { title: "Piano", icon: "CreditCard", url: "/app/subscription" },
   { title: "Richieste", icon: "Lightbulb", url: "/app/feature-requests" },
   { title: "Impostazioni", icon: "Settings", url: "/app/settings" },
 ];

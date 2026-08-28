@@ -194,7 +194,7 @@ const MORE_MENU: Record<string, NavItem[]> = {
     { label: "Finanza", icon: "BarChart3", path: "/app/finance" },
     { label: "Leads", icon: "Target", path: "/app/leads" },
     { label: "Social", icon: "PenTool", path: "/app/social" },
-    { label: "Abbonamento", icon: "CreditCard", path: "/app/subscription" },
+    { label: "Piano", icon: "CreditCard", path: "/app/subscription" },
     { label: "Richieste", icon: "Lightbulb", path: "/app/feature-requests" },
     { label: "Impostazioni", icon: "Settings", path: "/app/settings" },
   ],
@@ -211,7 +211,7 @@ const DEFAULT_MORE: NavItem[] = [
   { label: "Payroll", icon: "Receipt", path: "/app/payroll" },
   { label: "Leads", icon: "Target", path: "/app/leads" },
   { label: "Social", icon: "PenTool", path: "/app/social" },
-  { label: "Abbonamento", icon: "CreditCard", path: "/app/subscription" },
+  { label: "Piano", icon: "CreditCard", path: "/app/subscription" },
   { label: "Richieste", icon: "Lightbulb", path: "/app/feature-requests" },
   { label: "Impostazioni", icon: "Settings", path: "/app/settings" },
 ];

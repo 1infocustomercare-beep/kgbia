@@ -276,7 +276,7 @@ function AgentDetailModal({
           <div className="absolute inset-0 bg-background/50 backdrop-blur-sm flex items-center justify-center">
             <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-destructive/20 border border-destructive/30">
               <Lock className="w-3.5 h-3.5 text-destructive" />
-              <span className="text-xs font-semibold text-destructive">Abbonamento Richiesto</span>
+              <span className="text-xs font-semibold text-destructive">Piano Richiesto</span>
             </div>
           </div>
         )}

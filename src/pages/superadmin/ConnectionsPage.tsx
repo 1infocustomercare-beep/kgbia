@@ -122,8 +122,8 @@ const buildSections = (): ConfigSection[] => [
   },
   {
     id: "payments",
-    title: "Pagamenti & Abbonamenti",
-    description: "Stripe API, webhook e piani di abbonamento Empire",
+    title: "Pagamenti & Canoni",
+    description: "Stripe API, webhook e piani e canoni Empire",
     icon: <CreditCard className="w-5 h-5" />,
     accentColor: "hsl(250 60% 55%)",
     fields: [

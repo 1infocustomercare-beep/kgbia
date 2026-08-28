@@ -261,7 +261,7 @@ export function PrestigeRoiCalculator() {
             <RoiRow label={t({ it: "Recuperate da Empire (~70%)", en: "Recovered by Empire (~70%)" })} value={`${data.recovered}`} tone="good" />
             <RoiRow label={t({ it: "Fatturato extra stimato", en: "Estimated extra revenue" })} value={fmtEur(data.extraRevenue)} tone="good" />
             <RoiRow label={t({ it: "Risparmio staff (vs receptionist)", en: "Staff savings (vs receptionist)" })} value={fmtEur(data.staffSaved)} tone="good" />
-            <RoiRow label={t({ it: "Abbonamento Empire (da €49/mese)", en: "Empire subscription (from €49/month)" })} value={`− ${fmtEur(data.empireCost)}`} tone="bad" />
+            <RoiRow label={t({ it: "Canone Manutenzione Empire (da €49/mese)", en: "Empire maintenance fee (from €49/month)" })} value={`− ${fmtEur(data.empireCost)}`} tone="bad" />
             <div className="mt-4 border-t pt-4" style={{ borderColor: "hsl(var(--pr-gold) / 0.3)" }}>
               <div className="text-xs uppercase tracking-widest" style={{ color: "hsl(var(--pr-muted-on-light))" }}>{t({ it: "Guadagno netto stimato / mese", en: "Estimated net gain / month" })}</div>
               <div className="prestige-display mt-1 text-4xl sm:text-5xl prestige-gold-text">{fmtEur(data.netGain)}</div>
@@ -302,7 +302,7 @@ export function PrestigeComparison() {
     { k: { it: "Risposta 24/7 multilingua", en: "24/7 multilingual answers" }, empire: true, agency: false, staff: false },
     { k: { it: "Setup in 7 giorni", en: "Setup in 7 days" }, empire: true, agency: false, staff: true },
     { k: { it: "Investimento iniziale", en: "Upfront investment" }, empire: "€1.997–7.997", agency: "€5.000+", staff: "—" },
-    { k: { it: "Costo mensile (abbonamento)", en: "Monthly cost (subscription)" }, empire: "€0–49", agency: "€2.500+", staff: "€1.800+" },
+    { k: { it: "Costo mensile (canone manutenzione)", en: "Monthly cost (maintenance fee)" }, empire: "€0–49", agency: "€2.500+", staff: "€1.800+" },
     { k: { it: "Ferie / malattia", en: "Holidays / sick days" }, empire: { it: "Mai", en: "Never" }, agency: "—", staff: { it: "Sì", en: "Yes" } },
     { k: { it: "Si aggiorna da sola", en: "Self-improving" }, empire: true, agency: false, staff: false },
     { k: { it: "Garanzia soddisfatti", en: "Satisfaction guarantee" }, empire: { it: "90 gg", en: "90 days" }, agency: false, staff: false },
@@ -360,7 +360,7 @@ export function PrestigePricing() {
     {
       name: { it: "Digital Start", en: "Digital Start" },
       price: "€1.997",
-      per: { it: " una tantum + €49/mese", en: " one-off + €49/month" },
+      per: { it: " una tantum + Canone Manutenzione €49/mese", en: " one-off + €49/month maintenance fee" },
       desc: { it: "Sito web, app white-label e dashboard operativa per partire subito.", en: "Website, white-label app and operational dashboard to launch fast." },
       feats: [
         { it: "Sito web + app white-label", en: "Website + white-label app" },
@@ -373,7 +373,7 @@ export function PrestigePricing() {
     {
       name: { it: "Growth AI", en: "Growth AI" },
       price: "€4.997",
-      per: { it: " una tantum + €29/mese", en: " one-off + €29/month" },
+      per: { it: " una tantum + Canone Manutenzione €29/mese", en: " one-off + €29/month maintenance fee" },
       desc: { it: "Il piano consigliato: AI engine, automazioni e CRM avanzato inclusi.", en: "Recommended plan: AI engine, automations and advanced CRM included." },
       feats: [
         { it: "Tutto di Digital Start", en: "Everything in Digital Start" },
@@ -386,7 +386,7 @@ export function PrestigePricing() {
     {
       name: { it: "Empire Domination", en: "Empire Domination" },
       price: "€7.997",
-      per: { it: " una tantum + €0/mese", en: " one-off + €0/month" },
+      per: { it: " una tantum + Canone Manutenzione €0/mese", en: " one-off + €0/month maintenance fee" },
       desc: { it: "Tutto incluso, 0% commissioni e account manager VIP dedicato.", en: "Everything included, 0% fees and a dedicated VIP account manager." },
       feats: [
         { it: "Tutto incluso", en: "Everything included" },
@@ -408,7 +408,7 @@ export function PrestigePricing() {
             <span className="prestige-gold-text italic">{t({ it: "non in problemi.", en: "not in problems." })}</span>
           </h2>
           <p className="mt-3 text-sm" style={{ color: "hsl(var(--pr-muted-on-light))" }}>
-            {t({ it: "Setup in 7 giorni · Una tantum + abbonamento · Disdici l'abbonamento quando vuoi", en: "7-day setup · One-off + subscription · Cancel the subscription anytime" })}
+            {t({ it: "Setup in 7 giorni · Una tantum + Canone Manutenzione · Disdici il canone quando vuoi", en: "7-day setup · One-off + maintenance fee · Cancel the fee anytime" })}
           </p>
         </div>
 
@@ -525,8 +525,8 @@ export function PrestigeFAQ() {
     { q: { it: "Quanto ci vuole davvero per partire?", en: "How long does it really take to launch?" }, a: { it: "7 giorni in media. Il primo giorno ci dai gli accessi, in una settimana sei live con sito, AI, WhatsApp e telefono.", en: "7 days on average. Day one you give us access, within a week you're live with site, AI, WhatsApp and phone." } },
     { q: { it: "I miei dati e quelli dei clienti sono sicuri?", en: "Are my and my customers' data safe?" }, a: { it: "Sì. Server in UE, crittografia at-rest, GDPR compliant, nessun dato venduto a terzi. Mai.", en: "Yes. EU servers, at-rest encryption, GDPR compliant, no data sold to third parties. Ever." } },
     { q: { it: "Posso cancellare in qualunque momento?", en: "Can I cancel anytime?" }, a: { it: "Sì, senza penali. Puoi disdire in qualunque momento, senza costi nascosti.", en: "Yes, no penalties. You can cancel anytime with no hidden fees." } },
-    { q: { it: "Quanto costa e cosa comprende?", en: "How much is it and what's included?" }, a: { it: "Tre piani chiari: Digital Start €1.997 una tantum + €49/mese, Growth AI €4.997 + €29/mese, Empire Domination €7.997 + €0/mese. Prezzi IVA esclusa, rateizzabili. Nessun costo nascosto: quello che vedi è quello che paghi.", en: "Three clear plans: Digital Start €1,997 one-off + €49/month, Growth AI €4,997 + €29/month, Empire Domination €7,997 + €0/month. VAT excluded, instalments available. No hidden fees." } },
-    { q: { it: "E se non funziona per la mia azienda?", en: "What if it doesn't work for my business?" }, a: { it: "Hai 90 giorni per valutare il sistema con noi al tuo fianco: se gli obiettivi concordati non vengono raggiunti, continuiamo a lavorarci senza costi aggiuntivi finché non ci arriviamo. L'abbonamento è disdicibile in qualunque momento, senza penali.", en: "You get 90 days to evaluate the system with us alongside you: if the agreed goals aren't met, we keep working on it at no extra cost until they are. The subscription can be cancelled anytime, no penalties." } },
+    { q: { it: "Quanto costa e cosa comprende?", en: "How much is it and what's included?" }, a: { it: "Tre piani chiari: Digital Start €1.997 una tantum + Canone Manutenzione €49/mese, Growth AI €4.997 + Canone Manutenzione €29/mese, Empire Domination €7.997 + Canone Manutenzione €0/mese. Prezzi IVA esclusa, rateizzabili. Nessun costo nascosto: quello che vedi è quello che paghi.", en: "Three clear plans: Digital Start €1,997 one-off + €49/month maintenance fee, Growth AI €4,997 + €29/month maintenance fee, Empire Domination €7,997 + €0/month maintenance fee. VAT excluded, instalments available. No hidden fees." } },
+    { q: { it: "E se non funziona per la mia azienda?", en: "What if it doesn't work for my business?" }, a: { it: "Hai 90 giorni per valutare il sistema con noi al tuo fianco: se gli obiettivi concordati non vengono raggiunti, continuiamo a lavorarci senza costi aggiuntivi finché non ci arriviamo. Il Canone Manutenzione è disdicibile in qualunque momento, senza penali.", en: "You get 90 days to evaluate the system with us alongside you: if the agreed goals aren't met, we keep working on it at no extra cost until they are. The maintenance fee can be cancelled anytime, no penalties." } },
     { q: { it: "Funziona anche per il mio settore?", en: "Does it work for my industry?" }, a: { it: "Empire è già attivo in 25+ settori: food, NCC, beauty, hotel, palestre, studi medici/legali, e-commerce. Lo addestriamo sul tuo specifico.", en: "Empire is live in 25+ industries: food, NCC, beauty, hotels, gyms, medical/legal practices, e-commerce. We train it on yours." } },
   ];
 

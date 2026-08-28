@@ -136,7 +136,7 @@ export default function SubscriptionPage() {
           <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-accent flex items-center justify-center">
             <Crown className="w-5 h-5 text-primary-foreground" />
           </div>
-          Il Tuo Abbonamento
+          Il Tuo Piano
         </h1>
         <p className="text-sm text-muted-foreground mt-2 max-w-lg">
           Gestisci il tuo piano, monitora i gettoni IA e sblocca funzionalità avanzate per far crescere {terminology.company.toLowerCase() === "ristorante" ? "il tuo ristorante" : `la tua ${terminology.company.toLowerCase()}`}.

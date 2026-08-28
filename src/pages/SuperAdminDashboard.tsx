@@ -670,7 +670,7 @@ const SuperAdminDashboard = () => {
     ]},
     { label: "💰 Finanza", tabs: [
       { id: "payments", label: "Pagamenti", icon: <CreditCard className="w-4 h-4" /> },
-      { id: "subscriptions" as SuperTab, label: "Abbonamenti", icon: <Calendar className="w-4 h-4" /> },
+      { id: "subscriptions" as SuperTab, label: "Canoni", icon: <Calendar className="w-4 h-4" /> },
       { id: "fisco", label: "Fiscalità", icon: <ShieldCheck className="w-4 h-4" /> },
       { id: "billing", label: "Fatture", icon: <DollarSign className="w-4 h-4" /> },
       { id: "costs" as SuperTab, label: "Costi Empire", icon: <DollarSign className="w-4 h-4" /> },
@@ -1458,13 +1458,13 @@ const SuperAdminDashboard = () => {
 
               const handleCancelSub = async (subId: string) => {
                 await supabase.from("business_subscriptions").update({ cancel_at_period_end: true, updated_at: new Date().toISOString() }).eq("id", subId);
-                toast({ title: "Cancellazione programmata", description: "L'abbonamento terminerà alla fine del periodo" });
+                toast({ title: "Cancellazione programmata", description: "Il canone terminerà alla fine del periodo" });
                 fetchData();
               };
 
               const handleReactivateSub = async (subId: string) => {
                 await supabase.from("business_subscriptions").update({ cancel_at_period_end: false, status: "active", updated_at: new Date().toISOString() }).eq("id", subId);
-                toast({ title: "Abbonamento riattivato" });
+                toast({ title: "Canone riattivato" });
                 fetchData();
               };
 
@@ -1495,12 +1495,12 @@ const SuperAdminDashboard = () => {
                     <div className="p-3 rounded-2xl admin-card-accent">
                       <Calendar className="w-4 h-4 text-primary mb-1" />
                       <p className="text-2xl font-display font-bold text-primary">{activeSubs.length}</p>
-                      <p className="text-[10px] text-muted-foreground">Abbonamenti Attivi</p>
+                      <p className="text-[10px] text-muted-foreground">Canoni Attivi</p>
                     </div>
                     <div className="p-3 rounded-2xl admin-card">
                       <DollarSign className="w-4 h-4 text-primary mb-1" />
                       <p className="text-2xl font-display font-bold text-foreground">€{totalMRRSubs.toLocaleString()}</p>
-                      <p className="text-[10px] text-muted-foreground">MRR Abbonamenti</p>
+                      <p className="text-[10px] text-muted-foreground">MRR Canoni</p>
                     </div>
                     <div className="p-3 rounded-2xl admin-card">
                       <Clock className="w-4 h-4 text-blue-400 mb-1" />
@@ -1557,7 +1557,7 @@ const SuperAdminDashboard = () => {
                   {/* Subscriptions list */}
                   <div className="space-y-2">
                     <div className="flex items-center justify-between">
-                      <h3 className="text-sm font-semibold text-foreground">Tutti gli Abbonamenti ({subscriptions.length})</h3>
+                      <h3 className="text-sm font-semibold text-foreground">Tutti i Canoni ({subscriptions.length})</h3>
                     </div>
 
                     {subscriptions.map((sub) => {
@@ -1674,7 +1674,7 @@ const SuperAdminDashboard = () => {
                     {subscriptions.length === 0 && (
                       <div className="text-center py-12">
                         <Calendar className="w-12 h-12 mx-auto mb-3 text-muted-foreground/65" />
-                        <p className="text-sm text-muted-foreground">Nessun abbonamento registrato</p>
+                        <p className="text-sm text-muted-foreground">Nessun canone registrato</p>
                       </div>
                     )}
                   </div>
@@ -1909,7 +1909,7 @@ const SuperAdminDashboard = () => {
                 { name: "Lovable Cloud", description: "PostgreSQL, Auth, Storage, Realtime", status: "connected", detail: "Infrastruttura core — automatica", scope: "admin", usedBy: "Piattaforma", accountUsage: "subscribed", guideSteps: ["Gestito automaticamente", "Nessuna config necessaria"] },
                 { name: "Lovable AI Gateway", description: "LLM: Gemini, GPT-5", status: "connected", detail: "LOVABLE_API_KEY attiva", scope: "admin", usedBy: "Assistenti, Menu, Translate", secretName: "LOVABLE_API_KEY", accountUsage: "subscribed", guideSteps: ["Pre-configurata con Lovable Cloud", "Modelli: Gemini 2.5, GPT-5"] },
                 { name: "ElevenLabs", description: "TTS & Voice Agent", status: "connected", detail: "API Key configurata", scope: "admin", usedBy: "TTS, Voice Agent", secretName: "ELEVENLABS_API_KEY", accountUsage: "extra", guideUrl: "https://elevenlabs.io/docs/api-reference/text-to-speech", guideSteps: ["1. elevenlabs.io → API Keys", "2. Copia API Key", "3. Inserisci come secret"], buyCreditsUrl: "https://elevenlabs.io/subscription" },
-                { name: "Stripe Platform", description: "Pagamenti, split, abbonamenti", status: "missing", detail: "STRIPE_SECRET_KEY necessaria", scope: "admin", usedBy: "Checkout, split partner", actionLabel: "Configura", secretName: "STRIPE_SECRET_KEY", accountUsage: "subscribed", guideUrl: "https://docs.stripe.com/connect", guideSteps: ["1. dashboard.stripe.com", "2. Developers → API Keys", "3. Copia Secret Key", "4. Inserisci come secret"] },
+                { name: "Stripe Platform", description: "Pagamenti, split, canoni", status: "missing", detail: "STRIPE_SECRET_KEY necessaria", scope: "admin", usedBy: "Checkout, split partner", actionLabel: "Configura", secretName: "STRIPE_SECRET_KEY", accountUsage: "subscribed", guideUrl: "https://docs.stripe.com/connect", guideSteps: ["1. dashboard.stripe.com", "2. Developers → API Keys", "3. Copia Secret Key", "4. Inserisci come secret"] },
                 { name: "Stripe Webhook", description: "Verifica eventi pagamento", status: "missing", detail: "STRIPE_WEBHOOK_SECRET", scope: "admin", usedBy: "stripe-webhook", actionLabel: "Configura", secretName: "STRIPE_WEBHOOK_SECRET", accountUsage: "subscribed", guideUrl: "https://docs.stripe.com/webhooks", guideSteps: ["1. Stripe → Webhooks", "2. Aggiungi endpoint", "3. Copia Signing Secret"] },
                 { name: "Firebase FCM", description: "Push notification PWA", status: "missing", detail: "FCM_SERVER_KEY", scope: "admin", usedBy: "Notifiche ordini", actionLabel: "Configura", secretName: "FCM_SERVER_KEY", accountUsage: "requested", guideUrl: "https://firebase.google.com/docs/cloud-messaging", guideSteps: ["1. console.firebase.google.com", "2. Cloud Messaging → Server Key", "3. Inserisci come secret"] },
                 { name: "Resend Email", description: "Email transazionali", status: "missing", detail: "RESEND_API_KEY", scope: "admin", usedBy: "Conferme, fatture", actionLabel: "Configura", secretName: "RESEND_API_KEY", accountUsage: "none", guideUrl: "https://resend.com/docs/introduction", guideSteps: ["1. resend.com → API Keys", "2. Copia chiave (re_...)", "3. Inserisci come secret"] },
