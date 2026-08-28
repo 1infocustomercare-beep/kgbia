@@ -115,17 +115,20 @@ serve(async (req) => {
 
     console.log(`[empire-tts] Generating speech: profile=${voiceProfile || "arianna"}, text length=${normalizedText.length}`);
 
-    // Voci Lovable AI (femminili naturali) mappate sui profili Empire.
+    // Voci Lovable AI — SEMPRE femminili (Arianna è un personaggio femminile).
     const LOVABLE_VOICE: Record<string, string> = {
-      arianna: "shimmer",
-      splash: "sage",
+      arianna: "nova",
+      splash: "shimmer",
       sales: "coral",
     };
+    const FEMALE_HINT =
+      "Voce femminile italiana, italiano madrelingua. ";
     const LOVABLE_INSTRUCTIONS: Record<string, string> = {
-      arianna: "Parla in italiano, tono professionale, caldo e rassicurante, ritmo naturale.",
-      splash: "Parla in italiano con tono cinematografico ed elegante, ritmo lento e sicuro.",
-      sales: "Parla in italiano con tono consulenziale e coinvolgente, energia positiva ma mai aggressiva.",
+      arianna: FEMALE_HINT + "Tono professionale, caldo e rassicurante, ritmo naturale.",
+      splash: FEMALE_HINT + "Tono cinematografico ed elegante, ritmo lento e sicuro.",
+      sales: FEMALE_HINT + "Tono consulenziale e coinvolgente, energia positiva ma mai aggressiva.",
     };
+
     const key = (voiceProfile as string) in LOVABLE_VOICE ? (voiceProfile as string) : "arianna";
 
     // ── 1) Primario: Lovable AI (nessuna chiave esterna, nessun piano a pagamento) ──
