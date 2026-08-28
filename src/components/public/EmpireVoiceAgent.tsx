@@ -9,8 +9,8 @@ import { supabase } from "@/integrations/supabase/client";
 import { stopSplashNarration, isSplashNarrationDone, isSplashNarrationSpeaking } from "@/lib/splash-narration";
 import { ARIANNA_SYSTEM_PROMPT } from "@/config/ariannaPrompt";
 import { claimVoiceAgent, releaseVoiceAgent, isVoiceAgentActive, getActiveVoiceAgent } from "@/lib/voice-agent-mutex";
-import {
 import { getItalianFemaleVoice } from "@/lib/italian-female-voice";
+import {
   loadSessionMemory,
   rememberTurn,
   buildMemoryPayload,
