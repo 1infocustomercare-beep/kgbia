@@ -16,14 +16,21 @@ serve(async (req) => {
     // Endpoint pubblico (voice agent in landing) ma con quota anti-abuso:
     // ogni token rilasciato genera costo ElevenLabs, quindi limitiamo per chiamante.
     const guard = await enforceCostGuard(req, "elevenlabs-convai-token", 1, {
-      maxUnitsAnon: 10, maxCallsAnon: 10,
-      maxUnitsAuth: 60, maxCallsAuth: 60,
+      maxUnitsAnon: 60, maxCallsAnon: 60,
+      maxUnitsAuth: 300, maxCallsAuth: 300,
     });
     if (!guard.ok) {
-      return new Response(JSON.stringify({ error: guard.error }), {
-        status: guard.status, headers: { ...corsHeaders, "Content-Type": "application/json" },
+      // Non bloccare l'UI: rispondi 200 con fallback così il client usa la voce browser.
+      return new Response(JSON.stringify({
+        token: null,
+        unavailable: true,
+        fallback: true,
+        reason: guard.error || "Limite di utilizzo raggiunto.",
+      }), {
+        status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
+
 
     const ELEVENLABS_API_KEY = Deno.env.get("ELEVENLABS_API_KEY");
     if (!ELEVENLABS_API_KEY) {
