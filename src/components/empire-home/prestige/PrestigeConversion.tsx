@@ -420,13 +420,13 @@ export function PrestigePricing() {
                   ★ {t(p.badge)}
                 </span>
               )}
-              <h3 className="prestige-display text-2xl" style={{ color: p.highlight ? "hsl(var(--pr-text-on-dark))" : "hsl(var(--pr-text-on-light))" }}>{t(p.name)}</h3>
+              <h3 className="prestige-display text-2xl" style={{ color: "hsl(var(--pr-text-on-light))" }}>{t(p.name)}</h3>
               <div className="mt-2 flex items-baseline gap-1">
                 <span className="prestige-display text-4xl prestige-gold-text">{typeof p.price === "string" ? p.price : t(p.price)}</span>
-                <span className="text-sm" style={{ color: p.highlight ? "hsl(var(--pr-muted-on-dark))" : "hsl(var(--pr-muted-on-light))" }}>{typeof p.per === "string" ? p.per : t(p.per)}</span>
+                <span className="text-sm" style={{ color: "hsl(var(--pr-muted-on-light))" }}>{typeof p.per === "string" ? p.per : t(p.per)}</span>
               </div>
-              <p className="mt-3 text-sm" style={{ color: p.highlight ? "hsl(var(--pr-muted-on-dark))" : "hsl(var(--pr-muted-on-light))" }}>{t(p.desc)}</p>
-              <ul className="mt-5 space-y-2 text-sm" style={{ color: p.highlight ? "hsl(var(--pr-text-on-dark))" : "hsl(var(--pr-text-on-light))" }}>
+              <p className="mt-3 text-sm" style={{ color: "hsl(var(--pr-muted-on-light))" }}>{t(p.desc)}</p>
+              <ul className="mt-5 space-y-2 text-sm" style={{ color: "hsl(var(--pr-text-on-light))" }}>
                 {p.feats.map((f, i) => (
                   <li key={i} className="flex items-start gap-2"><Check size={16} className="mt-0.5 shrink-0" style={{ color: "hsl(var(--pr-gold))" }} />{t(f)}</li>
                 ))}
