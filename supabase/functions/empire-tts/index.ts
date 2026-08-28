@@ -56,13 +56,16 @@ serve(async (req) => {
 
     // ── Cost guard: quota oraria per chiamante (anti abuso economico) ──
     const guard = await enforceCostGuard(req, "empire-tts", normalizedText.length, {
-      maxUnitsAnon: 12000, maxCallsAnon: 40,
-      maxUnitsAuth: 120000, maxCallsAuth: 400,
+      maxUnitsAnon: 24000, maxCallsAnon: 80,
+      maxUnitsAuth: 600000, maxCallsAuth: 2000,
     });
     if (!guard.ok) {
-      return new Response(JSON.stringify({ error: guard.error }), {
-        status: guard.status, headers: { ...corsHeaders, "Content-Type": "application/json" },
-      });
+      // Non bloccare la UI: 200 + fallback flag così il client passa al TTS del browser
+      // invece di trattare il 429 come errore runtime (schermata bianca).
+      return new Response(
+        JSON.stringify({ success: false, fallback: true, error: guard.error }),
+        { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } },
+      );
     }
 
 
