@@ -45,18 +45,19 @@ export default function SetupPaidGuard({ children }: { children: ReactNode }) {
       }
 
       try {
+        // FAIL-CLOSED: sblocca solo se setup pagato E approvazione manuale completata.
         const { data, error } = await supabase.rpc("is_setup_paid", { _user_id: user.id });
         if (cancelled) return;
         if (error) {
-          console.warn("[SetupPaidGuard] is_setup_paid failed, allowing access (fail-open):", error);
-          setPaid(true);
+          console.warn("[SetupPaidGuard] is_setup_paid failed, blocking access (fail-closed):", error);
+          setPaid(false);
         } else {
           setPaid(Boolean(data));
         }
       } catch (err) {
         if (cancelled) return;
-        console.warn("[SetupPaidGuard] unexpected error, allowing access (fail-open):", err);
-        setPaid(true);
+        console.warn("[SetupPaidGuard] unexpected error, blocking access (fail-closed):", err);
+        setPaid(false);
       } finally {
         if (!cancelled) setChecking(false);
       }
