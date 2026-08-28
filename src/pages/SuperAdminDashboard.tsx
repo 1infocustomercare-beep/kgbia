@@ -24,6 +24,7 @@ const FeatureRequestsAdminPage = lazy(() => import("@/pages/superadmin/FeatureRe
 import TenantIntegrationsSection from "@/components/admin/TenantIntegrationsSection";
 import AccountManagerPanel from "@/components/superadmin/AccountManagerPanel";
 import SuperAdminProfileSection from "@/components/superadmin/SuperAdminProfileSection";
+import PendingApprovalsPanel from "@/components/superadmin/PendingApprovalsPanel";
 import SuperAdminCreditsCenter from "@/components/superadmin/SuperAdminCreditsCenter";
 import EmpireBrainPanel from "@/components/superadmin/EmpireBrainPanel";
 import SalesAgentCockpit from "@/components/superadmin/SalesAgentCockpit";
@@ -1248,6 +1249,8 @@ const SuperAdminDashboard = () => {
         {/* ===== TENANTS ===== */}
         {!loading && activeTab === "tenants" && (
           <motion.div className="space-y-4 mt-2" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+            <PendingApprovalsPanel />
+
             {/* Search + Filters */}
             <div className="space-y-2">
               <div className="relative">

@@ -42,9 +42,9 @@ const SetupSuccessPage = () => {
           ]);
           if (paidRestaurant || paidCompany) {
             if (!cancelled) {
+              // HOLD & APPROVE: nessun redirect automatico, l'attivazione è manuale.
               setStatus("ready");
               await supabase.auth.refreshSession();
-              setTimeout(() => navigate("/app", { replace: true }), 1500);
             }
             return;
           }
@@ -107,7 +107,10 @@ const SetupSuccessPage = () => {
               Pagamento confermato!
             </h1>
             <p className="text-foreground/65 text-sm">
-              Il tuo account Empire AI è ora attivo. Reindirizzamento alla dashboard...
+              Pagamento ricevuto. Il tuo account è in attesa di attivazione da parte del nostro team.
+            </p>
+            <p className="mt-4 text-xs text-foreground/45">
+              Riceverai una notifica appena il deploy è completato.
             </p>
           </motion.div>
         )}
@@ -121,7 +124,7 @@ const SetupSuccessPage = () => {
               Pagamento ricevuto, attivazione in corso
             </h1>
             <p className="text-foreground/65 text-sm mb-6">
-              La conferma da Stripe sta richiedendo qualche minuto. Riceverai un'email appena l'account è attivo, oppure ricarica questa pagina tra poco.
+              Pagamento ricevuto. Il tuo account è in attesa di attivazione da parte del nostro team. Riceverai un'email appena il deploy è completato.
             </p>
             <button
               onClick={() => window.location.reload()}
