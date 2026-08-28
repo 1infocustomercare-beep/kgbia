@@ -1705,6 +1705,9 @@ export type Database = {
           acquired_by_partner_id: string | null
           acquired_by_sub_partner_id: string | null
           address: string | null
+          approval_status: string
+          approved_at: string | null
+          approved_by: string | null
           blocked_reason: string | null
           city: string | null
           created_at: string
@@ -1739,6 +1742,9 @@ export type Database = {
           acquired_by_partner_id?: string | null
           acquired_by_sub_partner_id?: string | null
           address?: string | null
+          approval_status?: string
+          approved_at?: string | null
+          approved_by?: string | null
           blocked_reason?: string | null
           city?: string | null
           created_at?: string
@@ -1773,6 +1779,9 @@ export type Database = {
           acquired_by_partner_id?: string | null
           acquired_by_sub_partner_id?: string | null
           address?: string | null
+          approval_status?: string
+          approved_at?: string | null
+          approved_by?: string | null
           blocked_reason?: string | null
           city?: string | null
           created_at?: string
@@ -6499,6 +6508,9 @@ export type Database = {
           acquired_by_partner_id: string | null
           acquired_by_sub_partner_id: string | null
           address: string | null
+          approval_status: string
+          approved_at: string | null
+          approved_by: string | null
           blocked_keywords: string[] | null
           blocked_reason: string | null
           business_type: Database["public"]["Enums"]["business_type"]
@@ -6539,6 +6551,9 @@ export type Database = {
           acquired_by_partner_id?: string | null
           acquired_by_sub_partner_id?: string | null
           address?: string | null
+          approval_status?: string
+          approved_at?: string | null
+          approved_by?: string | null
           blocked_keywords?: string[] | null
           blocked_reason?: string | null
           business_type?: Database["public"]["Enums"]["business_type"]
@@ -6579,6 +6594,9 @@ export type Database = {
           acquired_by_partner_id?: string | null
           acquired_by_sub_partner_id?: string | null
           address?: string | null
+          approval_status?: string
+          approved_at?: string | null
+          approved_by?: string | null
           blocked_keywords?: string[] | null
           blocked_reason?: string | null
           business_type?: Database["public"]["Enums"]["business_type"]
@@ -9467,6 +9485,16 @@ export type Database = {
       mark_wa_ab_reply: {
         Args: { p_test_id: string; p_variant: string }
         Returns: Json
+      }
+      my_approval_status: {
+        Args: never
+        Returns: {
+          approval_status: string
+          kind: string
+          name: string
+          setup_paid: boolean
+          tenant_id: string
+        }[]
       }
       snapshot_cost_reconciliation: {
         Args: { p_period_days?: number }
