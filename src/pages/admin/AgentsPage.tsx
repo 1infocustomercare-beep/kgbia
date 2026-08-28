@@ -1824,7 +1824,7 @@ export default function AgentsPage() {
                         </Select>
                       </div>
                       <div>
-                        <Label className="text-xs text-muted-foreground">Prezzo Abbonamento (€/mese)</Label>
+                        <Label className="text-xs text-muted-foreground">Prezzo Canone (€/mese)</Label>
                         <Input type="number" step="1" value={editPricingBase} onChange={e => setEditPricingBase(parseFloat(e.target.value) || 0)} className="mt-1" />
                       </div>
                     </div>
