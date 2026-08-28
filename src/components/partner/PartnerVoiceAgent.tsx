@@ -5,6 +5,7 @@ import { Mic, MicOff, Volume2, VolumeX, X, MessageSquare, Send, Play, Square, Pa
 import voiceAgentAvatar from "@/assets/voice-agent-avatar.png";
 import ReactMarkdown from "react-markdown";
 import { claimVoiceAgent, releaseVoiceAgent } from "@/lib/voice-agent-mutex";
+import { getItalianFemaleVoice } from "@/lib/italian-female-voice";
 
 type Msg = { role: "user" | "assistant"; content: string };
 
@@ -27,20 +28,7 @@ const normalizeTextForSpeech = (text: string) =>
 let cachedItalianVoice: SpeechSynthesisVoice | null = null;
 
 function getBestItalianFemaleVoice(): SpeechSynthesisVoice | null {
-  if (cachedItalianVoice) return cachedItalianVoice;
-  const voices = window.speechSynthesis?.getVoices() || [];
-  const priorities = [
-    (v: SpeechSynthesisVoice) => v.lang.startsWith("it") && /alice/i.test(v.name),
-    (v: SpeechSynthesisVoice) => v.lang.startsWith("it") && /federica/i.test(v.name),
-    (v: SpeechSynthesisVoice) => v.lang.startsWith("it") && /google/i.test(v.name),
-    (v: SpeechSynthesisVoice) => v.lang.startsWith("it") && /elsa|isabella/i.test(v.name),
-    (v: SpeechSynthesisVoice) => v.lang.startsWith("it"),
-  ];
-  for (const test of priorities) {
-    const match = voices.find(test);
-    if (match) { cachedItalianVoice = match; return match; }
-  }
-  return null;
+  return getItalianFemaleVoice();
 }
 
 if (typeof window !== "undefined" && window.speechSynthesis) {
@@ -57,7 +45,7 @@ function speakWithBrowserTTS(text: string, abortRef: React.MutableRefObject<bool
     if (voice) utterance.voice = voice;
     utterance.lang = "it-IT";
     utterance.rate = 0.95;
-    utterance.pitch = 1.05;
+    utterance.pitch = 1.15;
     utterance.volume = 1;
     utterance.onend = () => resolve(true);
     utterance.onerror = () => resolve(false);
