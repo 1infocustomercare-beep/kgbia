@@ -376,7 +376,7 @@ export const featureGuides: Record<string, GuideEntry> = {
   /* Generic module */
   "subscription:plan": {
     title: "Il tuo Piano",
-    description: "Dettagli del tuo abbonamento attuale, funzionalità incluse e opzioni di upgrade.",
+    description: "Dettagli del tuo piano attuale, funzionalità incluse e opzioni di upgrade.",
     steps: [
       "Controlla le funzionalità del tuo piano",
       "Upgrada per sbloccare più funzionalità e gettoni IA",

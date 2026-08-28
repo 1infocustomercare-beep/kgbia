@@ -35,8 +35,8 @@ const STEPS: Step[] = [
   {
     icon: <Coins className="w-6 h-6" />,
     title: "Crediti — paghi solo quello che usi",
-    highlight: "Ogni azione costa crediti. Niente abbonamento, niente sorprese.",
-    body: "I crediti scalano automaticamente dal tuo saldo a ogni ricerca, arricchimento, demo o preview. Vedi sempre saldo e cronologia in alto a destra. Ricarichi quando vuoi dalla sezione Abbonamento.",
+    highlight: "Ogni azione costa crediti. Niente canoni fissi, niente sorprese.",
+    body: "I crediti scalano automaticamente dal tuo saldo a ogni ricerca, arricchimento, demo o preview. Vedi sempre saldo e cronologia in alto a destra. Ricarichi quando vuoi dalla sezione Piano.",
     bullets: [
       "🔍 Ricerca lead: 1–2 crediti",
       "🎬 Demo factory: 3 crediti",

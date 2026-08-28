@@ -271,7 +271,7 @@ function SubscriptionImpact({ installedCount, pendingAdd, pendingRemove }: { ins
 
       <div className="flex items-center gap-2 mb-4">
         <Crown className="w-4 h-4" style={{ color: "hsl(38,50%,55%)" }} />
-        <h3 className="text-[11px] font-bold tracking-[2px] uppercase" style={{ color: "hsl(38,50%,60%)" }}>Riepilogo Abbonamento</h3>
+        <h3 className="text-[11px] font-bold tracking-[2px] uppercase" style={{ color: "hsl(38,50%,60%)" }}>Riepilogo Piano</h3>
       </div>
 
       <div className="grid grid-cols-3 gap-3 text-center">
@@ -404,7 +404,7 @@ export default function AgentMarketplace() {
       });
 
       toast.success("Richiesta di disattivazione inviata", {
-        description: "Il team Empire processerà la richiesta e aggiornerà il tuo abbonamento.",
+        description: "Il team Empire processerà la richiesta e aggiornerà il tuo piano.",
       });
     } catch (e) {
       console.error(e);

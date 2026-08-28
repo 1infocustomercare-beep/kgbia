@@ -88,7 +88,7 @@ const AcademySection = () => {
     const featureCatLabels: Record<string, string> = {
       dashboard: "📊 Dashboard", studio: "🎨 Studio Creativo", checkout: "💳 Checkout",
       restaurant: "🍽️ Ristorante", partner: "🤝 Partner", whatsapp: "💬 WhatsApp",
-      subscription: "💎 Abbonamento",
+      subscription: "💎 Piano",
     };
 
     Object.entries(featureGuides).forEach(([key, guide]) => {
@@ -261,7 +261,7 @@ const MoreMenu = ({
     { id: "inventory", label: "AI Scorte", icon: <Package className="w-6 h-6" />, color: "text-purple-400" },
     { id: "academy", label: "Academy", icon: <GraduationCap className="w-6 h-6" />, color: "text-amber-400" },
     { id: "settings", label: "Impostazioni", icon: <Settings className="w-6 h-6" />, color: "text-muted-foreground" },
-    { id: "subscription", label: "Abbonamento", icon: <CreditCard className="w-6 h-6" />, color: "text-emerald-400" },
+    { id: "subscription", label: "Piano", icon: <CreditCard className="w-6 h-6" />, color: "text-emerald-400" },
   ];
 
   const handleVaultSave = async () => {
@@ -732,7 +732,7 @@ const MoreMenu = ({
         <div className="space-y-4">
           <div className="text-center py-2">
             <CreditCard className="w-10 h-10 mx-auto mb-2 text-primary" />
-            <h3 className="text-lg font-display font-bold text-foreground">Abbonamento</h3>
+            <h3 className="text-lg font-display font-bold text-foreground">Piano Empire</h3>
             <p className="text-xs text-muted-foreground mt-1">Gestisci il tuo piano Empire</p>
           </div>
           <SubscriptionSection restaurantId={restaurant.id} />

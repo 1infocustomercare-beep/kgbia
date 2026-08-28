@@ -222,7 +222,7 @@ export default function AriannaLeadScoutPanel(_props: Props) {
         }
       } else if (data?.error === "insufficient_credits") {
         toast.error("Crediti insufficienti per Arianna autopilot", {
-          description: "Ricarica i crediti dalla sezione abbonamento per continuare.",
+          description: "Ricarica i crediti dalla sezione Piano per continuare.",
         });
       }
       load();
