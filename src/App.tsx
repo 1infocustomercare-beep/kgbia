@@ -628,6 +628,12 @@ function App() {
                       <Route path="/mockups-demo" element={<Navigate to="/portfolio" replace />} />
                       <Route path="/demo-mockups" element={<Navigate to="/portfolio" replace />} />
                       <Route path="/mockups" element={<Navigate to="/portfolio" replace />} />
+                      <Route path="/mockup-catalog" element={<Navigate to="/portfolio" replace />} />
+                      <Route path="/mockup-catalogo" element={<Navigate to="/portfolio" replace />} />
+                      <Route path="/catalog" element={<Navigate to="/portfolio" replace />} />
+                      <Route path="/catalogo-mockup" element={<Navigate to="/portfolio" replace />} />
+                      <Route path="/portafoglio" element={<Navigate to="/portfolio" replace />} />
+
                       <Route path="/settori" element={<Navigate to="/#industries" replace />} />
                       <Route path="/prezzi" element={<Navigate to="/#pricing" replace />} />
                       <Route path="/ncc-demo/:slug" element={<NCCDemoPage />} />

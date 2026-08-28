@@ -1,8 +1,15 @@
 User-agent: *
 Allow: /
 Disallow: /admin
+Disallow: /superadmin
 Disallow: /kitchen
 Disallow: /staff
 Disallow: /partner
+Disallow: /vendor
+Disallow: /app
+Disallow: /onboarding
+Disallow: /checkout-setup
+Disallow: /t/
+Disallow: /reset-password
 
-Sitemap: https://empire-suite.it/sitemap.xml
+Sitemap: https://empireia.lovable.app/sitemap.xml
