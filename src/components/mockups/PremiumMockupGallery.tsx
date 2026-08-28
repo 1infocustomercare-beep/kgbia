@@ -14,7 +14,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { Sparkles, Layers, Search, ArrowRight, MonitorSmartphone, X } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import IPhoneProMaxFrame from "./IPhoneProMaxFrame";
 import { SECTOR_MOCKUPS } from "@/data/sector-mockups";
 import GlassBackButton from "@/components/glass/GlassBackButton";
@@ -88,7 +88,6 @@ function useSeoHead(projectCount: number, styleCount: number) {
 }
 
 export default function PremiumMockupGallery() {
-  const navigate = useNavigate();
   const [activeSector, setActiveSector] = useState<string>("all");
   const [tier, setTier] = useState<TierFilter>("all");
   const [query, setQuery] = useState("");
@@ -132,10 +131,6 @@ export default function PremiumMockupGallery() {
         .includes(q);
     });
   }, [allCards, activeSector, tier, query]);
-
-  const openCard = (c: (typeof allCards)[number]) => {
-    navigate(`/portfolio/${c.sectorId}?style=${encodeURIComponent(c.id)}`);
-  };
 
   return (
     <section className="pglass-scope pglass-bg min-h-screen pb-28 pt-28 text-white sm:pt-32">
@@ -272,18 +267,10 @@ export default function PremiumMockupGallery() {
             {cards.map((c) => {
               const second = c.screens?.[1]?.image;
               return (
-                <article
+                <Link
                   key={`${c.sectorId}-${c.id}`}
+                  to={`/portfolio/${c.sectorId}?style=${encodeURIComponent(c.id)}`}
                   className="pglass group cursor-pointer overflow-hidden transition duration-500 hover:-translate-y-1"
-                  onClick={() => openCard(c)}
-                  role="button"
-                  tabIndex={0}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter" || e.key === " ") {
-                      e.preventDefault();
-                      openCard(c);
-                    }
-                  }}
                   aria-label={`Apri il progetto ${c.brand}`}
                 >
                   {/* Preview: due iPhone affiancati, verticali, su pannello chiaro (leggibilità max) */}
@@ -351,7 +338,7 @@ export default function PremiumMockupGallery() {
                       </span>
                     </div>
                   </div>
-                </article>
+                </Link>
               );
             })}
           </div>
