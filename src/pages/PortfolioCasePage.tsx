@@ -16,6 +16,7 @@ import { Link, useNavigate, useParams, useSearchParams } from "react-router-dom"
 import { ArrowLeft, ArrowUpRight, CalendarDays, Layers, Smartphone, Sparkles, UserRound } from "lucide-react";
 import PrestigeTheme from "@/components/empire-home/prestige/PrestigeTheme";
 import IPhoneProMaxFrame from "@/components/mockups/IPhoneProMaxFrame";
+import DesktopBrowserFrame from "@/components/mockups/DesktopBrowserFrame";
 import MockupLightbox from "@/components/mockups/MockupLightbox";
 import { SECTOR_MOCKUPS, getSectorGroup, type SectorMockupVariant } from "@/data/sector-mockups";
 
@@ -231,13 +232,42 @@ export default function PortfolioCasePage() {
         </div>
       </div>
 
+      {/* ───────── COVER: desktop + mobile dello stile principale ───────── */}
+      <section className="mx-auto max-w-7xl px-5 pt-12 lg:px-10">
+        <div className="pglass overflow-hidden p-5 sm:p-8">
+          <div className="grid items-center gap-8 lg:grid-cols-[1.35fr_0.65fr]">
+            <DesktopBrowserFrame
+              src={lead.screens?.[0]?.image ?? lead.screen}
+              alt={`${lead.brand} — versione desktop`}
+              label={`${lead.brand.toLowerCase().replace(/[^a-z0-9]+/g, "")}.it`}
+              onClick={() => setLightbox({ index: 0 })}
+            />
+            <div className="mx-auto w-[62%] max-w-[240px] lg:w-full">
+              <IPhoneProMaxFrame
+                src={lead.screens?.[1]?.image ?? lead.screens?.[0]?.image ?? lead.screen}
+                alt={`${lead.brand} — versione mobile`}
+                width={230}
+                className="mx-auto !w-full"
+                style={{ width: "100%", height: "auto", aspectRatio: "9 / 19.5" }}
+                onClick={() => setLightbox({ index: 0 })}
+              />
+            </div>
+          </div>
+          <div className="mt-6 flex flex-wrap items-center gap-2 text-[10px] font-bold uppercase tracking-[0.22em]">
+            <span className="pglass-tag pglass-tag-accent">Desktop + mobile 1:1</span>
+            <span className="pglass-tag">{lead.brand}</span>
+            <span className="pglass-tag">{lead.palette}</span>
+          </div>
+        </div>
+      </section>
+
       {/* ───────── RIGHE STILE: TUTTE LE SCHERMATE A CONFRONTO ───────── */}
       <main className="mx-auto max-w-7xl px-5 pb-24 lg:px-10">
         {shown.map((v) => {
           const idx = variants.findIndex((x) => x.id === v.id);
           const screens = v.screens?.length ? v.screens : [{ label: "Home", caption: "", image: v.screen }];
           return (
-            <section key={v.id} className="pglass-divider py-14">
+            <section key={v.id} className="pglass my-8 p-5 sm:p-8">
               <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
                 <div>
                   <div
@@ -291,6 +321,16 @@ export default function PortfolioCasePage() {
                 </ul>
               )}
 
+              {/* Versione desktop dello stile */}
+              <div className="mt-8">
+                <DesktopBrowserFrame
+                  src={screens[0].image}
+                  alt={`${v.brand} — ${v.style} — desktop`}
+                  label={`${v.brand.toLowerCase().replace(/[^a-z0-9]+/g, "")}.it`}
+                  onClick={() => setLightbox({ index: idx })}
+                />
+              </div>
+
               {/* Griglia schermate: confronto integrale */}
               <div className="mt-9 grid grid-cols-2 gap-x-4 gap-y-9 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
                 {screens.map((s, si) => (
@@ -322,7 +362,7 @@ export default function PortfolioCasePage() {
 
         {/* ───────── GRIGLIA COMPATTA: altre direzioni visive ───────── */}
         {compact.length > 0 && (
-          <section className="pglass-divider py-14">
+          <section className="pglass my-8 p-5 sm:p-8">
             <div
               className="text-[10px] font-bold uppercase tracking-[0.26em]"
               style={{ color: "hsl(var(--pr-gold))" }}
