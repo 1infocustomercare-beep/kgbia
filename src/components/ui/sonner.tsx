@@ -4,12 +4,14 @@ import { Toaster as Sonner, toast } from "sonner";
 
 type ToasterProps = React.ComponentProps<typeof Sonner>;
 
-const Toaster = React.forwardRef<HTMLDivElement, ToasterProps>(({ ...props }, ref) => {
+// NOTE: sonner's <Toaster /> is a plain function component and does not accept
+// a ref — forwarding one triggers the React "Function components cannot be
+// given refs" warning on every route. Keep this a simple wrapper.
+const Toaster = ({ ...props }: ToasterProps) => {
   const { theme = "system" } = useTheme();
 
   return (
     <Sonner
-      ref={ref as any}
       theme={theme as ToasterProps["theme"]}
       className="toaster group"
       toastOptions={{
@@ -24,7 +26,7 @@ const Toaster = React.forwardRef<HTMLDivElement, ToasterProps>(({ ...props }, re
       {...props}
     />
   );
-});
+};
 
 Toaster.displayName = "SonnerToaster";
 
