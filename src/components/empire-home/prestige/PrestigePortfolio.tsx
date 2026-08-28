@@ -154,6 +154,18 @@ export default function PrestigePortfolio() {
     rail.scrollBy({ left: dir * step, behavior: "smooth" });
   };
 
+  const openMockup = (sectorId: string, styleId: string) => {
+    const card = cards.find((item) => item.sectorId === sectorId);
+    if (!card) return;
+    const index = card.variants.findIndex((variant) => variant.id === styleId);
+    setSelection({
+      sectorId,
+      sectorLabel: card.sectorLabel,
+      variants: card.variants,
+      index: Math.max(0, index),
+    });
+  };
+
   const rail = (
     <div className="relative mt-12">
       <div
@@ -174,7 +186,7 @@ export default function PrestigePortfolio() {
               transformStyle: "preserve-3d",
               transition: "transform 220ms linear, opacity 220ms linear",
             }}
-            onClick={() => navigate(`/portfolio/${item.sectorId}?style=${item.styleId}`)}
+            onClick={() => openMockup(item.sectorId, item.styleId)}
           >
             <img
               src={item.src}

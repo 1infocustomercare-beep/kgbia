@@ -12,11 +12,12 @@
  * Nessun iPhone dentro un altro iPhone: ogni frame mostra una webapp reale.
  */
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Sparkles, Layers, Search, ArrowRight, MonitorSmartphone, X } from "lucide-react";
-import { Link } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 import IPhoneProMaxFrame from "./IPhoneProMaxFrame";
-import { SECTOR_MOCKUPS } from "@/data/sector-mockups";
+import MockupLightbox from "./MockupLightbox";
+import { SECTOR_MOCKUPS, type SectorMockupVariant } from "@/data/sector-mockups";
 import GlassBackButton from "@/components/glass/GlassBackButton";
 
 type TierFilter = "all" | "primary" | "extended";
@@ -88,9 +89,16 @@ function useSeoHead(projectCount: number, styleCount: number) {
 }
 
 export default function PremiumMockupGallery() {
+  const [params, setParams] = useSearchParams();
   const [activeSector, setActiveSector] = useState<string>("all");
   const [tier, setTier] = useState<TierFilter>("all");
   const [query, setQuery] = useState("");
+  const [selection, setSelection] = useState<{
+    sectorLabel: string;
+    variants: SectorMockupVariant[];
+    index: number;
+  } | null>(null);
+  const deepLinkHandled = useRef(false);
 
   const sectors = useMemo(
     () => [{ id: "all", label: "Tutti" }, ...SECTOR_MOCKUPS.map((s) => ({ id: s.id, label: s.label }))],
@@ -118,6 +126,39 @@ export default function PremiumMockupGallery() {
   );
 
   useSeoHead(allCards.length, totalScreens);
+
+  useEffect(() => {
+    if (deepLinkHandled.current) return;
+    deepLinkHandled.current = true;
+    const sectorId = params.get("sector");
+    const styleId = params.get("style");
+    if (!sectorId) return;
+    const sector = SECTOR_MOCKUPS.find((item) => item.id === sectorId);
+    if (!sector) return;
+    setActiveSector(sectorId);
+    if (styleId) {
+      const index = sector.variants.findIndex((variant) => variant.id === styleId);
+      if (index >= 0) {
+        setSelection({ sectorLabel: sector.label, variants: sector.variants, index });
+      }
+    }
+  }, [params]);
+
+  const openCard = (sectorId: string, styleId: string) => {
+    const sector = SECTOR_MOCKUPS.find((item) => item.id === sectorId);
+    if (!sector) return;
+    const index = sector.variants.findIndex((variant) => variant.id === styleId);
+    if (index < 0) return;
+    setSelection({ sectorLabel: sector.label, variants: sector.variants, index });
+  };
+
+  const closeViewer = () => {
+    setSelection(null);
+    if (!params.has("style")) return;
+    const next = new URLSearchParams(params);
+    next.delete("style");
+    setParams(next, { replace: true });
+  };
 
   const cards = useMemo(() => {
     const q = query.trim().toLowerCase();
@@ -267,11 +308,12 @@ export default function PremiumMockupGallery() {
             {cards.map((c) => {
               const second = c.screens?.[1]?.image;
               return (
-                <Link
+                <button
+                  type="button"
                   key={`${c.sectorId}-${c.id}`}
-                  to={`/portfolio/${c.sectorId}?style=${encodeURIComponent(c.id)}`}
-                  className="pglass group cursor-pointer overflow-hidden transition-[border-color,box-shadow] duration-300 hover:border-white/30"
-                  aria-label={`Apri il progetto ${c.brand}`}
+                  onClick={() => openCard(c.sectorId, c.id)}
+                  className="pglass group w-full cursor-zoom-in overflow-hidden text-left transition-[border-color,box-shadow] duration-300 hover:border-white/30"
+                  aria-label={`Visualizza il mockup ${c.brand} a schermo intero`}
                 >
                   {/* Preview: due iPhone affiancati, verticali, su pannello chiaro (leggibilità max) */}
                   <div
@@ -338,7 +380,7 @@ export default function PremiumMockupGallery() {
                       </span>
                     </div>
                   </div>
-                </Link>
+                </button>
               );
             })}
           </div>
@@ -372,6 +414,14 @@ export default function PremiumMockupGallery() {
           </div>
         </div>
       </div>
+
+      <MockupLightbox
+        open={!!selection}
+        onClose={closeViewer}
+        sectorLabel={selection?.sectorLabel ?? ""}
+        variants={selection?.variants ?? []}
+        initialIndex={selection?.index ?? 0}
+      />
 
     </section>
   );
