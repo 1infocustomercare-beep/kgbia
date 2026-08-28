@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
 import { claimVoiceAgent, releaseVoiceAgent } from "@/lib/voice-agent-mutex";
+import { applyAriannaVoice } from "@/lib/italian-female-voice";
 
 /**
  * Empire Voice Orchestrator hook
@@ -108,8 +109,7 @@ export function useVoiceOrchestrator(navigate: (path: string) => void) {
       try {
         window.speechSynthesis.cancel();
         const utter = new SpeechSynthesisUtterance(text);
-        utter.lang = "it-IT";
-        utter.rate = 1.05;
+        applyAriannaVoice(utter, 1.02);
         let done = false;
         const finish = () => { if (!done) { done = true; resolve(); } };
         utter.onend = finish;

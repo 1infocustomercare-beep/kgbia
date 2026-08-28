@@ -6,6 +6,7 @@ import { useCart } from "@/context/CartContext";
 import { toast } from "@/hooks/use-toast";
 import type { MenuItem } from "@/types/restaurant";
 import { claimVoiceAgent, releaseVoiceAgent } from "@/lib/voice-agent-mutex";
+import { applyAriannaVoice } from "@/lib/italian-female-voice";
 
 type Msg = { role: "user" | "assistant"; content: string };
 
@@ -77,8 +78,7 @@ async function speak(text: string, audioRef: React.MutableRefObject<HTMLAudioEle
       // Fallback to Web Speech API
       const synth = window.speechSynthesis;
       const utter = new SpeechSynthesisUtterance(cleanText);
-      utter.lang = "it-IT";
-      utter.rate = 0.95;
+      applyAriannaVoice(utter, 0.95);
       utter.onend = onEnd;
       utter.onerror = () => onEnd();
       synth.speak(utter);

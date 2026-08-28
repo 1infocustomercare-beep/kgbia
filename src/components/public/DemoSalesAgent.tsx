@@ -6,6 +6,7 @@ import ReactMarkdown from "react-markdown";
 import { useConversation } from "@elevenlabs/react";
 import { supabase } from "@/integrations/supabase/client";
 import { claimVoiceAgent, releaseVoiceAgent, isVoiceAgentActive, getActiveVoiceAgent } from "@/lib/voice-agent-mutex";
+import { applyAriannaVoice } from "@/lib/italian-female-voice";
 
 const TTS_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/empire-tts`;
 const CHAT_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/empire-voice-agent`;
@@ -175,12 +176,7 @@ function speakWithBrowserTTS(text: string): Promise<boolean> {
     if (!window.speechSynthesis) { resolve(false); return; }
     window.speechSynthesis.cancel();
     const utterance = new SpeechSynthesisUtterance(text);
-    utterance.lang = "it-IT";
-    utterance.rate = 1.05;
-    utterance.pitch = 1.0;
-    const voices = window.speechSynthesis.getVoices();
-    const itVoice = voices.find(v => v.lang.startsWith("it")) || voices[0];
-    if (itVoice) utterance.voice = itVoice;
+    applyAriannaVoice(utterance, 1.02);
     utterance.onend = () => resolve(true);
     utterance.onerror = () => resolve(false);
     window.speechSynthesis.speak(utterance);
