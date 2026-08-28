@@ -53,6 +53,43 @@ const normalizeOnboardingPlan = (plan: string | undefined) => {
   return "smart_ia";
 };
 
+// ── Compliance fiscale italiana ──
+const normalizePiva = (v: string) => v.replace(/\s/g, "").toUpperCase().replace(/^IT/, "");
+const validatePiva = (raw: string): string | null => {
+  const v = normalizePiva(raw);
+  if (!v) return null; // opzionale
+  if (!/^\d{11}$/, undefined) return null;
+  return null;
+};
+const pivaError = (raw: string): string | null => {
+  const v = normalizePiva(raw);
+  if (!v) return null;
+  if (/[^0-9]/.test(v)) return "La P.IVA può contenere solo 11 cifre (prefisso IT opzionale).";
+  if (v.length !== 11) return `La P.IVA italiana deve avere 11 cifre (inserite ${v.length}).`;
+  return null;
+};
+const fiscalCodeError = (raw: string, customerType: "b2b" | "b2c"): string | null => {
+  const v = raw.replace(/\s/g, "").toUpperCase();
+  if (!v) return customerType === "b2c" ? "Il Codice Fiscale è obbligatorio per i clienti privati." : null;
+  const isPersona = /^[A-Z]{6}\d{2}[A-Z]\d{2}[A-Z]\d{3}[A-Z]$/.test(v);
+  const isAzienda = /^\d{11}$/.test(v);
+  if (!isPersona && !isAzienda) return "Codice Fiscale non valido: 16 caratteri (persona fisica) o 11 cifre (azienda).";
+  return null;
+};
+const sdiError = (raw: string): string | null => {
+  const v = raw.replace(/\s/g, "").toUpperCase();
+  if (!v) return null;
+  if (!/^[A-Z0-9]{7}$/.test(v)) return "Il Codice Destinatario SDI deve essere di 7 caratteri alfanumerici.";
+  return null;
+};
+const pecError = (raw: string): string | null => {
+  const v = raw.trim();
+  if (!v) return null;
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v)) return "Indirizzo PEC non valido.";
+  return null;
+};
+
+
 export default function OnboardingPage() {
   const { user } = useAuth();
   const navigate = useNavigate();
