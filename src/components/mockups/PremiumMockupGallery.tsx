@@ -270,7 +270,7 @@ export default function PremiumMockupGallery() {
                 <Link
                   key={`${c.sectorId}-${c.id}`}
                   to={`/portfolio/${c.sectorId}?style=${encodeURIComponent(c.id)}`}
-                  className="pglass group cursor-pointer overflow-hidden transition duration-500 hover:-translate-y-1"
+                  className="pglass group cursor-pointer overflow-hidden transition-[border-color,box-shadow] duration-300 hover:border-white/30"
                   aria-label={`Apri il progetto ${c.brand}`}
                 >
                   {/* Preview: due iPhone affiancati, verticali, su pannello chiaro (leggibilità max) */}
