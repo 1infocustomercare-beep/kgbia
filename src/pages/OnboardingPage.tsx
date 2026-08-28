@@ -55,12 +55,6 @@ const normalizeOnboardingPlan = (plan: string | undefined) => {
 
 // ── Compliance fiscale italiana ──
 const normalizePiva = (v: string) => v.replace(/\s/g, "").toUpperCase().replace(/^IT/, "");
-const validatePiva = (raw: string): string | null => {
-  const v = normalizePiva(raw);
-  if (!v) return null; // opzionale
-  if (!/^\d{11}$/, undefined) return null;
-  return null;
-};
 const pivaError = (raw: string): string | null => {
   const v = normalizePiva(raw);
   if (!v) return null;
