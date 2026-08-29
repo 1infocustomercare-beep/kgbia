@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 import { ArrowUpRight, Maximize2 } from "lucide-react";
 import PrestigePhone from "./PrestigePhone";
 import { SECTOR_MOCKUPS } from "@/data/sector-mockups";
-import MockupLightbox from "@/components/mockups/MockupLightbox";
 import { useT } from "./PrestigeLang";
 
 /**
@@ -11,19 +10,19 @@ import { useT } from "./PrestigeLang";
  * - Solo mockup PRIMARY + STUDIO (i più curati, testi/foto/icone coerenti).
  * - Pinned sticky: mentre scrolli, la fila di iPhone ruota in prospettiva 3D,
  *   trasla orizzontalmente e cambia il mockup in evidenza.
- * - Click su un telefono = apre lightbox fullscreen con i 4 screen coerenti.
+ * - Click su un telefono = apre la pagina categoria del settore.
  */
 export default function PrestigeDemoHub() {
   const t = useT();
   const navigate = useNavigate();
   const wrapRef = useRef<HTMLDivElement>(null);
   const [progress, setProgress] = useState(0);
-  const [openId, setOpenId] = useState<string | null>(null);
 
   // Solo mockup di qualità studio primary — max 1 per settore per varietà.
   const cards = useMemo(() => {
     const out: {
       id: string;
+      sectorId: string;
       sectorLabel: string;
       brand: string;
       style: string;
@@ -38,6 +37,7 @@ export default function PrestigeDemoHub() {
       if (!img) continue;
       out.push({
         id: v.id,
+        sectorId: g.id,
         sectorLabel: g.label,
         brand: v.brand,
         style: v.style,
@@ -99,7 +99,6 @@ export default function PrestigeDemoHub() {
     Math.max(0, activeIndex + (localProgress > 0.5 ? 1 : 0))
   );
 
-  const openVariant = cards.find((c) => c.id === openId)?.variant ?? null;
 
   // Una durata compatta mantiene il gesto 3D leggibile senza intrappolare
   // l'utente per migliaia di pixel, soprattutto su telefono e tablet.
@@ -186,7 +185,7 @@ export default function PrestigeDemoHub() {
                   <button
                     key={c.id}
                     type="button"
-                    onClick={() => setOpenId(c.id)}
+                    onClick={() => navigate(`/portfolio/${c.sectorId}?style=${c.id}`)}
                     className="absolute focus:outline-none"
                     style={{
                       transform: `translate3d(${x}px, 0, ${z}px) rotateY(${rotY}deg) scale(${scale})`,
@@ -265,10 +264,10 @@ export default function PrestigeDemoHub() {
 
             <div className="flex w-full flex-col items-stretch justify-center gap-2 sm:w-auto sm:flex-row sm:items-center sm:gap-3">
               <button
-                onClick={() => cards[centerIndex] && setOpenId(cards[centerIndex].id)}
+                onClick={() => cards[centerIndex] && navigate(`/portfolio/${cards[centerIndex].sectorId}?style=${cards[centerIndex].id}`)}
                 className="prestige-cta min-w-0 flex-1 justify-center sm:flex-none"
               >
-                <span>{t({ it: "Apri fullscreen", en: "Open fullscreen" })}</span>
+                <span>{t({ it: "Apri il settore", en: "Open sector" })}</span>
                 <Maximize2 size={14} />
               </button>
               <button
@@ -308,15 +307,6 @@ export default function PrestigeDemoHub() {
         </div>
       </div>
 
-      {openVariant && (
-        <MockupLightbox
-          open={!!openVariant}
-          onClose={() => setOpenId(null)}
-          sectorLabel={cards.find((c) => c.id === openId)?.sectorLabel ?? ""}
-          variants={[openVariant]}
-          initialIndex={0}
-        />
-      )}
     </section>
   );
 }

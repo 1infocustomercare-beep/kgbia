@@ -6,7 +6,7 @@
  *  2. Chip filtro stile ("Tutti" + un chip per ogni variante) sticky
  *  3. Per ogni stile: header con brand, palette, features, poi la RIGA COMPLETA
  *     di tutte le schermate in iPhone Pro Max con etichetta sotto (confronto 1:1)
- *  4. Click su qualsiasi schermata → lightbox fullscreen già posizionato
+ *  4. Ogni schermata è mostrata in chiaro (mobile, tablet, desktop): nessun overlay
  *
  * Additivo: non modifica /portfolio (catalogo) né la home.
  */
@@ -17,7 +17,6 @@ import { ArrowLeft, ArrowUpRight, CalendarDays, Layers, Smartphone, Sparkles, Us
 import PrestigeTheme from "@/components/empire-home/prestige/PrestigeTheme";
 import IPhoneProMaxFrame from "@/components/mockups/IPhoneProMaxFrame";
 import DesktopBrowserFrame from "@/components/mockups/DesktopBrowserFrame";
-import MockupLightbox from "@/components/mockups/MockupLightbox";
 import { SECTOR_MOCKUPS, getSectorGroup, type SectorMockupVariant } from "@/data/sector-mockups";
 
 const CURRENT_YEAR = new Date().getFullYear();
@@ -44,7 +43,6 @@ export default function PortfolioCasePage() {
   const [filter, setFilter] = useState<string>(styleParam);
   useEffect(() => setFilter(styleParam), [styleParam]);
 
-  const [lightbox, setLightbox] = useState<{ index: number } | null>(null);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -161,7 +159,7 @@ export default function PortfolioCasePage() {
                 className="prestige-eyebrow flex items-center gap-2"
                 style={{ color: "hsl(var(--pr-gold))" }}
               >
-                <Sparkles size={12} /> Case study · {variants.length} direzioni visive
+                <Sparkles size={12} /> Settore · {variants.length} direzioni visive
               </div>
               <h1
                 className="prestige-display mt-4 text-4xl font-semibold leading-[1.05] sm:text-6xl lg:text-7xl"
@@ -244,7 +242,6 @@ export default function PortfolioCasePage() {
               src={featured.screens?.[0]?.image ?? featured.screen}
               alt={`${featured.brand} — versione desktop`}
               label={`${featured.brand.toLowerCase().replace(/[^a-z0-9]+/g, "")}.it`}
-              onClick={() => setLightbox({ index: variants.findIndex((v) => v.id === featured.id) })}
             />
             <div className="mx-auto w-[62%] max-w-[240px] lg:w-full">
               <IPhoneProMaxFrame
@@ -253,12 +250,11 @@ export default function PortfolioCasePage() {
                 width={230}
                 className="mx-auto !w-full"
                 style={{ width: "100%", height: "auto", aspectRatio: "9 / 19.5" }}
-                onClick={() => setLightbox({ index: variants.findIndex((v) => v.id === featured.id) })}
               />
             </div>
           </div>
           <div className="mt-6 flex flex-wrap items-center gap-2 text-[10px] font-bold uppercase tracking-[0.22em]">
-            <span className="pglass-tag pglass-tag-accent">Desktop + mobile 1:1</span>
+            <span className="pglass-tag pglass-tag-accent">Desktop · iPad · mobile 1:1</span>
             <span className="pglass-tag">{featured.brand}</span>
             <span className="pglass-tag">{featured.palette}</span>
           </div>
@@ -325,14 +321,38 @@ export default function PortfolioCasePage() {
                 </ul>
               )}
 
-              {/* Versione desktop dello stile */}
-              <div className="mt-8">
+              {/* Versioni desktop + tablet dello stile */}
+              <div className="mt-8 grid gap-6 lg:grid-cols-[1.4fr_0.6fr] lg:items-center">
                 <DesktopBrowserFrame
                   src={screens[0].image}
                   alt={`${v.brand} — ${v.style} — desktop`}
                   label={`${v.brand.toLowerCase().replace(/[^a-z0-9]+/g, "")}.it`}
-                  onClick={() => setLightbox({ index: idx })}
                 />
+                <figure className="mx-auto w-full max-w-[420px]">
+                  <div
+                    className="overflow-hidden rounded-[26px] bg-black p-2.5"
+                    style={{
+                      border: "1px solid hsl(var(--pr-gold-light) / 0.18)",
+                      boxShadow: "0 24px 60px -30px rgba(0,0,0,0.8)",
+                    }}
+                  >
+                    <div className="overflow-hidden rounded-[18px]" style={{ aspectRatio: "3 / 4" }}>
+                      <img
+                        src={screens[Math.min(1, screens.length - 1)].image}
+                        alt={`${v.brand} — ${v.style} — tablet`}
+                        loading="lazy"
+                        decoding="async"
+                        className="h-full w-full object-cover object-top"
+                      />
+                    </div>
+                  </div>
+                  <figcaption
+                    className="mt-3 text-center text-[10px] font-bold uppercase tracking-[0.22em]"
+                    style={{ color: "hsl(var(--pr-gold-light) / 0.7)" }}
+                  >
+                    iPad · Tablet
+                  </figcaption>
+                </figure>
               </div>
 
               {/* Griglia schermate: confronto integrale */}
@@ -348,7 +368,6 @@ export default function PortfolioCasePage() {
                         width={200}
                         className="mx-auto !w-full"
                         style={{ width: "100%", height: "auto", aspectRatio: "9 / 19.5" }}
-                        onClick={() => setLightbox({ index: idx })}
                       />
                     </div>
                     <figcaption
@@ -383,7 +402,7 @@ export default function PortfolioCasePage() {
               className="mt-2 max-w-2xl text-sm"
               style={{ color: "hsl(var(--pr-gold-light) / 0.6)" }}
             >
-              Tocca uno stile per aprirlo a schermo intero: tipografia, palette e componenti sono
+              Ogni stile ha tipografia, palette e componenti
               completamente diversi tra una direzione e l'altra.
             </p>
 
@@ -401,7 +420,6 @@ export default function PortfolioCasePage() {
                         width={170}
                         className="mx-auto !w-full"
                         style={{ width: "100%", height: "auto", aspectRatio: "9 / 19.5" }}
-                        onClick={() => setLightbox({ index: idx })}
                       />
                     </div>
                     <figcaption className="mt-3 text-center">
@@ -466,13 +484,6 @@ export default function PortfolioCasePage() {
         )}
       </main>
 
-      <MockupLightbox
-        open={!!lightbox}
-        onClose={() => setLightbox(null)}
-        sectorLabel={group.label}
-        variants={variants}
-        initialIndex={lightbox?.index ?? 0}
-      />
     </div>
   );
 }
