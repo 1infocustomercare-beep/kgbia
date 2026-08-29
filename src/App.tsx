@@ -704,8 +704,8 @@ function App() {
                       
                       <Route path="/catalogo" element={<Navigate to="/portfolio" replace />} />
                       <Route path="/portfolio" element={<MockupCatalogPage />} />
-                      {/* I vecchi URL dei case study confluiscono nell'unico portfolio canonico. */}
-                      <Route path="/portfolio/:sectorId" element={<Navigate to="/portfolio" replace />} />
+                      {/* Click su uno stile dal portfolio → pagina categoria del settore. */}
+                      <Route path="/portfolio/:sectorId" element={<PortfolioCasePage />} />
 
                       {/* Onboarding wizard PUBLIC: l'account viene richiesto solo al momento del salvataggio */}
                       <Route path="/onboarding" element={<OnboardingPage />} />
