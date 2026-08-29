@@ -14,7 +14,7 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Sparkles, Layers, Search, ArrowRight, MonitorSmartphone, X } from "lucide-react";
-import { useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import IPhoneProMaxFrame from "./IPhoneProMaxFrame";
 import { SECTOR_MOCKUPS, type SectorMockupVariant } from "@/data/sector-mockups";
 import GlassBackButton from "@/components/glass/GlassBackButton";
@@ -88,7 +88,8 @@ function useSeoHead(projectCount: number, styleCount: number) {
 }
 
 export default function PremiumMockupGallery() {
-  const [params, setParams] = useSearchParams();
+  const navigate = useNavigate();
+  const [params] = useSearchParams();
   const [activeSector, setActiveSector] = useState<string>("all");
   const [tier, setTier] = useState<TierFilter>("all");
   const [query, setQuery] = useState("");
@@ -125,7 +126,6 @@ export default function PremiumMockupGallery() {
     if (deepLinkHandled.current) return;
     deepLinkHandled.current = true;
     const sectorId = params.get("sector");
-    const styleId = params.get("style");
     if (!sectorId) return;
     const sector = SECTOR_MOCKUPS.find((item) => item.id === sectorId);
     if (!sector) return;
