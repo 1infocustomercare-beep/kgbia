@@ -8,21 +8,12 @@ import {
   ChevronUp,
   Sparkles,
 } from "lucide-react";
-import MockupLightbox from "@/components/mockups/MockupLightbox";
 import { SECTOR_MOCKUPS, type SectorMockupVariant } from "@/data/sector-mockups";
-
-type Selection = {
-  sectorId: string;
-  sectorLabel: string;
-  variants: SectorMockupVariant[];
-  index: number;
-} | null;
 
 export default function PrestigePortfolio() {
   const navigate = useNavigate();
   const [expanded, setExpanded] = useState(false);
   const [filter, setFilter] = useState<string>("all");
-  const [selection, setSelection] = useState<Selection>(null);
 
   const cards = useMemo(
     () =>
@@ -155,15 +146,7 @@ export default function PrestigePortfolio() {
   };
 
   const openMockup = (sectorId: string, styleId: string) => {
-    const card = cards.find((item) => item.sectorId === sectorId);
-    if (!card) return;
-    const index = card.variants.findIndex((variant) => variant.id === styleId);
-    setSelection({
-      sectorId,
-      sectorLabel: card.sectorLabel,
-      variants: card.variants,
-      index: Math.max(0, index),
-    });
+    navigate(`/portfolio/${sectorId}?style=${styleId}`);
   };
 
   const rail = (
@@ -316,13 +299,6 @@ export default function PrestigePortfolio() {
         </div>
       </div>
 
-      <MockupLightbox
-        open={!!selection}
-        onClose={() => setSelection(null)}
-        sectorLabel={selection?.sectorLabel ?? ""}
-        variants={selection?.variants ?? []}
-        initialIndex={selection?.index ?? 0}
-      />
     </section>
   );
 }

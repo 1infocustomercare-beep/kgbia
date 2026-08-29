@@ -16,7 +16,6 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { Sparkles, Layers, Search, ArrowRight, MonitorSmartphone, X } from "lucide-react";
 import { useSearchParams } from "react-router-dom";
 import IPhoneProMaxFrame from "./IPhoneProMaxFrame";
-import MockupLightbox from "./MockupLightbox";
 import { SECTOR_MOCKUPS, type SectorMockupVariant } from "@/data/sector-mockups";
 import GlassBackButton from "@/components/glass/GlassBackButton";
 
@@ -93,11 +92,6 @@ export default function PremiumMockupGallery() {
   const [activeSector, setActiveSector] = useState<string>("all");
   const [tier, setTier] = useState<TierFilter>("all");
   const [query, setQuery] = useState("");
-  const [selection, setSelection] = useState<{
-    sectorLabel: string;
-    variants: SectorMockupVariant[];
-    index: number;
-  } | null>(null);
   const deepLinkHandled = useRef(false);
 
   const sectors = useMemo(
@@ -136,28 +130,10 @@ export default function PremiumMockupGallery() {
     const sector = SECTOR_MOCKUPS.find((item) => item.id === sectorId);
     if (!sector) return;
     setActiveSector(sectorId);
-    if (styleId) {
-      const index = sector.variants.findIndex((variant) => variant.id === styleId);
-      if (index >= 0) {
-        setSelection({ sectorLabel: sector.label, variants: sector.variants, index });
-      }
-    }
   }, [params]);
 
   const openCard = (sectorId: string, styleId: string) => {
-    const sector = SECTOR_MOCKUPS.find((item) => item.id === sectorId);
-    if (!sector) return;
-    const index = sector.variants.findIndex((variant) => variant.id === styleId);
-    if (index < 0) return;
-    setSelection({ sectorLabel: sector.label, variants: sector.variants, index });
-  };
-
-  const closeViewer = () => {
-    setSelection(null);
-    if (!params.has("style")) return;
-    const next = new URLSearchParams(params);
-    next.delete("style");
-    setParams(next, { replace: true });
+    navigate(`/portfolio/${sectorId}?style=${styleId}`);
   };
 
   const cards = useMemo(() => {
@@ -196,8 +172,8 @@ export default function PremiumMockupGallery() {
 
           <p className="mt-4 max-w-2xl text-sm leading-relaxed text-white/70 md:text-base">
             {allCards.length} progetti, {totalScreens} schermate disegnate una per una: colore, layout,
-            componenti e funzioni sono studiati sul settore. Tocca uno stile per aprire il case study completo,
-            confrontare le interfacce e vedere l'intero flusso della webapp.
+            componenti e funzioni sono studiati sul settore. Tocca uno stile per aprire il settore: tutti gli stili a confronto e ogni
+            schermata su mobile, tablet e desktop.
           </p>
 
           {/* Stats strip */}
@@ -312,8 +288,8 @@ export default function PremiumMockupGallery() {
                   type="button"
                   key={`${c.sectorId}-${c.id}`}
                   onClick={() => openCard(c.sectorId, c.id)}
-                  className="pglass group w-full cursor-zoom-in overflow-hidden text-left transition-[border-color,box-shadow] duration-300 hover:border-white/30"
-                  aria-label={`Visualizza il mockup ${c.brand} a schermo intero`}
+                  className="pglass group w-full cursor-pointer overflow-hidden text-left transition-[border-color,box-shadow] duration-300 hover:border-white/30"
+                  aria-label={`Apri il settore ${c.sectorLabel} — stile ${c.style}`}
                 >
                   {/* Preview: due iPhone affiancati, verticali, su pannello chiaro (leggibilità max) */}
                   <div
@@ -415,13 +391,6 @@ export default function PremiumMockupGallery() {
         </div>
       </div>
 
-      <MockupLightbox
-        open={!!selection}
-        onClose={closeViewer}
-        sectorLabel={selection?.sectorLabel ?? ""}
-        variants={selection?.variants ?? []}
-        initialIndex={selection?.index ?? 0}
-      />
 
     </section>
   );
