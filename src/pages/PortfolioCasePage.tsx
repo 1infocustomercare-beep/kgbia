@@ -330,7 +330,8 @@ export default function PortfolioCasePage() {
               {/* Versioni desktop + tablet dello stile */}
               <div className="mt-8 grid gap-6 lg:grid-cols-[1.4fr_0.6fr] lg:items-center">
                 <DesktopBrowserFrame
-                  src={screens[0].image}
+                  src={desktopShot ?? screens[0].image}
+                  native={Boolean(desktopShot)}
                   alt={`${v.brand} — ${v.style} — desktop`}
                   label={`${v.brand.toLowerCase().replace(/[^a-z0-9]+/g, "")}.it`}
                 />
@@ -344,14 +345,15 @@ export default function PortfolioCasePage() {
                   >
                     <div className="overflow-hidden rounded-[18px]" style={{ aspectRatio: "3 / 4" }}>
                       <img
-                        src={screens[Math.min(1, screens.length - 1)].image}
+                        src={desktopShot ?? screens[Math.min(1, screens.length - 1)].image}
                         alt={`${v.brand} — ${v.style} — tablet`}
                         loading="lazy"
                         decoding="async"
-                        className="h-full w-full object-cover object-top"
+                        className={`h-full w-full object-top ${desktopShot ? "scale-[1.35] object-cover object-left-top" : "object-cover"}`}
                       />
                     </div>
                   </div>
+
                   <figcaption
                     className="mt-3 text-center text-[10px] font-bold uppercase tracking-[0.22em]"
                     style={{ color: "hsl(var(--pr-gold-light) / 0.7)" }}
