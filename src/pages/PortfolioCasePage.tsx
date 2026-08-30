@@ -28,6 +28,8 @@ export default function PortfolioCasePage() {
   const navigate = useNavigate();
   const [params, setParams] = useSearchParams();
   const group = useMemo(() => getSectorGroup(sectorId), [sectorId]);
+  const desktopShot = useMemo(() => getSectorDesktopShot(sectorId), [sectorId]);
+
 
   const variants = useMemo<SectorMockupVariant[]>(() => {
     if (!group) return [];
