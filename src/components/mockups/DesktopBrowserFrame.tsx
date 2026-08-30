@@ -13,9 +13,12 @@ interface Props {
   className?: string;
   style?: CSSProperties;
   onClick?: () => void;
+  /** true quando `src` è già uno screenshot desktop nativo (nessun ritaglio) */
+  native?: boolean;
 }
 
-export default function DesktopBrowserFrame({ src, alt, label, className = "", style, onClick }: Props) {
+export default function DesktopBrowserFrame({ src, alt, label, className = "", style, onClick, native = false }: Props) {
+
   return (
     <div
       className={`overflow-hidden rounded-xl border border-[hsl(var(--pr-gold-light)/0.14)] bg-[hsl(var(--pr-emerald-deep))] shadow-2xl ${onClick ? "cursor-pointer" : ""} ${className}`}
@@ -51,8 +54,9 @@ export default function DesktopBrowserFrame({ src, alt, label, className = "", s
           alt={alt}
           loading="lazy"
           decoding="async"
-          className="absolute inset-0 h-full w-full scale-[1.55] object-cover object-top"
+          className={`absolute inset-0 h-full w-full object-top ${native ? "object-cover" : "scale-[1.55] object-cover"}`}
         />
+
       </div>
     </div>
   );

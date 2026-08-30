@@ -18,6 +18,8 @@ import PrestigeTheme from "@/components/empire-home/prestige/PrestigeTheme";
 import IPhoneProMaxFrame from "@/components/mockups/IPhoneProMaxFrame";
 import DesktopBrowserFrame from "@/components/mockups/DesktopBrowserFrame";
 import { SECTOR_MOCKUPS, getSectorGroup, type SectorMockupVariant } from "@/data/sector-mockups";
+import { getSectorDesktopShot } from "@/data/sector-desktop-mockups";
+
 
 const CURRENT_YEAR = new Date().getFullYear();
 
@@ -26,6 +28,8 @@ export default function PortfolioCasePage() {
   const navigate = useNavigate();
   const [params, setParams] = useSearchParams();
   const group = useMemo(() => getSectorGroup(sectorId), [sectorId]);
+  const desktopShot = useMemo(() => getSectorDesktopShot(sectorId), [sectorId]);
+
 
   const variants = useMemo<SectorMockupVariant[]>(() => {
     if (!group) return [];
@@ -239,10 +243,12 @@ export default function PortfolioCasePage() {
         <div className="pglass overflow-hidden p-5 sm:p-8">
           <div className="grid items-center gap-8 lg:grid-cols-[1.35fr_0.65fr]">
             <DesktopBrowserFrame
-              src={featured.screens?.[0]?.image ?? featured.screen}
+              src={desktopShot ?? featured.screens?.[0]?.image ?? featured.screen}
+              native={Boolean(desktopShot)}
               alt={`${featured.brand} — versione desktop`}
               label={`${featured.brand.toLowerCase().replace(/[^a-z0-9]+/g, "")}.it`}
             />
+
             <div className="mx-auto w-[62%] max-w-[240px] lg:w-full">
               <IPhoneProMaxFrame
                 src={featured.screens?.[1]?.image ?? featured.screens?.[0]?.image ?? featured.screen}
@@ -324,7 +330,8 @@ export default function PortfolioCasePage() {
               {/* Versioni desktop + tablet dello stile */}
               <div className="mt-8 grid gap-6 lg:grid-cols-[1.4fr_0.6fr] lg:items-center">
                 <DesktopBrowserFrame
-                  src={screens[0].image}
+                  src={desktopShot ?? screens[0].image}
+                  native={Boolean(desktopShot)}
                   alt={`${v.brand} — ${v.style} — desktop`}
                   label={`${v.brand.toLowerCase().replace(/[^a-z0-9]+/g, "")}.it`}
                 />
@@ -338,14 +345,15 @@ export default function PortfolioCasePage() {
                   >
                     <div className="overflow-hidden rounded-[18px]" style={{ aspectRatio: "3 / 4" }}>
                       <img
-                        src={screens[Math.min(1, screens.length - 1)].image}
+                        src={desktopShot ?? screens[Math.min(1, screens.length - 1)].image}
                         alt={`${v.brand} — ${v.style} — tablet`}
                         loading="lazy"
                         decoding="async"
-                        className="h-full w-full object-cover object-top"
+                        className={`h-full w-full object-top ${desktopShot ? "scale-[1.35] object-cover object-left-top" : "object-cover"}`}
                       />
                     </div>
                   </div>
+
                   <figcaption
                     className="mt-3 text-center text-[10px] font-bold uppercase tracking-[0.22em]"
                     style={{ color: "hsl(var(--pr-gold-light) / 0.7)" }}
