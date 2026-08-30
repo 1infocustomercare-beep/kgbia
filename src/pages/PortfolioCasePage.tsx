@@ -18,6 +18,8 @@ import PrestigeTheme from "@/components/empire-home/prestige/PrestigeTheme";
 import IPhoneProMaxFrame from "@/components/mockups/IPhoneProMaxFrame";
 import DesktopBrowserFrame from "@/components/mockups/DesktopBrowserFrame";
 import { SECTOR_MOCKUPS, getSectorGroup, type SectorMockupVariant } from "@/data/sector-mockups";
+import { getSectorDesktopShot } from "@/data/sector-desktop-mockups";
+
 
 const CURRENT_YEAR = new Date().getFullYear();
 
