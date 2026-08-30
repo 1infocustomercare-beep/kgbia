@@ -243,10 +243,12 @@ export default function PortfolioCasePage() {
         <div className="pglass overflow-hidden p-5 sm:p-8">
           <div className="grid items-center gap-8 lg:grid-cols-[1.35fr_0.65fr]">
             <DesktopBrowserFrame
-              src={featured.screens?.[0]?.image ?? featured.screen}
+              src={desktopShot ?? featured.screens?.[0]?.image ?? featured.screen}
+              native={Boolean(desktopShot)}
               alt={`${featured.brand} — versione desktop`}
               label={`${featured.brand.toLowerCase().replace(/[^a-z0-9]+/g, "")}.it`}
             />
+
             <div className="mx-auto w-[62%] max-w-[240px] lg:w-full">
               <IPhoneProMaxFrame
                 src={featured.screens?.[1]?.image ?? featured.screens?.[0]?.image ?? featured.screen}
