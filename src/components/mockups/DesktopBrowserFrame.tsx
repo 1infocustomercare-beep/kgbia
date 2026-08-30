@@ -54,8 +54,9 @@ export default function DesktopBrowserFrame({ src, alt, label, className = "", s
           alt={alt}
           loading="lazy"
           decoding="async"
-          className="absolute inset-0 h-full w-full scale-[1.55] object-cover object-top"
+          className={`absolute inset-0 h-full w-full object-top ${native ? "object-cover" : "scale-[1.55] object-cover"}`}
         />
+
       </div>
     </div>
   );
