@@ -456,19 +456,19 @@ export default function PortfolioCasePage() {
           <section className="pglass my-8 p-5 sm:p-8">
             <div
               className="text-[10px] font-bold uppercase tracking-[0.26em]"
-              style={{ color: "hsl(var(--pr-gold))" }}
+              style={{ color: "hsl(43 88% 62%)" }}
             >
               Altre direzioni visive · {compact.length}
             </div>
             <h2
               className="prestige-display mt-2 text-2xl sm:text-3xl"
-              style={{ color: "hsl(var(--pr-gold-light))" }}
+              style={{ color: "hsl(var(--pr-ivory))" }}
             >
               Confronto rapido degli stili
             </h2>
             <p
               className="mt-2 max-w-2xl text-sm"
-              style={{ color: "hsl(var(--pr-gold-light) / 0.6)" }}
+              style={{ color: "hsl(var(--pr-muted-on-dark) / 0.75)" }}
             >
               Ogni stile ha tipografia, palette e componenti
               completamente diversi tra una direzione e l'altra.
@@ -478,9 +478,14 @@ export default function PortfolioCasePage() {
               {compact.map((v) => {
                 const idx = variants.findIndex((x) => x.id === v.id);
                 return (
-                  <figure key={v.id} className="group flex flex-col items-center">
+                  <figure
+                    key={v.id}
+                    className="group flex flex-col items-center"
+                    style={{ ["--acc" as string]: accentAt(idx) }}
+                  >
                     <div
                       className="pglass w-full p-2.5 group-hover:-translate-y-1.5"
+                      style={{ borderColor: "hsl(var(--acc) / 0.26)" }}
                     >
                       <IPhoneProMaxFrame
                         src={v.screens?.[0]?.image ?? v.screen}
@@ -493,13 +498,13 @@ export default function PortfolioCasePage() {
                     <figcaption className="mt-3 text-center">
                       <span
                         className="block text-xs font-semibold"
-                        style={{ color: "hsl(var(--pr-gold-light))" }}
+                        style={{ color: "hsl(var(--pr-ivory))" }}
                       >
                         {v.brand}
                       </span>
                       <span
                         className="mt-0.5 block text-[10px] uppercase tracking-[0.16em]"
-                        style={{ color: "hsl(var(--pr-gold) / 0.75)" }}
+                        style={{ color: "hsl(var(--acc))" }}
                       >
                         {v.palette}
                       </span>
@@ -518,7 +523,7 @@ export default function PortfolioCasePage() {
           <section className="py-16">
             <h2
               className="prestige-display text-2xl sm:text-3xl"
-              style={{ color: "hsl(var(--pr-gold-light))" }}
+              style={{ color: "hsl(var(--pr-ivory))" }}
             >
               Altri settori
             </h2>
