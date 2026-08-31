@@ -17,6 +17,7 @@ import { ArrowLeft, ArrowUpRight, CalendarDays, Layers, Smartphone, Sparkles, Us
 import PrestigeTheme from "@/components/empire-home/prestige/PrestigeTheme";
 import IPhoneProMaxFrame from "@/components/mockups/IPhoneProMaxFrame";
 import DesktopBrowserFrame from "@/components/mockups/DesktopBrowserFrame";
+import IPadProFrame from "@/components/mockups/IPadProFrame";
 import { SECTOR_MOCKUPS, getSectorGroup, type SectorMockupVariant } from "@/data/sector-mockups";
 import { getSectorDesktopShot } from "@/data/sector-desktop-mockups";
 
