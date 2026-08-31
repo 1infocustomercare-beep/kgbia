@@ -143,7 +143,10 @@ export default function PortfolioCasePage() {
   ];
 
   return (
-    <div className="pglass-scope pglass-bg min-h-screen">
+    <div
+      className="pglass-scope pglass-bg min-h-screen"
+      style={{ ["--acc-hero" as string]: accentAt(SECTOR_MOCKUPS.findIndex((g) => g.id === group.id)) }}
+    >
       <PrestigeTheme />
 
       {/* ───────── HERO EDITORIALE ───────── */}
