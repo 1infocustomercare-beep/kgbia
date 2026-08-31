@@ -153,38 +153,43 @@ export default function PortfolioCasePage() {
           className="pointer-events-none absolute inset-0"
           style={{
             background:
-              "radial-gradient(120% 80% at 15% 0%, hsl(var(--pr-emerald) / 0.55), transparent 60%), radial-gradient(90% 70% at 90% 10%, hsl(var(--pr-gold) / 0.16), transparent 65%)",
+              "radial-gradient(110% 75% at 12% 0%, hsl(var(--pr-emerald) / 0.6), transparent 62%), radial-gradient(80% 60% at 88% 4%, hsl(var(--acc-hero) / 0.22), transparent 66%), radial-gradient(70% 60% at 62% 100%, hsl(43 88% 60% / 0.10), transparent 70%)",
           }}
         />
         <div className="relative mx-auto max-w-7xl px-5 pb-14 pt-10 lg:px-10 lg:pt-14">
-          <div className="flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.24em]">
+          <div className="flex flex-wrap items-center gap-3">
             <button
               type="button"
-              onClick={() => navigate(-1)}
-              className="flex items-center gap-1.5 transition-opacity hover:opacity-70"
-              style={{ color: "hsl(var(--pr-gold-light) / 0.75)" }}
+              onClick={() => navigate("/portfolio")}
+              className="pglass-btn-ghost pglass-press group !px-4 !py-2 !text-[11px] !tracking-[0.2em]"
+              aria-label="Torna al portfolio"
             >
-              <ArrowLeft size={13} /> Indietro
-            </button>
-            <span style={{ color: "hsl(var(--pr-gold-light) / 0.35)" }}>/</span>
-            <Link to="/portfolio" style={{ color: "hsl(var(--pr-gold-light) / 0.6)" }}>
+              <ArrowLeft size={14} className="transition-transform group-hover:-translate-x-0.5" />
               Portfolio
-            </Link>
-            <span style={{ color: "hsl(var(--pr-gold-light) / 0.35)" }}>/</span>
-            <span style={{ color: "hsl(var(--pr-gold))" }}>{group.label}</span>
+            </button>
+            <div className="flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.22em]">
+              <span style={{ color: "hsl(var(--pr-text-on-dark) / 0.4)" }}>/</span>
+              <span style={{ color: "hsl(var(--acc-hero))" }}>{group.label}</span>
+            </div>
           </div>
 
           <div className="mt-8 grid gap-10 lg:grid-cols-[1.15fr_0.85fr] lg:items-end">
             <div>
               <div
                 className="prestige-eyebrow flex items-center gap-2"
-                style={{ color: "hsl(var(--pr-gold))" }}
+                style={{ color: "hsl(var(--acc-hero))" }}
               >
                 <Sparkles size={12} /> Settore · {variants.length} direzioni visive
               </div>
               <h1
                 className="prestige-display mt-4 text-4xl font-semibold leading-[1.05] sm:text-6xl lg:text-7xl"
-                style={{ color: "hsl(var(--pr-gold-light))" }}
+                style={{
+                  background:
+                    "linear-gradient(115deg, hsl(var(--pr-ivory)) 0%, hsl(var(--acc-hero)) 46%, hsl(43 88% 66%) 100%)",
+                  WebkitBackgroundClip: "text",
+                  backgroundClip: "text",
+                  WebkitTextFillColor: "transparent",
+                }}
               >
                 {group.label}
               </h1>
