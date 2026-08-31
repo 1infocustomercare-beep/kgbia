@@ -24,6 +24,22 @@ import { getSectorDesktopShot } from "@/data/sector-desktop-mockups";
 
 const CURRENT_YEAR = new Date().getFullYear();
 
+/**
+ * Accenti coerenti col brand Empire (glass midnight) ma NON tutti blu:
+ * ogni stile riceve il proprio accento, così la pagina respira colore.
+ */
+const ACCENTS = [
+  "178 74% 48%", // aqua Empire
+  "160 62% 46%", // smeraldo
+  "43 88% 60%",  // oro
+  "14 84% 62%",  // corallo
+  "268 72% 68%", // viola liquido
+  "199 88% 58%", // azzurro elettrico
+  "334 74% 64%", // rosa magenta
+  "88 58% 52%",  // lime
+];
+const accentAt = (i: number) => ACCENTS[((i % ACCENTS.length) + ACCENTS.length) % ACCENTS.length];
+
 export default function PortfolioCasePage() {
   const { sectorId = "" } = useParams();
   const navigate = useNavigate();
