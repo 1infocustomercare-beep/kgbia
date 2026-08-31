@@ -198,13 +198,13 @@ export default function PortfolioCasePage() {
               </h1>
               <p
                 className="mt-5 max-w-2xl text-base leading-relaxed sm:text-lg"
-                style={{ color: "hsl(var(--pr-gold-light) / 0.72)" }}
+                style={{ color: "hsl(var(--pr-text-on-dark) / 0.88)" }}
               >
                 {group.tagline}
               </p>
               <p
                 className="mt-3 max-w-2xl text-sm leading-relaxed"
-                style={{ color: "hsl(var(--pr-gold-light) / 0.55)" }}
+                style={{ color: "hsl(var(--pr-muted-on-dark) / 0.72)" }}
               >
                 Ogni stile qui sotto è un sistema completo: tipografia, palette, griglie, componenti e
                 micro-interazioni diverse — con la sequenza integrale delle schermate, così puoi confrontarli
