@@ -17,11 +17,28 @@ import { ArrowLeft, ArrowUpRight, CalendarDays, Layers, Smartphone, Sparkles, Us
 import PrestigeTheme from "@/components/empire-home/prestige/PrestigeTheme";
 import IPhoneProMaxFrame from "@/components/mockups/IPhoneProMaxFrame";
 import DesktopBrowserFrame from "@/components/mockups/DesktopBrowserFrame";
+import IPadProFrame from "@/components/mockups/IPadProFrame";
 import { SECTOR_MOCKUPS, getSectorGroup, type SectorMockupVariant } from "@/data/sector-mockups";
 import { getSectorDesktopShot } from "@/data/sector-desktop-mockups";
 
 
 const CURRENT_YEAR = new Date().getFullYear();
+
+/**
+ * Accenti coerenti col brand Empire (glass midnight) ma NON tutti blu:
+ * ogni stile riceve il proprio accento, così la pagina respira colore.
+ */
+const ACCENTS = [
+  "178 74% 48%", // aqua Empire
+  "160 62% 46%", // smeraldo
+  "43 88% 60%",  // oro
+  "14 84% 62%",  // corallo
+  "268 72% 68%", // viola liquido
+  "199 88% 58%", // azzurro elettrico
+  "334 74% 64%", // rosa magenta
+  "88 58% 52%",  // lime
+];
+const accentAt = (i: number) => ACCENTS[((i % ACCENTS.length) + ACCENTS.length) % ACCENTS.length];
 
 export default function PortfolioCasePage() {
   const { sectorId = "" } = useParams();
@@ -126,7 +143,10 @@ export default function PortfolioCasePage() {
   ];
 
   return (
-    <div className="pglass-scope pglass-bg min-h-screen">
+    <div
+      className="pglass-scope pglass-bg min-h-screen"
+      style={{ ["--acc-hero" as string]: accentAt(SECTOR_MOCKUPS.findIndex((g) => g.id === group.id)) }}
+    >
       <PrestigeTheme />
 
       {/* ───────── HERO EDITORIALE ───────── */}
@@ -136,50 +156,55 @@ export default function PortfolioCasePage() {
           className="pointer-events-none absolute inset-0"
           style={{
             background:
-              "radial-gradient(120% 80% at 15% 0%, hsl(var(--pr-emerald) / 0.55), transparent 60%), radial-gradient(90% 70% at 90% 10%, hsl(var(--pr-gold) / 0.16), transparent 65%)",
+              "radial-gradient(110% 75% at 12% 0%, hsl(var(--pr-emerald) / 0.6), transparent 62%), radial-gradient(80% 60% at 88% 4%, hsl(var(--acc-hero) / 0.22), transparent 66%), radial-gradient(70% 60% at 62% 100%, hsl(43 88% 60% / 0.10), transparent 70%)",
           }}
         />
         <div className="relative mx-auto max-w-7xl px-5 pb-14 pt-10 lg:px-10 lg:pt-14">
-          <div className="flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.24em]">
+          <div className="flex flex-wrap items-center gap-3">
             <button
               type="button"
-              onClick={() => navigate(-1)}
-              className="flex items-center gap-1.5 transition-opacity hover:opacity-70"
-              style={{ color: "hsl(var(--pr-gold-light) / 0.75)" }}
+              onClick={() => navigate("/portfolio")}
+              className="pglass-btn-ghost pglass-press group !px-4 !py-2 !text-[11px] !tracking-[0.2em]"
+              aria-label="Torna al portfolio"
             >
-              <ArrowLeft size={13} /> Indietro
-            </button>
-            <span style={{ color: "hsl(var(--pr-gold-light) / 0.35)" }}>/</span>
-            <Link to="/portfolio" style={{ color: "hsl(var(--pr-gold-light) / 0.6)" }}>
+              <ArrowLeft size={14} className="transition-transform group-hover:-translate-x-0.5" />
               Portfolio
-            </Link>
-            <span style={{ color: "hsl(var(--pr-gold-light) / 0.35)" }}>/</span>
-            <span style={{ color: "hsl(var(--pr-gold))" }}>{group.label}</span>
+            </button>
+            <div className="flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.22em]">
+              <span style={{ color: "hsl(var(--pr-text-on-dark) / 0.4)" }}>/</span>
+              <span style={{ color: "hsl(var(--acc-hero))" }}>{group.label}</span>
+            </div>
           </div>
 
           <div className="mt-8 grid gap-10 lg:grid-cols-[1.15fr_0.85fr] lg:items-end">
             <div>
               <div
                 className="prestige-eyebrow flex items-center gap-2"
-                style={{ color: "hsl(var(--pr-gold))" }}
+                style={{ color: "hsl(var(--acc-hero))" }}
               >
                 <Sparkles size={12} /> Settore · {variants.length} direzioni visive
               </div>
               <h1
                 className="prestige-display mt-4 text-4xl font-semibold leading-[1.05] sm:text-6xl lg:text-7xl"
-                style={{ color: "hsl(var(--pr-gold-light))" }}
+                style={{
+                  background:
+                    "linear-gradient(115deg, hsl(var(--pr-ivory)) 0%, hsl(var(--acc-hero)) 46%, hsl(43 88% 66%) 100%)",
+                  WebkitBackgroundClip: "text",
+                  backgroundClip: "text",
+                  WebkitTextFillColor: "transparent",
+                }}
               >
                 {group.label}
               </h1>
               <p
                 className="mt-5 max-w-2xl text-base leading-relaxed sm:text-lg"
-                style={{ color: "hsl(var(--pr-gold-light) / 0.72)" }}
+                style={{ color: "hsl(var(--pr-text-on-dark) / 0.88)" }}
               >
                 {group.tagline}
               </p>
               <p
                 className="mt-3 max-w-2xl text-sm leading-relaxed"
-                style={{ color: "hsl(var(--pr-gold-light) / 0.55)" }}
+                style={{ color: "hsl(var(--pr-muted-on-dark) / 0.72)" }}
               >
                 Ogni stile qui sotto è un sistema completo: tipografia, palette, griglie, componenti e
                 micro-interazioni diverse — con la sequenza integrale delle schermate, così puoi confrontarli
@@ -188,20 +213,25 @@ export default function PortfolioCasePage() {
             </div>
 
             <dl className="grid grid-cols-2 gap-3">
-              {meta.map(({ icon: Icon, k, v }) => (
+              {meta.map(({ icon: Icon, k, v }, mi) => (
                 <div
                   key={k}
                   className="pglass p-4"
+                  style={{
+                    ["--acc" as string]: accentAt(mi + 1),
+                    borderColor: "hsl(var(--acc) / 0.28)",
+                    boxShadow: "0 26px 60px -46px hsl(var(--acc) / 0.75), inset 0 1px 0 hsl(0 0% 100% / 0.1)",
+                  }}
                 >
                   <dt
                     className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-[0.2em]"
-                    style={{ color: "hsl(var(--pr-gold) / 0.85)" }}
+                    style={{ color: "hsl(var(--acc))" }}
                   >
                     <Icon size={12} /> {k}
                   </dt>
                   <dd
                     className="mt-1.5 text-sm font-semibold"
-                    style={{ color: "hsl(var(--pr-gold-light))" }}
+                    style={{ color: "hsl(var(--pr-text-on-dark))" }}
                   >
                     {v}
                   </dd>
@@ -240,8 +270,11 @@ export default function PortfolioCasePage() {
 
       {/* ───────── COVER: desktop + mobile dello stile principale ───────── */}
       <section className="mx-auto max-w-7xl px-5 pt-12 lg:px-10">
-        <div className="pglass overflow-hidden p-5 sm:p-8">
-          <div className="grid items-center gap-8 lg:grid-cols-[1.35fr_0.65fr]">
+        <div
+          className="pglass overflow-hidden p-5 sm:p-8"
+          style={{ ["--acc" as string]: "var(--acc-hero)", borderColor: "hsl(var(--acc-hero) / 0.26)" }}
+        >
+          <div className="grid items-center gap-8 lg:grid-cols-[1.3fr_0.7fr]">
             <DesktopBrowserFrame
               src={desktopShot ?? featured.screens?.[0]?.image ?? featured.screen}
               native={Boolean(desktopShot)}
@@ -249,7 +282,13 @@ export default function PortfolioCasePage() {
               label={`${featured.brand.toLowerCase().replace(/[^a-z0-9]+/g, "")}.it`}
             />
 
-            <div className="mx-auto w-[62%] max-w-[240px] lg:w-full">
+            <div className="grid grid-cols-[1.25fr_0.75fr] items-center gap-4 sm:gap-6">
+              <IPadProFrame
+                src={desktopShot ?? featured.screens?.[0]?.image ?? featured.screen}
+                native={Boolean(desktopShot)}
+                orientation="portrait"
+                alt={`${featured.brand} — versione tablet`}
+              />
               <IPhoneProMaxFrame
                 src={featured.screens?.[1]?.image ?? featured.screens?.[0]?.image ?? featured.screen}
                 alt={`${featured.brand} — versione mobile`}
@@ -273,31 +312,54 @@ export default function PortfolioCasePage() {
           const idx = variants.findIndex((x) => x.id === v.id);
           const screens = v.screens?.length ? v.screens : [{ label: "Home", caption: "", image: v.screen }];
           return (
-            <section key={v.id} className="pglass my-8 p-5 sm:p-8">
+            <section
+              key={v.id}
+              className="pglass my-8 p-5 sm:p-8"
+              style={{
+                ["--acc" as string]: accentAt(idx),
+                borderColor: "hsl(var(--acc) / 0.3)",
+                boxShadow: "0 44px 110px -70px hsl(var(--acc) / 0.9), inset 0 1px 0 hsl(0 0% 100% / 0.08)",
+              }}
+            >
               <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
                 <div>
                   <div
-                    className="text-[10px] font-bold uppercase tracking-[0.26em]"
-                    style={{ color: "hsl(var(--pr-gold))" }}
+                    className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.26em]"
+                    style={{ color: "hsl(var(--acc))" }}
                   >
+                    <span
+                      aria-hidden
+                      className="inline-block h-2 w-2 rounded-full"
+                      style={{ background: "hsl(var(--acc))", boxShadow: "0 0 12px hsl(var(--acc) / 0.9)" }}
+                    />
                     {v.style}
                   </div>
                   <h2
                     className="prestige-display mt-2 text-2xl sm:text-3xl"
-                    style={{ color: "hsl(var(--pr-gold-light))" }}
+                    style={{
+                      background: "linear-gradient(110deg, hsl(var(--pr-ivory)), hsl(var(--acc)) 92%)",
+                      WebkitBackgroundClip: "text",
+                      backgroundClip: "text",
+                      WebkitTextFillColor: "transparent",
+                    }}
                   >
                     {v.brand}
                   </h2>
                   <p
                     className="mt-2 max-w-2xl text-sm leading-relaxed"
-                    style={{ color: "hsl(var(--pr-gold-light) / 0.62)" }}
+                    style={{ color: "hsl(var(--pr-muted-on-dark) / 0.8)" }}
                   >
                     {v.description}
                   </p>
                 </div>
                 <div className="flex flex-wrap items-center gap-2">
                   <span
-                    className="pglass-tag pglass-tag-accent"
+                    className="pglass-tag"
+                    style={{
+                      background: "linear-gradient(160deg, hsl(var(--acc) / 0.22), hsl(var(--acc) / 0.06))",
+                      borderColor: "hsl(var(--acc) / 0.42)",
+                      color: "hsl(var(--acc))",
+                    }}
                   >
                     {v.palette}
                   </span>
@@ -316,9 +378,9 @@ export default function PortfolioCasePage() {
                       key={f}
                       className="rounded-lg px-2.5 py-1 text-[11px]"
                       style={{
-                        background: "hsl(var(--pr-gold-light) / 0.04)",
-                        color: "hsl(var(--pr-gold-light) / 0.7)",
-                        border: "1px solid hsl(var(--pr-gold-light) / 0.1)",
+                        background: "hsl(var(--acc) / 0.07)",
+                        color: "hsl(var(--pr-text-on-dark) / 0.82)",
+                        border: "1px solid hsl(var(--acc) / 0.22)",
                       }}
                     >
                       {f}
@@ -328,37 +390,34 @@ export default function PortfolioCasePage() {
               )}
 
               {/* Versioni desktop + tablet dello stile */}
-              <div className="mt-8 grid gap-6 lg:grid-cols-[1.4fr_0.6fr] lg:items-center">
-                <DesktopBrowserFrame
-                  src={desktopShot ?? screens[0].image}
-                  native={Boolean(desktopShot)}
-                  alt={`${v.brand} — ${v.style} — desktop`}
-                  label={`${v.brand.toLowerCase().replace(/[^a-z0-9]+/g, "")}.it`}
-                />
-                <figure className="mx-auto w-full max-w-[420px]">
-                  <div
-                    className="overflow-hidden rounded-[26px] bg-black p-2.5"
-                    style={{
-                      border: "1px solid hsl(var(--pr-gold-light) / 0.18)",
-                      boxShadow: "0 24px 60px -30px rgba(0,0,0,0.8)",
-                    }}
-                  >
-                    <div className="overflow-hidden rounded-[18px]" style={{ aspectRatio: "3 / 4" }}>
-                      <img
-                        src={desktopShot ?? screens[Math.min(1, screens.length - 1)].image}
-                        alt={`${v.brand} — ${v.style} — tablet`}
-                        loading="lazy"
-                        decoding="async"
-                        className={`h-full w-full object-top ${desktopShot ? "scale-[1.35] object-cover object-left-top" : "object-cover"}`}
-                      />
-                    </div>
-                  </div>
-
+              <div className="mt-8 grid gap-6 lg:grid-cols-[1.35fr_0.65fr] lg:items-center">
+                <figure>
+                  <DesktopBrowserFrame
+                    src={desktopShot ?? screens[0].image}
+                    native={Boolean(desktopShot)}
+                    alt={`${v.brand} — ${v.style} — desktop`}
+                    label={`${v.brand.toLowerCase().replace(/[^a-z0-9]+/g, "")}.it`}
+                  />
                   <figcaption
                     className="mt-3 text-center text-[10px] font-bold uppercase tracking-[0.22em]"
-                    style={{ color: "hsl(var(--pr-gold-light) / 0.7)" }}
+                    style={{ color: "hsl(var(--acc) / 0.85)" }}
                   >
-                    iPad · Tablet
+                    Desktop
+                  </figcaption>
+                </figure>
+
+                <figure className="mx-auto w-full max-w-[440px]">
+                  <IPadProFrame
+                    src={desktopShot ?? screens[Math.min(1, screens.length - 1)].image}
+                    native={Boolean(desktopShot)}
+                    orientation="landscape"
+                    alt={`${v.brand} — ${v.style} — tablet`}
+                  />
+                  <figcaption
+                    className="mt-4 text-center text-[10px] font-bold uppercase tracking-[0.22em]"
+                    style={{ color: "hsl(var(--acc) / 0.85)" }}
+                  >
+                    iPad Pro
                   </figcaption>
                 </figure>
               </div>
@@ -369,6 +428,7 @@ export default function PortfolioCasePage() {
                   <figure key={`${v.id}-${si}`} className="group flex flex-col items-center">
                     <div
                       className="pglass w-full p-3 group-hover:-translate-y-1.5"
+                      style={{ borderColor: "hsl(var(--acc) / 0.24)" }}
                     >
                       <IPhoneProMaxFrame
                         src={s.image}
@@ -380,7 +440,7 @@ export default function PortfolioCasePage() {
                     </div>
                     <figcaption
                       className="mt-3 text-center text-[10px] font-bold uppercase tracking-[0.22em]"
-                      style={{ color: "hsl(var(--pr-gold-light) / 0.72)" }}
+                      style={{ color: "hsl(var(--acc) / 0.9)" }}
                     >
                       {s.label}
                     </figcaption>
@@ -396,19 +456,19 @@ export default function PortfolioCasePage() {
           <section className="pglass my-8 p-5 sm:p-8">
             <div
               className="text-[10px] font-bold uppercase tracking-[0.26em]"
-              style={{ color: "hsl(var(--pr-gold))" }}
+              style={{ color: "hsl(43 88% 62%)" }}
             >
               Altre direzioni visive · {compact.length}
             </div>
             <h2
               className="prestige-display mt-2 text-2xl sm:text-3xl"
-              style={{ color: "hsl(var(--pr-gold-light))" }}
+              style={{ color: "hsl(var(--pr-ivory))" }}
             >
               Confronto rapido degli stili
             </h2>
             <p
               className="mt-2 max-w-2xl text-sm"
-              style={{ color: "hsl(var(--pr-gold-light) / 0.6)" }}
+              style={{ color: "hsl(var(--pr-muted-on-dark) / 0.75)" }}
             >
               Ogni stile ha tipografia, palette e componenti
               completamente diversi tra una direzione e l'altra.
@@ -418,9 +478,14 @@ export default function PortfolioCasePage() {
               {compact.map((v) => {
                 const idx = variants.findIndex((x) => x.id === v.id);
                 return (
-                  <figure key={v.id} className="group flex flex-col items-center">
+                  <figure
+                    key={v.id}
+                    className="group flex flex-col items-center"
+                    style={{ ["--acc" as string]: accentAt(idx) }}
+                  >
                     <div
                       className="pglass w-full p-2.5 group-hover:-translate-y-1.5"
+                      style={{ borderColor: "hsl(var(--acc) / 0.26)" }}
                     >
                       <IPhoneProMaxFrame
                         src={v.screens?.[0]?.image ?? v.screen}
@@ -433,13 +498,13 @@ export default function PortfolioCasePage() {
                     <figcaption className="mt-3 text-center">
                       <span
                         className="block text-xs font-semibold"
-                        style={{ color: "hsl(var(--pr-gold-light))" }}
+                        style={{ color: "hsl(var(--pr-ivory))" }}
                       >
                         {v.brand}
                       </span>
                       <span
                         className="mt-0.5 block text-[10px] uppercase tracking-[0.16em]"
-                        style={{ color: "hsl(var(--pr-gold) / 0.75)" }}
+                        style={{ color: "hsl(var(--acc))" }}
                       >
                         {v.palette}
                       </span>
@@ -458,7 +523,7 @@ export default function PortfolioCasePage() {
           <section className="py-16">
             <h2
               className="prestige-display text-2xl sm:text-3xl"
-              style={{ color: "hsl(var(--pr-gold-light))" }}
+              style={{ color: "hsl(var(--pr-ivory))" }}
             >
               Altri settori
             </h2>

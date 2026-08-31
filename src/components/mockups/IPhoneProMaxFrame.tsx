@@ -81,7 +81,7 @@ export default function IPhoneProMaxFrame({
             width: `${Math.round(width * 0.85)}px`,
             height: `${Math.round(height * 0.12)}px`,
             background:
-              "radial-gradient(ellipse, hsl(var(--primary,262 60% 55%) / 0.55), transparent 70%)",
+              "radial-gradient(ellipse, hsl(var(--acc, var(--pr-aqua, 178 74% 48%)) / 0.5), transparent 70%)",
             filter: "blur(30px)",
           }}
         />
