@@ -270,8 +270,11 @@ export default function PortfolioCasePage() {
 
       {/* ───────── COVER: desktop + mobile dello stile principale ───────── */}
       <section className="mx-auto max-w-7xl px-5 pt-12 lg:px-10">
-        <div className="pglass overflow-hidden p-5 sm:p-8">
-          <div className="grid items-center gap-8 lg:grid-cols-[1.35fr_0.65fr]">
+        <div
+          className="pglass overflow-hidden p-5 sm:p-8"
+          style={{ ["--acc" as string]: "var(--acc-hero)", borderColor: "hsl(var(--acc-hero) / 0.26)" }}
+        >
+          <div className="grid items-center gap-8 lg:grid-cols-[1.3fr_0.7fr]">
             <DesktopBrowserFrame
               src={desktopShot ?? featured.screens?.[0]?.image ?? featured.screen}
               native={Boolean(desktopShot)}
@@ -279,7 +282,13 @@ export default function PortfolioCasePage() {
               label={`${featured.brand.toLowerCase().replace(/[^a-z0-9]+/g, "")}.it`}
             />
 
-            <div className="mx-auto w-[62%] max-w-[240px] lg:w-full">
+            <div className="grid grid-cols-[1.25fr_0.75fr] items-center gap-4 sm:gap-6">
+              <IPadProFrame
+                src={desktopShot ?? featured.screens?.[0]?.image ?? featured.screen}
+                native={Boolean(desktopShot)}
+                orientation="portrait"
+                alt={`${featured.brand} — versione tablet`}
+              />
               <IPhoneProMaxFrame
                 src={featured.screens?.[1]?.image ?? featured.screens?.[0]?.image ?? featured.screen}
                 alt={`${featured.brand} — versione mobile`}
