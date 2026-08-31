@@ -312,31 +312,54 @@ export default function PortfolioCasePage() {
           const idx = variants.findIndex((x) => x.id === v.id);
           const screens = v.screens?.length ? v.screens : [{ label: "Home", caption: "", image: v.screen }];
           return (
-            <section key={v.id} className="pglass my-8 p-5 sm:p-8">
+            <section
+              key={v.id}
+              className="pglass my-8 p-5 sm:p-8"
+              style={{
+                ["--acc" as string]: accentAt(idx),
+                borderColor: "hsl(var(--acc) / 0.3)",
+                boxShadow: "0 44px 110px -70px hsl(var(--acc) / 0.9), inset 0 1px 0 hsl(0 0% 100% / 0.08)",
+              }}
+            >
               <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
                 <div>
                   <div
-                    className="text-[10px] font-bold uppercase tracking-[0.26em]"
-                    style={{ color: "hsl(var(--pr-gold))" }}
+                    className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.26em]"
+                    style={{ color: "hsl(var(--acc))" }}
                   >
+                    <span
+                      aria-hidden
+                      className="inline-block h-2 w-2 rounded-full"
+                      style={{ background: "hsl(var(--acc))", boxShadow: "0 0 12px hsl(var(--acc) / 0.9)" }}
+                    />
                     {v.style}
                   </div>
                   <h2
                     className="prestige-display mt-2 text-2xl sm:text-3xl"
-                    style={{ color: "hsl(var(--pr-gold-light))" }}
+                    style={{
+                      background: "linear-gradient(110deg, hsl(var(--pr-ivory)), hsl(var(--acc)) 92%)",
+                      WebkitBackgroundClip: "text",
+                      backgroundClip: "text",
+                      WebkitTextFillColor: "transparent",
+                    }}
                   >
                     {v.brand}
                   </h2>
                   <p
                     className="mt-2 max-w-2xl text-sm leading-relaxed"
-                    style={{ color: "hsl(var(--pr-gold-light) / 0.62)" }}
+                    style={{ color: "hsl(var(--pr-muted-on-dark) / 0.8)" }}
                   >
                     {v.description}
                   </p>
                 </div>
                 <div className="flex flex-wrap items-center gap-2">
                   <span
-                    className="pglass-tag pglass-tag-accent"
+                    className="pglass-tag"
+                    style={{
+                      background: "linear-gradient(160deg, hsl(var(--acc) / 0.22), hsl(var(--acc) / 0.06))",
+                      borderColor: "hsl(var(--acc) / 0.42)",
+                      color: "hsl(var(--acc))",
+                    }}
                   >
                     {v.palette}
                   </span>
@@ -355,9 +378,9 @@ export default function PortfolioCasePage() {
                       key={f}
                       className="rounded-lg px-2.5 py-1 text-[11px]"
                       style={{
-                        background: "hsl(var(--pr-gold-light) / 0.04)",
-                        color: "hsl(var(--pr-gold-light) / 0.7)",
-                        border: "1px solid hsl(var(--pr-gold-light) / 0.1)",
+                        background: "hsl(var(--acc) / 0.07)",
+                        color: "hsl(var(--pr-text-on-dark) / 0.82)",
+                        border: "1px solid hsl(var(--acc) / 0.22)",
                       }}
                     >
                       {f}
@@ -367,37 +390,34 @@ export default function PortfolioCasePage() {
               )}
 
               {/* Versioni desktop + tablet dello stile */}
-              <div className="mt-8 grid gap-6 lg:grid-cols-[1.4fr_0.6fr] lg:items-center">
-                <DesktopBrowserFrame
-                  src={desktopShot ?? screens[0].image}
-                  native={Boolean(desktopShot)}
-                  alt={`${v.brand} — ${v.style} — desktop`}
-                  label={`${v.brand.toLowerCase().replace(/[^a-z0-9]+/g, "")}.it`}
-                />
-                <figure className="mx-auto w-full max-w-[420px]">
-                  <div
-                    className="overflow-hidden rounded-[26px] bg-black p-2.5"
-                    style={{
-                      border: "1px solid hsl(var(--pr-gold-light) / 0.18)",
-                      boxShadow: "0 24px 60px -30px rgba(0,0,0,0.8)",
-                    }}
-                  >
-                    <div className="overflow-hidden rounded-[18px]" style={{ aspectRatio: "3 / 4" }}>
-                      <img
-                        src={desktopShot ?? screens[Math.min(1, screens.length - 1)].image}
-                        alt={`${v.brand} — ${v.style} — tablet`}
-                        loading="lazy"
-                        decoding="async"
-                        className={`h-full w-full object-top ${desktopShot ? "scale-[1.35] object-cover object-left-top" : "object-cover"}`}
-                      />
-                    </div>
-                  </div>
-
+              <div className="mt-8 grid gap-6 lg:grid-cols-[1.35fr_0.65fr] lg:items-center">
+                <figure>
+                  <DesktopBrowserFrame
+                    src={desktopShot ?? screens[0].image}
+                    native={Boolean(desktopShot)}
+                    alt={`${v.brand} — ${v.style} — desktop`}
+                    label={`${v.brand.toLowerCase().replace(/[^a-z0-9]+/g, "")}.it`}
+                  />
                   <figcaption
                     className="mt-3 text-center text-[10px] font-bold uppercase tracking-[0.22em]"
-                    style={{ color: "hsl(var(--pr-gold-light) / 0.7)" }}
+                    style={{ color: "hsl(var(--acc) / 0.85)" }}
                   >
-                    iPad · Tablet
+                    Desktop
+                  </figcaption>
+                </figure>
+
+                <figure className="mx-auto w-full max-w-[440px]">
+                  <IPadProFrame
+                    src={desktopShot ?? screens[Math.min(1, screens.length - 1)].image}
+                    native={Boolean(desktopShot)}
+                    orientation="landscape"
+                    alt={`${v.brand} — ${v.style} — tablet`}
+                  />
+                  <figcaption
+                    className="mt-4 text-center text-[10px] font-bold uppercase tracking-[0.22em]"
+                    style={{ color: "hsl(var(--acc) / 0.85)" }}
+                  >
+                    iPad Pro
                   </figcaption>
                 </figure>
               </div>
