@@ -213,20 +213,25 @@ export default function PortfolioCasePage() {
             </div>
 
             <dl className="grid grid-cols-2 gap-3">
-              {meta.map(({ icon: Icon, k, v }) => (
+              {meta.map(({ icon: Icon, k, v }, mi) => (
                 <div
                   key={k}
                   className="pglass p-4"
+                  style={{
+                    ["--acc" as string]: accentAt(mi + 1),
+                    borderColor: "hsl(var(--acc) / 0.28)",
+                    boxShadow: "0 26px 60px -46px hsl(var(--acc) / 0.75), inset 0 1px 0 hsl(0 0% 100% / 0.1)",
+                  }}
                 >
                   <dt
                     className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-[0.2em]"
-                    style={{ color: "hsl(var(--pr-gold) / 0.85)" }}
+                    style={{ color: "hsl(var(--acc))" }}
                   >
                     <Icon size={12} /> {k}
                   </dt>
                   <dd
                     className="mt-1.5 text-sm font-semibold"
-                    style={{ color: "hsl(var(--pr-gold-light))" }}
+                    style={{ color: "hsl(var(--pr-text-on-dark))" }}
                   >
                     {v}
                   </dd>
