@@ -428,6 +428,7 @@ export default function PortfolioCasePage() {
                   <figure key={`${v.id}-${si}`} className="group flex flex-col items-center">
                     <div
                       className="pglass w-full p-3 group-hover:-translate-y-1.5"
+                      style={{ borderColor: "hsl(var(--acc) / 0.24)" }}
                     >
                       <IPhoneProMaxFrame
                         src={s.image}
@@ -439,7 +440,7 @@ export default function PortfolioCasePage() {
                     </div>
                     <figcaption
                       className="mt-3 text-center text-[10px] font-bold uppercase tracking-[0.22em]"
-                      style={{ color: "hsl(var(--pr-gold-light) / 0.72)" }}
+                      style={{ color: "hsl(var(--acc) / 0.9)" }}
                     >
                       {s.label}
                     </figcaption>
