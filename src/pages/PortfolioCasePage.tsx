@@ -16,10 +16,7 @@ import { Link, useNavigate, useParams, useSearchParams } from "react-router-dom"
 import { ArrowLeft, ArrowUpRight, CalendarDays, Layers, Smartphone, Sparkles, UserRound } from "lucide-react";
 import PrestigeTheme from "@/components/empire-home/prestige/PrestigeTheme";
 import IPhoneProMaxFrame from "@/components/mockups/IPhoneProMaxFrame";
-import DesktopBrowserFrame from "@/components/mockups/DesktopBrowserFrame";
-import IPadProFrame from "@/components/mockups/IPadProFrame";
 import { SECTOR_MOCKUPS, getSectorGroup, type SectorMockupVariant } from "@/data/sector-mockups";
-import { getSectorDesktopShot } from "@/data/sector-desktop-mockups";
 
 
 const CURRENT_YEAR = new Date().getFullYear();
@@ -40,20 +37,39 @@ const ACCENTS = [
 ];
 const accentAt = (i: number) => ACCENTS[((i % ACCENTS.length) + ACCENTS.length) % ACCENTS.length];
 
+/**
+ * Il catalogo interno contiene anche prove, identità generate e vecchie cover.
+ * Nella pagina pubblica entrano soltanto set editoriali completi, con quattro
+ * schermate realmente appartenenti allo stesso progetto. La firma delle URL
+ * impedisce inoltre che lo stesso set venga esposto più volte con nomi diversi.
+ */
+const curatePublicVariants = (items: SectorMockupVariant[]): SectorMockupVariant[] => {
+  const signatures = new Set<string>();
+  return items.filter((variant) => {
+    const screens = variant.screens ?? [];
+    const isApprovedSequence =
+      screens.length >= 4 &&
+      variant.source !== "catalog" &&
+      !variant.id.startsWith("studio-");
+    if (!isApprovedSequence) return false;
+
+    const signature = screens.map((screen) => screen.image).join("|");
+    if (signatures.has(signature)) return false;
+    signatures.add(signature);
+    return true;
+  });
+};
+
 export default function PortfolioCasePage() {
   const { sectorId = "" } = useParams();
   const navigate = useNavigate();
   const [params, setParams] = useSearchParams();
   const group = useMemo(() => getSectorGroup(sectorId), [sectorId]);
-  const desktopShot = useMemo(() => getSectorDesktopShot(sectorId), [sectorId]);
 
 
   const variants = useMemo<SectorMockupVariant[]>(() => {
     if (!group) return [];
-    // La pagina settore deve mostrare TUTTO il catalogo del settore. Prima
-    // venivano esclusi gli stili extended quando era presente anche un solo
-    // progetto Studio: il click dal portfolio poteva quindi aprire una pagina vuota.
-    return [...group.variants].sort((a, b) => {
+    return curatePublicVariants(group.variants).sort((a, b) => {
       if (a.tier !== b.tier) return a.tier === "primary" ? -1 : 1;
       return (b.screens?.length ?? 1) - (a.screens?.length ?? 1);
     });
@@ -269,38 +285,30 @@ export default function PortfolioCasePage() {
         </div>
       </div>
 
-      {/* ───────── COVER: desktop + mobile dello stile principale ───────── */}
+      {/* ───────── COVER: sequenza reale dello stile principale ───────── */}
       <section className="mx-auto max-w-7xl px-5 pt-12 lg:px-10">
         <div
           className="pglass overflow-hidden p-5 sm:p-8"
           style={{ ["--acc" as string]: "var(--acc-hero)", borderColor: "hsl(var(--acc-hero) / 0.26)" }}
         >
-          <div className="grid items-center gap-8 lg:grid-cols-[1.3fr_0.7fr]">
-            <DesktopBrowserFrame
-              src={desktopShot ?? featured.screens?.[0]?.image ?? featured.screen}
-              native={Boolean(desktopShot)}
-              alt={`${featured.brand} — versione desktop`}
-              label={`${featured.brand.toLowerCase().replace(/[^a-z0-9]+/g, "")}.it`}
-            />
-
-            <div className="grid grid-cols-[1fr_0.42fr] items-end gap-4 sm:gap-6">
-              <IPadProFrame
-                src={desktopShot ?? featured.screens?.[0]?.image ?? featured.screen}
-                native={Boolean(desktopShot)}
-                orientation="landscape"
-                alt={`${featured.brand} — versione tablet`}
-              />
+          <div className="grid grid-cols-2 items-end gap-4 sm:grid-cols-4 sm:gap-6">
+            {(featured.screens ?? []).slice(0, 4).map((screen, index) => (
+              <figure key={`${featured.id}-cover-${screen.image}`} className="flex min-w-0 flex-col items-center">
               <IPhoneProMaxFrame
-                src={featured.screens?.[1]?.image ?? featured.screens?.[0]?.image ?? featured.screen}
-                alt={`${featured.brand} — versione mobile`}
-                width={230}
+                src={screen.image}
+                alt={`${featured.brand} — ${screen.label}`}
+                width={250}
                 className="mx-auto !w-full"
                 style={{ width: "100%", height: "auto", aspectRatio: "9 / 19.5" }}
               />
-            </div>
+                <figcaption className="mt-3 text-center text-[10px] font-bold uppercase tracking-[0.18em]" style={{ color: "hsl(var(--acc-hero))" }}>
+                  {index + 1}. {screen.label}
+                </figcaption>
+              </figure>
+            ))}
           </div>
           <div className="mt-6 flex flex-wrap items-center gap-2 text-[10px] font-bold uppercase tracking-[0.22em]">
-            <span className="pglass-tag pglass-tag-accent">Desktop · iPad · mobile 1:1</span>
+            <span className="pglass-tag pglass-tag-accent">Sequenza mobile completa · 4 schermate reali</span>
             <span className="pglass-tag">{featured.brand}</span>
             <span className="pglass-tag">{featured.palette}</span>
           </div>
@@ -390,41 +398,8 @@ export default function PortfolioCasePage() {
                 </ul>
               )}
 
-              {/* Versioni desktop + tablet dello stile */}
-              <div className="mt-8 grid gap-6 lg:grid-cols-[1.35fr_0.65fr] lg:items-center">
-                <figure>
-                  <DesktopBrowserFrame
-                    src={desktopShot ?? screens[0].image}
-                    native={Boolean(desktopShot)}
-                    alt={`${v.brand} — ${v.style} — desktop`}
-                    label={`${v.brand.toLowerCase().replace(/[^a-z0-9]+/g, "")}.it`}
-                  />
-                  <figcaption
-                    className="mt-3 text-center text-[10px] font-bold uppercase tracking-[0.22em]"
-                    style={{ color: "hsl(var(--acc) / 0.85)" }}
-                  >
-                    Desktop
-                  </figcaption>
-                </figure>
-
-                <figure className="mx-auto w-full max-w-[430px]">
-                  <IPadProFrame
-                    src={desktopShot ?? screens[0].image}
-                    native={Boolean(desktopShot)}
-                    orientation="landscape"
-                    alt={`${v.brand} — ${v.style} — tablet`}
-                  />
-                  <figcaption
-                    className="mt-4 text-center text-[10px] font-bold uppercase tracking-[0.22em]"
-                    style={{ color: "hsl(var(--acc) / 0.85)" }}
-                  >
-                    iPad Pro
-                  </figcaption>
-                </figure>
-              </div>
-
               {/* Griglia schermate: confronto integrale */}
-              <div className="mt-9 grid grid-cols-2 gap-x-4 gap-y-9 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+              <div className="mt-9 grid grid-cols-2 gap-x-4 gap-y-9 sm:grid-cols-4">
                 {screens.map((s, si) => (
                   <figure key={`${v.id}-${si}`} className="group flex flex-col items-center">
                     <div
