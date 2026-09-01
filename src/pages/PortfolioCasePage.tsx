@@ -407,11 +407,11 @@ export default function PortfolioCasePage() {
                   </figcaption>
                 </figure>
 
-                <figure className="mx-auto w-full max-w-[330px]">
+                <figure className="mx-auto w-full max-w-[430px]">
                   <IPadProFrame
-                    src={screens[Math.min(1, screens.length - 1)].image}
-                    native
-                    orientation="portrait"
+                    src={desktopShot ?? screens[0].image}
+                    native={Boolean(desktopShot)}
+                    orientation="landscape"
                     alt={`${v.brand} — ${v.style} — tablet`}
                   />
                   <figcaption
