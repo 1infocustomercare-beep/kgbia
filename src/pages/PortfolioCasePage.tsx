@@ -128,6 +128,7 @@ export default function PortfolioCasePage() {
     );
   }
 
+  const sectorIndex = SECTOR_MOCKUPS.findIndex((g) => g.id === group.id);
   const lead = variants[0];
   const featured = filter === "all" ? lead : variants.find((v) => v.id === filter) ?? lead;
   const totalScreens = variants.reduce((n, v) => n + (v.screens?.length || 1), 0);
@@ -282,11 +283,11 @@ export default function PortfolioCasePage() {
               label={`${featured.brand.toLowerCase().replace(/[^a-z0-9]+/g, "")}.it`}
             />
 
-            <div className="grid grid-cols-[1.25fr_0.75fr] items-center gap-4 sm:gap-6">
+            <div className="grid grid-cols-[1fr_0.42fr] items-end gap-4 sm:gap-6">
               <IPadProFrame
                 src={desktopShot ?? featured.screens?.[0]?.image ?? featured.screen}
                 native={Boolean(desktopShot)}
-                orientation="portrait"
+                orientation="landscape"
                 alt={`${featured.brand} — versione tablet`}
               />
               <IPhoneProMaxFrame
@@ -316,7 +317,7 @@ export default function PortfolioCasePage() {
               key={v.id}
               className="pglass my-8 p-5 sm:p-8"
               style={{
-                ["--acc" as string]: accentAt(idx),
+                ["--acc" as string]: accentAt(idx + sectorIndex + 1),
                 borderColor: "hsl(var(--acc) / 0.3)",
                 boxShadow: "0 44px 110px -70px hsl(var(--acc) / 0.9), inset 0 1px 0 hsl(0 0% 100% / 0.08)",
               }}
@@ -406,9 +407,9 @@ export default function PortfolioCasePage() {
                   </figcaption>
                 </figure>
 
-                <figure className="mx-auto w-full max-w-[440px]">
+                <figure className="mx-auto w-full max-w-[430px]">
                   <IPadProFrame
-                    src={desktopShot ?? screens[Math.min(1, screens.length - 1)].image}
+                    src={desktopShot ?? screens[0].image}
                     native={Boolean(desktopShot)}
                     orientation="landscape"
                     alt={`${v.brand} — ${v.style} — tablet`}
@@ -481,7 +482,7 @@ export default function PortfolioCasePage() {
                   <figure
                     key={v.id}
                     className="group flex flex-col items-center"
-                    style={{ ["--acc" as string]: accentAt(idx) }}
+                    style={{ ["--acc" as string]: accentAt(idx + sectorIndex + 1) }}
                   >
                     <div
                       className="pglass w-full p-2.5 group-hover:-translate-y-1.5"
