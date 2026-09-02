@@ -153,7 +153,6 @@ export default function PortfolioCasePage() {
 
   const sectorIndex = SECTOR_MOCKUPS.findIndex((g) => g.id === group.id);
   const lead = variants[0];
-  const featured = filter === "all" ? lead : variants.find((v) => v.id === filter) ?? lead;
   const totalScreens = variants.reduce((n, v) => n + (v.screens?.length || 1), 0);
   const otherSectors = SECTOR_MOCKUPS.filter(
     (g) => g.id !== group.id && g.variants.some((v) => v.source === "studio"),
