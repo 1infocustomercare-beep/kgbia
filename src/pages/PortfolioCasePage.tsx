@@ -44,15 +44,22 @@ const accentAt = (i: number) => ACCENTS[((i % ACCENTS.length) + ACCENTS.length) 
  * impedisce inoltre che lo stesso set venga esposto più volte con nomi diversi.
  */
 const curatePublicVariants = (items: SectorMockupVariant[]): SectorMockupVariant[] => {
+  const approvedStudio = items.filter(
+    (variant) =>
+      (variant.screens?.length ?? 0) >= 4 &&
+      variant.source === "studio" &&
+      !variant.id.startsWith("studio-"),
+  );
+  const candidates = approvedStudio.length
+    ? approvedStudio
+    : items.filter(
+        (variant) =>
+          (variant.screens?.length ?? 0) >= 4 &&
+          variant.source === "reference",
+      );
   const signatures = new Set<string>();
-  return items.filter((variant) => {
+  return candidates.filter((variant) => {
     const screens = variant.screens ?? [];
-    const isApprovedSequence =
-      screens.length >= 4 &&
-      variant.source !== "catalog" &&
-      !variant.id.startsWith("studio-");
-    if (!isApprovedSequence) return false;
-
     const signature = screens.map((screen) => screen.image).join("|");
     if (signatures.has(signature)) return false;
     signatures.add(signature);
@@ -285,38 +292,8 @@ export default function PortfolioCasePage() {
         </div>
       </div>
 
-      {/* ───────── COVER: sequenza reale dello stile principale ───────── */}
-      <section className="mx-auto max-w-7xl px-5 pt-12 lg:px-10">
-        <div
-          className="pglass overflow-hidden p-5 sm:p-8"
-          style={{ ["--acc" as string]: "var(--acc-hero)", borderColor: "hsl(var(--acc-hero) / 0.26)" }}
-        >
-          <div className="grid grid-cols-2 items-end gap-4 sm:grid-cols-4 sm:gap-6">
-            {(featured.screens ?? []).slice(0, 4).map((screen, index) => (
-              <figure key={`${featured.id}-cover-${screen.image}`} className="flex min-w-0 flex-col items-center">
-              <IPhoneProMaxFrame
-                src={screen.image}
-                alt={`${featured.brand} — ${screen.label}`}
-                width={250}
-                className="mx-auto !w-full"
-                style={{ width: "100%", height: "auto", aspectRatio: "9 / 19.5" }}
-              />
-                <figcaption className="mt-3 text-center text-[10px] font-bold uppercase tracking-[0.18em]" style={{ color: "hsl(var(--acc-hero))" }}>
-                  {index + 1}. {screen.label}
-                </figcaption>
-              </figure>
-            ))}
-          </div>
-          <div className="mt-6 flex flex-wrap items-center gap-2 text-[10px] font-bold uppercase tracking-[0.22em]">
-            <span className="pglass-tag pglass-tag-accent">Sequenza mobile completa · 4 schermate reali</span>
-            <span className="pglass-tag">{featured.brand}</span>
-            <span className="pglass-tag">{featured.palette}</span>
-          </div>
-        </div>
-      </section>
-
       {/* ───────── RIGHE STILE: TUTTE LE SCHERMATE A CONFRONTO ───────── */}
-      <main className="mx-auto max-w-7xl px-5 pb-24 lg:px-10">
+      <main className="mx-auto max-w-7xl px-5 pb-24 pt-4 lg:px-10">
         {shown.map((v) => {
           const idx = variants.findIndex((x) => x.id === v.id);
           const screens = v.screens?.length ? v.screens : [{ label: "Home", caption: "", image: v.screen }];
