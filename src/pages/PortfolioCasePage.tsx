@@ -1,23 +1,27 @@
 /**
- * PortfolioCasePage — pagina caso studio per SINGOLO SETTORE.
+ * PortfolioCasePage — case study per SINGOLO SETTORE.
  *
- * Struttura (ispirata a lowengeldagency.com/<progetto>, migliorata):
- *  1. Breadcrumb + hero editoriale: settore, claim, descrizione, meta (Cliente / Anno / Piattaforma / Stili)
- *  2. Chip filtro stile ("Tutti" + un chip per ogni variante) sticky
- *  3. Per ogni stile: header con brand, palette, features, poi la RIGA COMPLETA
- *     di tutte le schermate in iPhone Pro Max con etichetta sotto (confronto 1:1)
- *  4. Ogni schermata è mostrata in chiaro (mobile, tablet, desktop): nessun overlay
+ * Struttura allineata ai case study di riferimento (lowengeldagency.com/<progetto>),
+ * con il design system glass Empire:
+ *  1. Barra alta compatta: "← Portfolio / Settore"
+ *  2. Tabs stile sticky: "Tutti" + un tab per stile + tab Desktop
+ *  3. Hero: card scura (badge, titolo, descrizione, meta Cliente/Anno/Piattaforma) + iPhone hero
+ *  4. "TUTTE LE SCHERMATE": per ogni stile una riga di 4 iPhone con etichetta sotto
+ *  5. Riga Desktop nativa del settore
+ *  6. Click su qualsiasi schermata → apertura fullscreen con frecce e contatore
  *
  * Additivo: non modifica /portfolio (catalogo) né la home.
  */
 
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { Link, useNavigate, useParams, useSearchParams } from "react-router-dom";
-import { ArrowLeft, ArrowUpRight, CalendarDays, Layers, Smartphone, Sparkles, UserRound } from "lucide-react";
+import { ArrowLeft, ArrowUpRight, CalendarDays, Layers, Monitor, Smartphone, Sparkles, UserRound } from "lucide-react";
 import PrestigeTheme from "@/components/empire-home/prestige/PrestigeTheme";
 import IPhoneProMaxFrame from "@/components/mockups/IPhoneProMaxFrame";
+import DesktopBrowserFrame from "@/components/mockups/DesktopBrowserFrame";
+import CaseScreenLightbox, { type CaseScreenItem } from "@/components/mockups/CaseScreenLightbox";
 import { SECTOR_MOCKUPS, getSectorGroup, type SectorMockupVariant } from "@/data/sector-mockups";
-
+import { getSectorDesktopShot } from "@/data/sector-desktop-mockups";
 
 const CURRENT_YEAR = new Date().getFullYear();
 
@@ -73,7 +77,6 @@ export default function PortfolioCasePage() {
   const [params, setParams] = useSearchParams();
   const group = useMemo(() => getSectorGroup(sectorId), [sectorId]);
 
-
   const variants = useMemo<SectorMockupVariant[]>(() => {
     if (!group) return [];
     return curatePublicVariants(group.variants).sort((a, b) => {
@@ -82,11 +85,11 @@ export default function PortfolioCasePage() {
     });
   }, [group]);
 
-
   const styleParam = params.get("style") ?? "all";
   const [filter, setFilter] = useState<string>(styleParam);
   useEffect(() => setFilter(styleParam), [styleParam]);
 
+  const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -111,7 +114,7 @@ export default function PortfolioCasePage() {
   );
   /** Stili con sequenza completa: riga dedicata con tutte le schermate. */
   const shown = useMemo(
-    () => (filter === "all" ? selected.filter((v) => (v.screens?.length ?? 1) > 1) : selected),
+    () => (filter === "desktop" ? [] : selected.filter((v) => (v.screens?.length ?? 1) > 1)),
     [selected, filter],
   );
   /** Stili con una sola schermata: griglia compatta di confronto. */
@@ -120,6 +123,48 @@ export default function PortfolioCasePage() {
     [selected, filter],
   );
 
+  const desktopShot = getSectorDesktopShot(group?.id);
+  const showDesktopRow = Boolean(desktopShot) && (filter === "all" || filter === "desktop");
+
+  /**
+   * Lista piatta di TUTTE le schermate visibili: il fullscreen scorre l'intera
+   * pagina (mobile + desktop) con contatore progressivo, come nei riferimenti.
+   */
+  const lightboxItems = useMemo<CaseScreenItem[]>(() => {
+    const items: CaseScreenItem[] = [];
+    shown.forEach((v) => {
+      (v.screens ?? []).forEach((s) => {
+        items.push({ image: s.image, label: s.label, brand: v.brand, style: v.style, kind: "mobile" });
+      });
+    });
+    compact.forEach((v) => {
+      items.push({
+        image: v.screens?.[0]?.image ?? v.screen,
+        label: v.palette,
+        brand: v.brand,
+        style: v.style,
+        kind: "mobile",
+      });
+    });
+    if (showDesktopRow && desktopShot && group) {
+      items.push({
+        image: desktopShot,
+        label: "Versione desktop",
+        brand: variants[0]?.brand ?? group.label,
+        style: `${group.label} Desktop`,
+        kind: "desktop",
+      });
+    }
+    return items;
+  }, [shown, compact, showDesktopRow, desktopShot, group, variants]);
+
+  const openScreen = useCallback(
+    (image: string) => {
+      const i = lightboxItems.findIndex((item) => item.image === image);
+      setLightboxIndex(i >= 0 ? i : 0);
+    },
+    [lightboxItems],
+  );
 
   const setStyle = (id: string) => {
     setFilter(id);
@@ -140,10 +185,7 @@ export default function PortfolioCasePage() {
           <p className="text-sm" style={{ color: "hsl(var(--pr-gold-light) / 0.7)" }}>
             Scegli un settore dal portfolio completo.
           </p>
-          <Link
-            to="/portfolio"
-            className="pglass-btn"
-          >
+          <Link to="/portfolio" className="pglass-btn">
             Vai al portfolio
           </Link>
         </div>
@@ -152,14 +194,16 @@ export default function PortfolioCasePage() {
   }
 
   const sectorIndex = SECTOR_MOCKUPS.findIndex((g) => g.id === group.id);
+  const heroAccent = accentAt(sectorIndex);
   const lead = variants[0];
+  const heroScreen = lead.screens?.[0]?.image ?? lead.screen;
   const totalScreens = variants.reduce((n, v) => n + (v.screens?.length || 1), 0);
   const otherSectors = SECTOR_MOCKUPS.filter(
     (g) => g.id !== group.id && g.variants.some((v) => v.source === "studio"),
   ).slice(0, 8);
 
   const meta = [
-    { icon: UserRound, k: "Cliente tipo", v: lead.brand },
+    { icon: UserRound, k: "Cliente", v: lead.brand },
     { icon: CalendarDays, k: "Anno", v: String(CURRENT_YEAR) },
     { icon: Smartphone, k: "Piattaforma", v: "iOS · Web app" },
     { icon: Layers, k: "Stili", v: `${variants.length} · ${totalScreens} schermate` },
@@ -168,47 +212,102 @@ export default function PortfolioCasePage() {
   return (
     <div
       className="pglass-scope pglass-bg min-h-screen"
-      style={{ ["--acc-hero" as string]: accentAt(SECTOR_MOCKUPS.findIndex((g) => g.id === group.id)) }}
+      style={{ ["--acc-hero" as string]: heroAccent }}
     >
       <PrestigeTheme />
 
-      {/* ───────── HERO EDITORIALE ───────── */}
+      {/* ───────── BARRA ALTA: breadcrumb compatto ───────── */}
+      <div className="relative mx-auto flex max-w-7xl flex-wrap items-center gap-3 px-5 pt-7 lg:px-10">
+        <button
+          type="button"
+          onClick={() => navigate("/portfolio")}
+          className="pglass-btn-ghost pglass-press group !px-4 !py-2 !text-[11px] !tracking-[0.2em]"
+          aria-label="Torna al portfolio"
+        >
+          <ArrowLeft size={14} className="transition-transform group-hover:-translate-x-0.5" />
+          Portfolio
+        </button>
+        <div className="flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.22em]">
+          <span style={{ color: "hsl(var(--pr-text-on-dark) / 0.4)" }}>/</span>
+          <span style={{ color: "hsl(var(--acc-hero))" }}>{group.label}</span>
+        </div>
+      </div>
+
+      {/* ───────── TABS STILE (sticky) ───────── */}
+      <div className="pglass-stickybar sticky top-0 z-30 mt-5">
+        <div className="mx-auto max-w-7xl overflow-x-auto px-5 py-3 [scrollbar-width:none] lg:px-10 [&::-webkit-scrollbar]:hidden">
+          <div className="flex w-max items-center gap-2">
+            {[
+              { id: "all", label: `Tutti · ${variants.length}` },
+              ...variants.map((v) => ({ id: v.id, label: v.style })),
+              ...(desktopShot ? [{ id: "desktop", label: "Desktop" }] : []),
+            ].map((chip) => {
+              const on = filter === chip.id;
+              return (
+                <button
+                  key={chip.id}
+                  type="button"
+                  onClick={() => setStyle(chip.id)}
+                  aria-pressed={on}
+                  className="pglass-chip pglass-chip-dark"
+                  style={
+                    on
+                      ? {
+                          borderColor: "hsl(var(--acc-hero) / 0.55)",
+                          background: "hsl(var(--acc-hero) / 0.16)",
+                          color: "hsl(var(--acc-hero))",
+                        }
+                      : undefined
+                  }
+                >
+                  {chip.label}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      </div>
+
+      {/* ───────── HERO: card editoriale + iPhone ───────── */}
       <header className="relative overflow-hidden">
         <div
           aria-hidden
           className="pointer-events-none absolute inset-0"
           style={{
             background:
-              "radial-gradient(110% 75% at 12% 0%, hsl(var(--pr-emerald) / 0.6), transparent 62%), radial-gradient(80% 60% at 88% 4%, hsl(var(--acc-hero) / 0.22), transparent 66%), radial-gradient(70% 60% at 62% 100%, hsl(43 88% 60% / 0.10), transparent 70%)",
+              "radial-gradient(110% 75% at 12% 0%, hsl(var(--pr-emerald) / 0.55), transparent 62%), radial-gradient(80% 60% at 88% 4%, hsl(var(--acc-hero) / 0.22), transparent 66%), radial-gradient(70% 60% at 62% 100%, hsl(43 88% 60% / 0.10), transparent 70%)",
           }}
         />
-        <div className="relative mx-auto max-w-7xl px-5 pb-14 pt-10 lg:px-10 lg:pt-14">
-          <div className="flex flex-wrap items-center gap-3">
-            <button
-              type="button"
-              onClick={() => navigate("/portfolio")}
-              className="pglass-btn-ghost pglass-press group !px-4 !py-2 !text-[11px] !tracking-[0.2em]"
-              aria-label="Torna al portfolio"
+        <div className="relative mx-auto max-w-7xl px-5 pb-12 pt-10 lg:px-10">
+          <div className="grid items-center gap-8 lg:grid-cols-[1.25fr_0.75fr]">
+            {/* card scura */}
+            <div
+              className="pglass p-6 sm:p-9"
+              style={{
+                ["--acc" as string]: "var(--acc-hero)",
+                borderColor: "hsl(var(--acc-hero) / 0.3)",
+                boxShadow: "0 50px 120px -80px hsl(var(--acc-hero) / 0.95), inset 0 1px 0 hsl(0 0% 100% / 0.08)",
+              }}
             >
-              <ArrowLeft size={14} className="transition-transform group-hover:-translate-x-0.5" />
-              Portfolio
-            </button>
-            <div className="flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.22em]">
-              <span style={{ color: "hsl(var(--pr-text-on-dark) / 0.4)" }}>/</span>
-              <span style={{ color: "hsl(var(--acc-hero))" }}>{group.label}</span>
-            </div>
-          </div>
-
-          <div className="mt-8 grid gap-10 lg:grid-cols-[1.15fr_0.85fr] lg:items-end">
-            <div>
-              <div
-                className="prestige-eyebrow flex items-center gap-2"
-                style={{ color: "hsl(var(--acc-hero))" }}
-              >
-                <Sparkles size={12} /> Settore · {variants.length} direzioni visive
+              <div className="flex flex-wrap items-center gap-2">
+                <span
+                  className="pglass-tag"
+                  style={{
+                    background: "linear-gradient(160deg, hsl(var(--acc-hero) / 0.24), hsl(var(--acc-hero) / 0.06))",
+                    borderColor: "hsl(var(--acc-hero) / 0.45)",
+                    color: "hsl(var(--acc-hero))",
+                  }}
+                >
+                  App design
+                </span>
+                <span className="pglass-tag">{lead.palette}</span>
+                <span className="pglass-tag">
+                  <Sparkles size={11} /> {variants.length} direzioni visive
+                </span>
               </div>
+
               <h1
-                className="prestige-display mt-4 text-4xl font-semibold leading-[1.05] sm:text-6xl lg:text-7xl"
+                className="prestige-display mt-5 text-4xl font-semibold leading-[1.05] sm:text-5xl lg:text-6xl"
                 style={{
                   background:
                     "linear-gradient(115deg, hsl(var(--pr-ivory)) 0%, hsl(var(--acc-hero)) 46%, hsl(43 88% 66%) 100%)",
@@ -219,80 +318,67 @@ export default function PortfolioCasePage() {
               >
                 {group.label}
               </h1>
-              <p
-                className="mt-5 max-w-2xl text-base leading-relaxed sm:text-lg"
-                style={{ color: "hsl(var(--pr-text-on-dark) / 0.88)" }}
-              >
+
+              <p className="mt-4 max-w-2xl text-base leading-relaxed" style={{ color: "hsl(var(--pr-text-on-dark) / 0.88)" }}>
                 {group.tagline}
               </p>
-              <p
-                className="mt-3 max-w-2xl text-sm leading-relaxed"
-                style={{ color: "hsl(var(--pr-muted-on-dark) / 0.72)" }}
-              >
-                Ogni stile qui sotto è un sistema completo: tipografia, palette, griglie, componenti e
-                micro-interazioni diverse — con la sequenza integrale delle schermate, così puoi confrontarli
-                fianco a fianco e scegliere la direzione del tuo progetto.
+              <p className="mt-3 max-w-2xl text-sm leading-relaxed" style={{ color: "hsl(var(--pr-muted-on-dark) / 0.72)" }}>
+                Ogni stile è un sistema completo — tipografia, palette, griglie, componenti e micro-interazioni —
+                con la sequenza integrale delle schermate mobile e la versione desktop, così puoi confrontarli
+                fianco a fianco e aprirli a tutto schermo.
               </p>
+
+              <dl className="mt-7 grid grid-cols-2 gap-3 sm:grid-cols-4">
+                {meta.map(({ icon: Icon, k, v }, mi) => (
+                  <div
+                    key={k}
+                    className="rounded-2xl border p-3"
+                    style={{
+                      ["--acc" as string]: accentAt(mi + sectorIndex + 1),
+                      borderColor: "hsl(var(--acc) / 0.26)",
+                      background: "hsl(var(--acc) / 0.06)",
+                    }}
+                  >
+                    <dt
+                      className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-[0.18em]"
+                      style={{ color: "hsl(var(--acc))" }}
+                    >
+                      <Icon size={11} /> {k}
+                    </dt>
+                    <dd className="mt-1.5 text-[13px] font-semibold" style={{ color: "hsl(var(--pr-text-on-dark))" }}>
+                      {v}
+                    </dd>
+                  </div>
+                ))}
+              </dl>
             </div>
 
-            <dl className="grid grid-cols-2 gap-3">
-              {meta.map(({ icon: Icon, k, v }, mi) => (
-                <div
-                  key={k}
-                  className="pglass p-4"
-                  style={{
-                    ["--acc" as string]: accentAt(mi + 1),
-                    borderColor: "hsl(var(--acc) / 0.28)",
-                    boxShadow: "0 26px 60px -46px hsl(var(--acc) / 0.75), inset 0 1px 0 hsl(0 0% 100% / 0.1)",
-                  }}
-                >
-                  <dt
-                    className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-[0.2em]"
-                    style={{ color: "hsl(var(--acc))" }}
-                  >
-                    <Icon size={12} /> {k}
-                  </dt>
-                  <dd
-                    className="mt-1.5 text-sm font-semibold"
-                    style={{ color: "hsl(var(--pr-text-on-dark))" }}
-                  >
-                    {v}
-                  </dd>
-                </div>
-              ))}
-            </dl>
+            {/* iPhone hero */}
+            <div className="flex justify-center lg:justify-end">
+              <IPhoneProMaxFrame
+                src={heroScreen}
+                alt={`${lead.brand} — ${lead.style}`}
+                width={300}
+                loading="eager"
+                onClick={() => openScreen(heroScreen)}
+                className="max-w-[290px]"
+                style={{ width: "100%", height: "auto", aspectRatio: "9 / 19.5" }}
+              />
+            </div>
           </div>
         </div>
       </header>
 
-      {/* ───────── FILTRO STILI (sticky) ───────── */}
-      <div
-        className="pglass-stickybar sticky top-0 z-30"
-      >
-        <div className="mx-auto max-w-7xl overflow-x-auto px-5 py-3 [scrollbar-width:none] lg:px-10 [&::-webkit-scrollbar]:hidden">
-          <div className="flex w-max items-center gap-2">
-            {[{ id: "all", label: `Tutti · ${variants.length}` }, ...variants.map((v) => ({ id: v.id, label: v.style }))].map(
-              (chip) => {
-                const on = filter === chip.id;
-                return (
-                  <button
-                    key={chip.id}
-                    type="button"
-                    onClick={() => setStyle(chip.id)}
-                    aria-pressed={on}
-                    className="pglass-chip pglass-chip-dark"
-                  >
-                    {chip.label}
-                  </button>
-                );
-              },
-            )}
-          </div>
+      {/* ───────── TUTTE LE SCHERMATE ───────── */}
+      <main className="mx-auto max-w-7xl px-5 pb-24 lg:px-10">
+        <div
+          className="flex items-center gap-3 pb-2 pt-4 text-[10px] font-bold uppercase tracking-[0.3em]"
+          style={{ color: "hsl(var(--pr-muted-on-dark) / 0.6)" }}
+        >
+          Tutte le schermate
+          <span aria-hidden className="h-px flex-1" style={{ background: "hsl(var(--acc-hero) / 0.22)" }} />
         </div>
-      </div>
 
-      {/* ───────── RIGHE STILE: TUTTE LE SCHERMATE A CONFRONTO ───────── */}
-      <main className="mx-auto max-w-7xl px-5 pb-24 pt-4 lg:px-10">
         {shown.map((v) => {
           const idx = variants.findIndex((x) => x.id === v.id);
           const screens = v.screens?.length ? v.screens : [{ label: "Home", caption: "", image: v.screen }];
@@ -330,10 +416,7 @@ export default function PortfolioCasePage() {
                   >
                     {v.brand}
                   </h2>
-                  <p
-                    className="mt-2 max-w-2xl text-sm leading-relaxed"
-                    style={{ color: "hsl(var(--pr-muted-on-dark) / 0.8)" }}
-                  >
+                  <p className="mt-2 max-w-2xl text-sm leading-relaxed" style={{ color: "hsl(var(--pr-muted-on-dark) / 0.8)" }}>
                     {v.description}
                   </p>
                 </div>
@@ -348,9 +431,7 @@ export default function PortfolioCasePage() {
                   >
                     {v.palette}
                   </span>
-                  <span
-                    className="pglass-tag"
-                  >
+                  <span className="pglass-tag">
                     {screens.length} {screens.length === 1 ? "schermata" : "schermate"}
                   </span>
                 </div>
@@ -374,18 +455,19 @@ export default function PortfolioCasePage() {
                 </ul>
               )}
 
-              {/* Griglia schermate: confronto integrale */}
+              {/* Griglia schermate: confronto integrale, click = fullscreen */}
               <div className="mt-9 grid grid-cols-2 gap-x-4 gap-y-9 sm:grid-cols-4">
                 {screens.map((s, si) => (
                   <figure key={`${v.id}-${si}`} className="group flex flex-col items-center">
                     <div
-                      className="pglass w-full p-3 group-hover:-translate-y-1.5"
+                      className="pglass w-full p-3 transition-transform duration-300 group-hover:-translate-y-1.5"
                       style={{ borderColor: "hsl(var(--acc) / 0.24)" }}
                     >
                       <IPhoneProMaxFrame
                         src={s.image}
                         alt={`${v.brand} — ${v.style} — ${s.label}`}
                         width={200}
+                        onClick={() => openScreen(s.image)}
                         className="mx-auto !w-full"
                         style={{ width: "100%", height: "auto", aspectRatio: "9 / 19.5" }}
                       />
@@ -403,32 +485,57 @@ export default function PortfolioCasePage() {
           );
         })}
 
+        {/* ───────── RIGA DESKTOP NATIVA ───────── */}
+        {showDesktopRow && desktopShot && (
+          <section
+            className="pglass my-8 p-5 sm:p-8"
+            style={{
+              ["--acc" as string]: accentAt(sectorIndex + 2),
+              borderColor: "hsl(var(--acc) / 0.3)",
+            }}
+          >
+            <div
+              className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.26em]"
+              style={{ color: "hsl(var(--acc))" }}
+            >
+              <Monitor size={12} /> Versione desktop
+            </div>
+            <h2 className="prestige-display mt-2 text-2xl sm:text-3xl" style={{ color: "hsl(var(--pr-ivory))" }}>
+              {group.label} · layout desktop
+            </h2>
+            <p className="mt-2 max-w-2xl text-sm" style={{ color: "hsl(var(--pr-muted-on-dark) / 0.78)" }}>
+              Lo stesso sistema visivo su schermo grande: griglia estesa, navigazione persistente e sezioni
+              editoriali. Clicca per aprirlo a tutto schermo.
+            </p>
+            <div className="mt-7">
+              <DesktopBrowserFrame
+                src={desktopShot}
+                alt={`${group.label} — versione desktop`}
+                label={`${group.id}.empire-ia.app`}
+                native
+                onClick={() => openScreen(desktopShot)}
+              />
+            </div>
+          </section>
+        )}
+
         {/* ───────── GRIGLIA COMPATTA: altre direzioni visive ───────── */}
         {compact.length > 0 && (
           <section className="pglass my-8 p-5 sm:p-8">
-            <div
-              className="text-[10px] font-bold uppercase tracking-[0.26em]"
-              style={{ color: "hsl(43 88% 62%)" }}
-            >
+            <div className="text-[10px] font-bold uppercase tracking-[0.26em]" style={{ color: "hsl(43 88% 62%)" }}>
               Altre direzioni visive · {compact.length}
             </div>
-            <h2
-              className="prestige-display mt-2 text-2xl sm:text-3xl"
-              style={{ color: "hsl(var(--pr-ivory))" }}
-            >
+            <h2 className="prestige-display mt-2 text-2xl sm:text-3xl" style={{ color: "hsl(var(--pr-ivory))" }}>
               Confronto rapido degli stili
             </h2>
-            <p
-              className="mt-2 max-w-2xl text-sm"
-              style={{ color: "hsl(var(--pr-muted-on-dark) / 0.75)" }}
-            >
-              Ogni stile ha tipografia, palette e componenti
-              completamente diversi tra una direzione e l'altra.
+            <p className="mt-2 max-w-2xl text-sm" style={{ color: "hsl(var(--pr-muted-on-dark) / 0.75)" }}>
+              Ogni stile ha tipografia, palette e componenti completamente diversi tra una direzione e l'altra.
             </p>
 
             <div className="mt-8 grid grid-cols-2 gap-x-4 gap-y-9 sm:grid-cols-3 lg:grid-cols-5 xl:grid-cols-6">
               {compact.map((v) => {
                 const idx = variants.findIndex((x) => x.id === v.id);
+                const img = v.screens?.[0]?.image ?? v.screen;
                 return (
                   <figure
                     key={v.id}
@@ -436,28 +543,23 @@ export default function PortfolioCasePage() {
                     style={{ ["--acc" as string]: accentAt(idx + sectorIndex + 1) }}
                   >
                     <div
-                      className="pglass w-full p-2.5 group-hover:-translate-y-1.5"
+                      className="pglass w-full p-2.5 transition-transform duration-300 group-hover:-translate-y-1.5"
                       style={{ borderColor: "hsl(var(--acc) / 0.26)" }}
                     >
                       <IPhoneProMaxFrame
-                        src={v.screens?.[0]?.image ?? v.screen}
+                        src={img}
                         alt={`${v.brand} — ${v.style}`}
                         width={170}
+                        onClick={() => openScreen(img)}
                         className="mx-auto !w-full"
                         style={{ width: "100%", height: "auto", aspectRatio: "9 / 19.5" }}
                       />
                     </div>
                     <figcaption className="mt-3 text-center">
-                      <span
-                        className="block text-xs font-semibold"
-                        style={{ color: "hsl(var(--pr-ivory))" }}
-                      >
+                      <span className="block text-xs font-semibold" style={{ color: "hsl(var(--pr-ivory))" }}>
                         {v.brand}
                       </span>
-                      <span
-                        className="mt-0.5 block text-[10px] uppercase tracking-[0.16em]"
-                        style={{ color: "hsl(var(--acc))" }}
-                      >
+                      <span className="mt-0.5 block text-[10px] uppercase tracking-[0.16em]" style={{ color: "hsl(var(--acc))" }}>
                         {v.palette}
                       </span>
                     </figcaption>
@@ -468,40 +570,25 @@ export default function PortfolioCasePage() {
           </section>
         )}
 
-
-
         {/* ───────── ALTRI SETTORI ───────── */}
         {otherSectors.length > 0 && (
           <section className="py-16">
-            <h2
-              className="prestige-display text-2xl sm:text-3xl"
-              style={{ color: "hsl(var(--pr-ivory))" }}
-            >
+            <h2 className="prestige-display text-2xl sm:text-3xl" style={{ color: "hsl(var(--pr-ivory))" }}>
               Altri settori
             </h2>
             <div className="mt-6 flex flex-wrap gap-2">
               {otherSectors.map((g) => (
-                <Link
-                  key={g.id}
-                  to={`/portfolio/${g.id}`}
-                  className="pglass-chip pglass-chip-dark"
-                >
+                <Link key={g.id} to={`/portfolio/${g.id}`} className="pglass-chip pglass-chip-dark">
                   {g.label} <ArrowUpRight size={13} />
                 </Link>
               ))}
             </div>
 
             <div className="mt-10 flex flex-wrap gap-3">
-              <Link
-                to="/demo"
-                className="pglass-btn"
-              >
+              <Link to="/demo" className="pglass-btn">
                 Apri i siti demo live <ArrowUpRight size={16} />
               </Link>
-              <Link
-                to="/portfolio"
-                className="pglass-btn-ghost"
-              >
+              <Link to="/portfolio" className="pglass-btn-ghost">
                 Portfolio completo <ArrowUpRight size={16} />
               </Link>
             </div>
@@ -509,6 +596,13 @@ export default function PortfolioCasePage() {
         )}
       </main>
 
+      <CaseScreenLightbox
+        items={lightboxItems}
+        index={lightboxIndex}
+        accent={heroAccent}
+        onClose={() => setLightboxIndex(null)}
+        onIndexChange={setLightboxIndex}
+      />
     </div>
   );
 }
