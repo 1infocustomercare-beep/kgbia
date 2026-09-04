@@ -169,6 +169,7 @@ export default function CaseScreenLightbox({ items, index, accent, onClose, onIn
           {(index as number) + 1} / {items.length} · clicca in qualsiasi punto per chiudere
         </p>
       </div>
-    </div>
+    </div>,
+    document.body,
   );
 }
