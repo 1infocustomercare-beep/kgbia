@@ -11,6 +11,7 @@
  * Additivo: nessun componente esistente viene modificato.
  */
 import { useCallback, useEffect } from "react";
+import { createPortal } from "react-dom";
 import { ChevronLeft, ChevronRight, X } from "lucide-react";
 import IPhoneProMaxFrame from "@/components/mockups/IPhoneProMaxFrame";
 import DesktopBrowserFrame from "@/components/mockups/DesktopBrowserFrame";
@@ -61,7 +62,7 @@ export default function CaseScreenLightbox({ items, index, accent, onClose, onIn
   if (!open) return null;
   const item = items[index as number];
 
-  return (
+  return createPortal(
     <div
       role="dialog"
       aria-modal="true"
@@ -147,7 +148,11 @@ export default function CaseScreenLightbox({ items, index, accent, onClose, onIn
             width={360}
             loading="eager"
             glow
-            style={{ width: "auto", height: "min(78vh, 820px)", aspectRatio: "9 / 19.5" }}
+            style={{
+              width: "min(84vw, 34vh, 340px)",
+              height: "auto",
+              aspectRatio: "9 / 19.5",
+            }}
           />
         )}
       </div>
@@ -164,6 +169,7 @@ export default function CaseScreenLightbox({ items, index, accent, onClose, onIn
           {(index as number) + 1} / {items.length} · clicca in qualsiasi punto per chiudere
         </p>
       </div>
-    </div>
+    </div>,
+    document.body,
   );
 }
