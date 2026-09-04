@@ -147,7 +147,11 @@ export default function CaseScreenLightbox({ items, index, accent, onClose, onIn
             width={360}
             loading="eager"
             glow
-            style={{ width: "auto", height: "min(78vh, 820px)", aspectRatio: "9 / 19.5" }}
+            style={{
+              width: "min(84vw, 34vh, 340px)",
+              height: "auto",
+              aspectRatio: "9 / 19.5",
+            }}
           />
         )}
       </div>
