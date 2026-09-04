@@ -11,6 +11,7 @@
  * Additivo: nessun componente esistente viene modificato.
  */
 import { useCallback, useEffect } from "react";
+import { createPortal } from "react-dom";
 import { ChevronLeft, ChevronRight, X } from "lucide-react";
 import IPhoneProMaxFrame from "@/components/mockups/IPhoneProMaxFrame";
 import DesktopBrowserFrame from "@/components/mockups/DesktopBrowserFrame";
@@ -61,7 +62,7 @@ export default function CaseScreenLightbox({ items, index, accent, onClose, onIn
   if (!open) return null;
   const item = items[index as number];
 
-  return (
+  return createPortal(
     <div
       role="dialog"
       aria-modal="true"
