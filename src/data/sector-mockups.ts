@@ -258,9 +258,14 @@ const buildScreens = (
   const captions = CAPTIONS[sectorId] ?? labels;
   const comp = companionByStem.get(heroStem) ?? {};
   const seq: (string | undefined)[] = [heroImage, comp.menu, comp.detail, comp.booking];
-  return seq
+  const base = seq
     .map((img, i) => (img ? { label: labels[i], caption: captions[i], image: img } : null))
     .filter((s): s is MockupScreen => s !== null);
+  ACCOUNT_SCREENS.forEach((extra) => {
+    const img = comp[extra.kind];
+    if (img) base.push({ label: extra.label, caption: extra.caption, image: img });
+  });
+  return base;
 };
 
 const buildManualScreens = (
@@ -270,12 +275,18 @@ const buildManualScreens = (
 ): MockupScreen[] => {
   const labels = SECTOR_SCREEN_LABELS[sectorId] ?? ["Home", "Menu", "Dettaglio", "Prenotazione"];
   const captions = CAPTIONS[sectorId] ?? labels;
-  return entries.map((entry, index) => ({
+  const base = entries.map((entry, index) => ({
     label: entry.label ?? labels[index] ?? `Screen ${index + 1}`,
     caption: entry.caption ?? captions[index] ?? labels[index] ?? `Screen ${index + 1}`,
     image: portfolioImage(slug, entry.file),
   }));
+  ACCOUNT_SCREENS.forEach((extra) => {
+    const img = portfolioImageOptional(slug, extra.file);
+    if (img) base.push({ label: extra.label, caption: extra.caption, image: img });
+  });
+  return base;
 };
+
 
 const V = (
   sectorId: string,
