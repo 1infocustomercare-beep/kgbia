@@ -882,6 +882,11 @@ for (const folder of discoverFolders()) {
     caption: captions[i] ?? labels[i] ?? titleize(f.kind),
     image: portfolioImage(folder, f.file),
   }));
+  ACCOUNT_SCREENS.forEach((extra) => {
+    const img = portfolioImageOptional(folder, extra.file);
+    if (img) screens.push({ label: extra.label, caption: extra.caption, image: img });
+  });
+
 
   const brand = meta?.brand ?? titleize(cleanSlug);
   const style = meta?.style ?? "Auto-import Premium";
