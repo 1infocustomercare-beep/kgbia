@@ -53,10 +53,13 @@ const portfolioLowengeldFiles = import.meta.glob(
   { eager: true, import: "default" },
 ) as Record<string, string>;
 
-const companionByStem = new Map<string, { menu?: string; detail?: string; booking?: string }>();
+const companionByStem = new Map<
+  string,
+  { menu?: string; detail?: string; booking?: string; signup?: string; payment?: string }
+>();
 for (const [path, url] of Object.entries(companionFiles)) {
   const file = path.split("/").pop() ?? "";
-  const m = file.match(/^(.+?)--(\d+)-(menu|detail|booking)\.png$/);
+  const m = file.match(/^(.+?)--(\d+)-(menu|detail|booking|signup|payment)\.png$/);
   if (!m) continue;
   const [, stem, , kind] = m;
   const bucket = companionByStem.get(stem) ?? {};
@@ -64,17 +67,52 @@ for (const [path, url] of Object.entries(companionFiles)) {
   companionByStem.set(stem, bucket);
 }
 
-const portfolioImage = (slug: string, file: string): string => {
+/** Returns the module URL for a portfolio screen, or null when the file does not exist. */
+const portfolioImageOptional = (slug: string, file: string): string | null => {
   const suffix = `/portfolio-lowengeld/${slug}/${file}`;
   for (const [key, url] of Object.entries(portfolioLowengeldFiles)) {
     if (key.endsWith(suffix)) return url;
   }
+  return null;
+};
+
+const portfolioImage = (slug: string, file: string): string => {
+  const found = portfolioImageOptional(slug, file);
+  if (found) return found;
   // Non-fatal: log and return a transparent placeholder so the whole page still renders.
   if (typeof console !== "undefined") {
-    console.warn(`[sector-mockups] Missing portfolio mockup: ${suffix}`);
+    console.warn(`[sector-mockups] Missing portfolio mockup: /portfolio-lowengeld/${slug}/${file}`);
   }
   return "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1 1'/>";
 };
+
+/**
+ * Screens 5 & 6 (Registrazione / Pagamento) are ADDITIVE: as soon as the PNG
+ * exists in `portfolio-lowengeld/<slug>/` (or as companion `--5-signup.png`
+ * / `--6-payment.png`) it is appended to the sequence automatically.
+ */
+const ACCOUNT_SCREENS: Array<{
+  file: string;
+  kind: "signup" | "payment";
+  label: string;
+  caption: string;
+}> = [
+  {
+    file: "5-signup.png",
+    kind: "signup",
+    label: "Registrazione",
+    caption:
+      "Registrazione cliente: accesso rapido con email o social, consensi privacy e benvenuto nel programma fedeltà.",
+  },
+  {
+    file: "6-payment.png",
+    kind: "payment",
+    label: "Pagamento",
+    caption:
+      "Pagamento sicuro: riepilogo ordine, carte salvate, Apple Pay, mancia/extra e conferma con ricevuta digitale.",
+  },
+];
+
 
 
 export type MockupScreen = {
@@ -220,9 +258,14 @@ const buildScreens = (
   const captions = CAPTIONS[sectorId] ?? labels;
   const comp = companionByStem.get(heroStem) ?? {};
   const seq: (string | undefined)[] = [heroImage, comp.menu, comp.detail, comp.booking];
-  return seq
+  const base = seq
     .map((img, i) => (img ? { label: labels[i], caption: captions[i], image: img } : null))
     .filter((s): s is MockupScreen => s !== null);
+  ACCOUNT_SCREENS.forEach((extra) => {
+    const img = comp[extra.kind];
+    if (img) base.push({ label: extra.label, caption: extra.caption, image: img });
+  });
+  return base;
 };
 
 const buildManualScreens = (
@@ -232,12 +275,18 @@ const buildManualScreens = (
 ): MockupScreen[] => {
   const labels = SECTOR_SCREEN_LABELS[sectorId] ?? ["Home", "Menu", "Dettaglio", "Prenotazione"];
   const captions = CAPTIONS[sectorId] ?? labels;
-  return entries.map((entry, index) => ({
+  const base = entries.map((entry, index) => ({
     label: entry.label ?? labels[index] ?? `Screen ${index + 1}`,
     caption: entry.caption ?? captions[index] ?? labels[index] ?? `Screen ${index + 1}`,
     image: portfolioImage(slug, entry.file),
   }));
+  ACCOUNT_SCREENS.forEach((extra) => {
+    const img = portfolioImageOptional(slug, extra.file);
+    if (img) base.push({ label: extra.label, caption: extra.caption, image: img });
+  });
+  return base;
 };
+
 
 const V = (
   sectorId: string,
@@ -833,6 +882,11 @@ for (const folder of discoverFolders()) {
     caption: captions[i] ?? labels[i] ?? titleize(f.kind),
     image: portfolioImage(folder, f.file),
   }));
+  ACCOUNT_SCREENS.forEach((extra) => {
+    const img = portfolioImageOptional(folder, extra.file);
+    if (img) screens.push({ label: extra.label, caption: extra.caption, image: img });
+  });
+
 
   const brand = meta?.brand ?? titleize(cleanSlug);
   const style = meta?.style ?? "Auto-import Premium";
