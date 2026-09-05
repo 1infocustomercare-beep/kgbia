@@ -53,10 +53,13 @@ const portfolioLowengeldFiles = import.meta.glob(
   { eager: true, import: "default" },
 ) as Record<string, string>;
 
-const companionByStem = new Map<string, { menu?: string; detail?: string; booking?: string }>();
+const companionByStem = new Map<
+  string,
+  { menu?: string; detail?: string; booking?: string; signup?: string; payment?: string }
+>();
 for (const [path, url] of Object.entries(companionFiles)) {
   const file = path.split("/").pop() ?? "";
-  const m = file.match(/^(.+?)--(\d+)-(menu|detail|booking)\.png$/);
+  const m = file.match(/^(.+?)--(\d+)-(menu|detail|booking|signup|payment)\.png$/);
   if (!m) continue;
   const [, stem, , kind] = m;
   const bucket = companionByStem.get(stem) ?? {};
@@ -64,17 +67,52 @@ for (const [path, url] of Object.entries(companionFiles)) {
   companionByStem.set(stem, bucket);
 }
 
-const portfolioImage = (slug: string, file: string): string => {
+/** Returns the module URL for a portfolio screen, or null when the file does not exist. */
+const portfolioImageOptional = (slug: string, file: string): string | null => {
   const suffix = `/portfolio-lowengeld/${slug}/${file}`;
   for (const [key, url] of Object.entries(portfolioLowengeldFiles)) {
     if (key.endsWith(suffix)) return url;
   }
+  return null;
+};
+
+const portfolioImage = (slug: string, file: string): string => {
+  const found = portfolioImageOptional(slug, file);
+  if (found) return found;
   // Non-fatal: log and return a transparent placeholder so the whole page still renders.
   if (typeof console !== "undefined") {
-    console.warn(`[sector-mockups] Missing portfolio mockup: ${suffix}`);
+    console.warn(`[sector-mockups] Missing portfolio mockup: /portfolio-lowengeld/${slug}/${file}`);
   }
   return "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1 1'/>";
 };
+
+/**
+ * Screens 5 & 6 (Registrazione / Pagamento) are ADDITIVE: as soon as the PNG
+ * exists in `portfolio-lowengeld/<slug>/` (or as companion `--5-signup.png`
+ * / `--6-payment.png`) it is appended to the sequence automatically.
+ */
+const ACCOUNT_SCREENS: Array<{
+  file: string;
+  kind: "signup" | "payment";
+  label: string;
+  caption: string;
+}> = [
+  {
+    file: "5-signup.png",
+    kind: "signup",
+    label: "Registrazione",
+    caption:
+      "Registrazione cliente: accesso rapido con email o social, consensi privacy e benvenuto nel programma fedeltà.",
+  },
+  {
+    file: "6-payment.png",
+    kind: "payment",
+    label: "Pagamento",
+    caption:
+      "Pagamento sicuro: riepilogo ordine, carte salvate, Apple Pay, mancia/extra e conferma con ricevuta digitale.",
+  },
+];
+
 
 
 export type MockupScreen = {
