@@ -145,7 +145,7 @@ def main() -> int:
     ap.add_argument("--out", default="/tmp/mockups/v2")
     ap.add_argument("--retries", type=int, default=2)
     ap.add_argument("--workers", type=int, default=3)
-    ap.add_argument("--fidelity", type=float, default=0.55)
+    ap.add_argument("--fidelity", type=float, default=0.45)
     ap.add_argument("--limit", type=int, default=0)
     ap.add_argument("--dry-run", action="store_true")
     args = ap.parse_args()
