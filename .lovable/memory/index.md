@@ -80,3 +80,4 @@
 80: - [Demo Studio Presentation Mode](mem://features/demo-studio-presentation-mode) — Modalità "Pronta da mostrare" fullscreen 60s (Hero→Preview→Wow→CTA) per vendita cliente, mostra solo mockup, nasconde tutto il resto
 81: - [Partner Naming Convention](mem://style/partner-naming-convention) — Etichette ufficiali: Lead+Demo (auto-genera), Mockup su Misura (manuale), Vetrina (catalogo). Mai "Custom Preview" o "Anteprima Personalizzata"
 82: - [Vendor Workflow Clarity](mem://features/vendor-workflow-clarity) — VendorWorkflowWizard sulla home + PartnerFlowStepper su 3 pagine + TutorialPopup contestuali per chiarire quale dei 3 entry point Partner usare
+- [Empire v2 Batch Economy](mem://constraints/empire-v2-batch-economy) — Ordine anti-spreco crediti: copia prima, inventario, generazione a lotti con QA automatico, lotto approvato mai ritoccato
