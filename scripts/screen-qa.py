@@ -28,7 +28,8 @@ base = SourceFileLoader("mockup_qa", os.path.join(HERE, "mockup-qa.py")).load_mo
 
 ASPECT_MIN, ASPECT_MAX = 0.40, 0.56
 BORDER_TOUCH_PX = 2
-RIGHT_BLEED_TOLERANCE = 4          # parole tollerate a filo destro (caroselli)
+RIGHT_BLEED_TOLERANCE = 4
+TRUNCATION_TOLERANCE = 2          # le UI reali troncano qualche etichetta lunga          # parole tollerate a filo destro (caroselli)
 RING_INK_FRAMED = 0.006            # ring esterno quasi privo di ink = cornice/canvas
 
 
@@ -59,8 +60,14 @@ def validate_screen(path: str) -> dict:
         issues.append({"type": "aspect", "severity": "blocker",
                        "detail": f"proporzione {aspect:.3f} fuori range verticale iPhone"})
 
-    # 2. cornice disegnata dentro l'immagine
-    if _ring_ink(edges, W, H) < RING_INK_FRAMED:
+    # 2. cornice disegnata dentro l'immagine: bordi vuoti MA contenuto che riparte
+    #    più in dentro. Uno sfondo scuro piatto ha bordi e inset entrambi vuoti.
+    inset = int(min(W, H) * 0.045)
+    inset_ink = max(
+        base._band_ink_ratio(edges, (inset, inset, W - inset, inset + 6)),
+        base._band_ink_ratio(edges, (inset, H - inset - 6, W - inset, H - inset)),
+    )
+    if _ring_ink(edges, W, H) < RING_INK_FRAMED and inset_ink > 0.02:
         issues.append({"type": "frame_present", "severity": "blocker",
                        "detail": "bordi senza contenuto: sembra un telefono dentro una scena, non una schermata piena"})
 
@@ -70,6 +77,7 @@ def validate_screen(path: str) -> dict:
     words = base._ocr_words(work)
     w2, h2 = work.size
     right_bleed = 0
+    truncated: list[str] = []
     for w in words:
         right, bottom = w["left"] + w["width"], w["top"] + w["height"]
         label = w["text"][:32]
@@ -79,8 +87,10 @@ def validate_screen(path: str) -> dict:
         elif right >= w2 - BORDER_TOUCH_PX:
             right_bleed += 1
         if any(m in w["text"] for m in base.TRUNCATION_MARKERS):
-            issues.append({"type": "text_truncated", "severity": "blocker",
-                           "detail": f"marcatore di troncamento in «{label}»"})
+            truncated.append(label)
+    if len(truncated) > TRUNCATION_TOLERANCE:
+        issues.append({"type": "text_truncated", "severity": "blocker",
+                       "detail": f"{len(truncated)} testi troncati: {', '.join(truncated[:4])}"})
     if right_bleed > RIGHT_BLEED_TOLERANCE:
         issues.append({"type": "right_edge_overflow", "severity": "blocker",
                        "detail": f"{right_bleed} parole tagliate sul bordo destro"})
