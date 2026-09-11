@@ -204,3 +204,23 @@ Galleria + pagine settore + visualizzatore. Import degli asset buoni, rigenerazi
 Prima i 4 da riportare, poi i 20 nuovi a lotti di 3-4.
 
 Ogni fase si chiude con verifica su desktop e telefono prima di aprire la successiva.
+
+---
+
+## 11. Regola di esecuzione anti-spreco (obbligatoria)
+
+Vale per ogni fase, in questo ordine:
+
+1. **Copiare prima di generare.** Mockup già approvati, cornici iPhone/iPad/desktop,
+   visualizzatore a tutto schermo, Arianna, pagine legali e i 4 siti demo finiti si trasferiscono
+   come file (vedi `EMPIRE_V2_ASSET_INVENTORY.md`). Nessuna rigenerazione.
+2. **Inventario prima di spendere.** Per ogni stile, elencare quali delle 6-8 schermate mancano.
+   Si genera solo il buco reale.
+3. **Generazione a lotti** con `scripts/mockup-generate.py`: gate inquadratura + gate contenuto +
+   retry automatico; gli scarti vanno in `_rejected/` e non entrano nel catalogo.
+   Un lotto = un messaggio, non un messaggio per immagine.
+4. **Lotti chiusi.** Mockup per settore, siti demo a 3-4. Ogni lotto si chiude con verifica
+   screenshot a 375px e desktop. Un lotto approvato non si tocca più.
+5. **Conferma prima dei siti demo.** 5 righe su cosa si replica dall'originale, prima di costruire.
+6. **Registro mockup curato a mano.** Liste esplicite, mai auto-discovery: nel progetto vecchio è
+   stata la causa di duplicati e schermate incoerenti.
