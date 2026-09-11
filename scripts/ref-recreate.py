@@ -124,14 +124,13 @@ def fidelity(candidate: str, reference: str) -> tuple[float, str]:
 
 
 def verify(path: str, reference: str, threshold: float) -> dict:
-    frame = frame_qa.validate_frame(path)
-    content = content_qa.validate_image(path)
+    screen = screen_qa.validate_screen(path)
     fid, fid_hint = fidelity(path, reference)
-    issues = list(frame["issues"]) + list(content.get("issues", []))
+    issues = list(screen["issues"])
     if fid < threshold:
         issues.append({"code": "fidelity", "severity": "blocker", "score": round(fid, 3)})
-    hints = [h for h in (frame.get("retry_hint"), content.get("retry_hint"), fid_hint if fid < threshold else "") if h]
-    return {"pass": bool(frame["pass"] and content.get("pass") and fid >= threshold),
+    hints = [h for h in (screen.get("retry_hint"), fid_hint if fid < threshold else "") if h]
+    return {"pass": bool(screen["pass"] and fid >= threshold),
             "fidelity": round(fid, 3), "issues": issues, "retry_hint": " · ".join(hints)}
 
 
