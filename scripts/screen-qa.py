@@ -43,7 +43,10 @@ def _ring_ink(edges: Image.Image, W: int, H: int) -> float:
     )
 
 
-def validate_screen(path: str) -> dict:
+DESKTOP_ASPECT_MIN, DESKTOP_ASPECT_MAX = 1.30, 2.00
+
+
+def validate_screen(path: str, kind: str = "phone") -> dict:
     try:
         img = Image.open(path).convert("RGB")
     except Exception as err:
@@ -56,9 +59,10 @@ def validate_screen(path: str) -> dict:
 
     # 1. proporzione
     aspect = W / H
-    if not (ASPECT_MIN <= aspect <= ASPECT_MAX):
+    lo, hi = (DESKTOP_ASPECT_MIN, DESKTOP_ASPECT_MAX) if kind == "desktop" else (ASPECT_MIN, ASPECT_MAX)
+    if not (lo <= aspect <= hi):
         issues.append({"type": "aspect", "severity": "blocker",
-                       "detail": f"proporzione {aspect:.3f} fuori range verticale iPhone"})
+                       "detail": f"proporzione {aspect:.3f} fuori range ({kind})"})
 
     # 2. cornice disegnata dentro l'immagine: bordi vuoti MA contenuto che riparte
     #    più in dentro. Uno sfondo scuro piatto ha bordi e inset entrambi vuoti.
@@ -67,7 +71,7 @@ def validate_screen(path: str) -> dict:
         base._band_ink_ratio(edges, (inset, inset, W - inset, inset + 6)),
         base._band_ink_ratio(edges, (inset, H - inset - 6, W - inset, H - inset)),
     )
-    if _ring_ink(edges, W, H) < RING_INK_FRAMED and inset_ink > 0.02:
+    if kind != "desktop" and _ring_ink(edges, W, H) < RING_INK_FRAMED and inset_ink > 0.02:
         issues.append({"type": "frame_present", "severity": "blocker",
                        "detail": "bordi senza contenuto: sembra un telefono dentro una scena, non una schermata piena"})
 
@@ -122,7 +126,10 @@ def main() -> int:
     if not paths:
         print(__doc__)
         return 1
-    out = [validate_screen(p) for p in paths]
+    kind = "phone"
+    if paths and paths[0] in ("phone", "desktop"):
+        kind, paths = paths[0], paths[1:]
+    out = [validate_screen(p, kind) for p in paths]
     print(json.dumps(out, indent=1, ensure_ascii=False))
     return 0 if all(r["pass"] for r in out) else 2
 

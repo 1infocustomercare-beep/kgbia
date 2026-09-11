@@ -20,7 +20,7 @@ CHAT = "https://ai.gateway.lovable.dev/v1/chat/completions"
 MODEL = os.environ.get("DESCRIBE_MODEL", "google/gemini-2.5-flash")
 REF = "/tmp/reference"
 
-ASK = """Analizza questa schermata di app mobile e restituisci SOLO JSON valido, senza commenti.
+ASK_PHONE = """Analizza questa schermata di app mobile e restituisci SOLO JSON valido, senza commenti.
 
 {
  "screen_function": "home|login|signup|catalog|detail|booking|order|payment|tracking|loyalty|profile|chat|schedule|team|report|map|gallery|review|quote|admin",
@@ -38,13 +38,20 @@ ASK = """Analizza questa schermata di app mobile e restituisci SOLO JSON valido,
 
 Sii estremamente specifico su numeri, posizioni e colori. Descrivi ciò che vedi, non ciò che immagini."""
 
+ASK_DESKTOP = ASK_PHONE.replace(
+    "schermata di app mobile", "schermata di sito o gestionale desktop"
+).replace(
+    '"screen_function": "home|login|signup|catalog|detail|booking|order|payment|tracking|loyalty|profile|chat|schedule|team|report|map|gallery|review|quote|admin"',
+    '"screen_function": "hero|home|about|services|catalog|detail|booking|contact|pricing|gallery|dashboard|report|calendar|table|crm|settings|login"',
+)
 
-def describe(path: str, api_key: str) -> dict:
+
+def describe(path: str, api_key: str, kind: str = "phone") -> dict:
     b64 = base64.b64encode(open(path, "rb").read()).decode()
     body = json.dumps({
         "model": MODEL,
         "messages": [{"role": "user", "content": [
-            {"type": "text", "text": ASK},
+            {"type": "text", "text": ASK_DESKTOP if kind == "desktop" else ASK_PHONE},
             {"type": "image_url", "image_url": {"url": f"data:image/png;base64,{b64}"}},
         ]}],
     }).encode()
@@ -84,16 +91,17 @@ def main() -> int:
                 continue
             out = f"{REF}/specs/{slug}__{os.path.basename(it['file']).rsplit('.', 1)[0]}.json"
             if not os.path.exists(out):
-                jobs.append((slug, it["file"], out))
+                jobs.append((slug, it["file"], out, it["kind"]))
     if args.limit:
         jobs = jobs[: args.limit]
     print(f"schede da produrre: {len(jobs)}")
 
     def run(job):
-        slug, src, out = job
+        slug, src, out, kind = job
         for attempt in range(3):
             try:
-                spec = describe(src, api_key)
+                spec = describe(src, api_key, kind)
+                spec["_kind"] = kind
                 spec["_source"] = os.path.basename(src)
                 spec["_slug"] = slug
                 json.dump(spec, open(out, "w"), indent=1, ensure_ascii=False)
