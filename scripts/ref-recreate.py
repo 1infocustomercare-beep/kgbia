@@ -22,8 +22,7 @@ from concurrent.futures import ThreadPoolExecutor
 from importlib.machinery import SourceFileLoader
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-frame_qa = SourceFileLoader("frame_qa", os.path.join(HERE, "mockup-frame-qa.py")).load_module()
-content_qa = SourceFileLoader("mockup_qa", os.path.join(HERE, "mockup-qa.py")).load_module()
+screen_qa = SourceFileLoader("screen_qa", os.path.join(HERE, "screen-qa.py")).load_module()
 
 IMAGES = "https://ai.gateway.lovable.dev/v1/images/generations"
 MODEL = os.environ.get("MOCKUP_MODEL", "google/gemini-3-pro-image")
