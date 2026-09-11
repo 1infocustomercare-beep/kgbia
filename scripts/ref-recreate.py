@@ -59,7 +59,9 @@ DETTAGLI DISTINTIVI DA REPLICARE: {sigs}
 
 SOSTITUZIONI OBBLIGATORIE (unica cosa che cambia):
 - il brand originale ({replace}) diventa "{brand}", con un logo nuovo e coerente al settore
-- tutti i testi in italiano naturale, prezzi in euro
+- tutti i testi in italiano naturale, prezzi in euro: anche la tab bar, i pulsanti,
+  le etichette di navigazione e i micro-testi (mai parole inglesi come Home, Search, Cart)
+- il logo del nuovo brand è visibile nell'intestazione o nella barra superiore
 - foto nuove, stesso soggetto e stessa luce del riferimento
 - nessun riferimento, nome o marchio dell'originale deve rimanere visibile
 
@@ -204,11 +206,11 @@ def main() -> int:
                 return True
             codes = ", ".join(str(i.get("code") or i.get("type")) for i in res["issues"] if i.get("severity") == "blocker")
             print(f"  ✗ {name} tentativo {attempt + 1}: {codes or 'qa'} (fedeltà {res['fidelity']})")
+            if probe == target and os.path.exists(target):
+                os.replace(target, os.path.join(rej_dir, f"try{attempt + 1}-{name}"))
             if attempt < args.retries:
                 prompt = build_prompt(spec, args.brand, args.sector) + f"\nCORREZIONI OBBLIGATORIE: {res['retry_hint']}."
             else:
-                if probe == target and os.path.exists(target):
-                    os.replace(target, os.path.join(rej_dir, name))
                 report.append({"screen": name, "status": "rejected", "issues": res["issues"]})
         print(f"  → {name} scartato: non entra nel catalogo")
         return False
