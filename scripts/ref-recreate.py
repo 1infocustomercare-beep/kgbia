@@ -31,7 +31,14 @@ REF = "/tmp/reference"
 
 # ---------------------------------------------------------------- prompt
 
-def build_prompt(spec: dict, brand: str, sector: str) -> str:
+DESKTOP_RENDER_RULES = """REGOLE DI RESA (obbligatorie):
+- immagine orizzontale 16:10, SOLO il contenuto della pagina web a schermo pieno,
+  nessuna cornice di browser, nessuna barra indirizzi, nessun monitor, nessuna scrivania
+- nessun testo tagliato o troncato, tutto leggibile, margini interni rispettati
+- resa nitida, pixel-perfect, come uno screenshot reale del sito"""
+
+
+def build_prompt(spec: dict, brand: str, sector: str, kind: str = "phone") -> str:
     pal = spec.get("palette", {})
     typo = spec.get("typography", {})
     geo = spec.get("geometry", {})
@@ -39,7 +46,9 @@ def build_prompt(spec: dict, brand: str, sector: str) -> str:
     comps = "\n".join(f"  - {c}" for c in spec.get("components", []))
     sigs = "; ".join(spec.get("signature_details", []))
     replace = ", ".join(spec.get("brand_marks_to_replace", [])) or "il logo e il nome originali"
-    return f"""Screenshot UI di una app mobile iOS, ricostruzione fedele della schermata descritta qui sotto.
+    head = ("Screenshot UI di una app mobile iOS" if kind != "desktop"
+            else "Screenshot di una pagina web desktop a tutta larghezza")
+    return f"""{head}, ricostruzione fedele della schermata descritta qui sotto.
 
 SCHERMATA: {spec.get('screen_title_it')} — funzione: {spec.get('screen_function')} — settore: {sector}
 TEMA: {spec.get('theme')}
@@ -63,6 +72,9 @@ SOSTITUZIONI OBBLIGATORIE (unica cosa che cambia):
   le etichette di navigazione e i micro-testi (mai parole inglesi come Home, Search, Cart)
 - il logo del nuovo brand è visibile nell'intestazione o nella barra superiore
 - foto nuove, stesso soggetto e stessa luce del riferimento
+- nessuna parola segnaposto tipo "Photo", "Image", "Lorem": ogni etichetta è testo reale in italiano
+- città, indirizzi e prefissi telefonici italiani (mai città estere del riferimento)
+- nessun marchio o certificazione di terzi (Michelin, TripAdvisor, loghi di brand reali)
 - nessun riferimento, nome o marchio dell'originale deve rimanere visibile
 
 REGOLE DI RESA (obbligatorie):
@@ -70,7 +82,35 @@ REGOLE DI RESA (obbligatorie):
   nessun telefono dentro il telefono, nessuna mano, nessun mockup fotografico
 - status bar iOS in alto, tab bar in basso se prevista dalla struttura
 - nessun testo tagliato o troncato, tutto leggibile, margini di sicurezza rispettati
-- resa nitida, pixel-perfect, come uno screenshot reale dell'app"""
+- resa nitida, pixel-perfect, come uno screenshot reale dell'app""" if kind != "desktop" else f"""{head}, ricostruzione fedele della schermata descritta qui sotto.
+
+SCHERMATA: {spec.get('screen_title_it')} — funzione: {spec.get('screen_function')} — settore: {sector}
+TEMA: {spec.get('theme')}
+PALETTE ESATTA: fondo {pal.get('bg')}, superfici {pal.get('surface')}, testo {pal.get('text')},
+testo secondario {pal.get('muted')}, accento {pal.get('accent')}, accento secondario {pal.get('accent2')}
+TIPOGRAFIA: titoli {typo.get('display')}; testo {typo.get('body')}; {typo.get('case')}, tracking {typo.get('tracking')}
+GEOMETRIA: raggio {geo.get('radius')}; bordi {geo.get('border')}; griglia {geo.get('grid')}; densità {geo.get('density')}
+
+STRUTTURA ZONA PER ZONA (rispettala alla lettera):
+{zones}
+
+COMPONENTI VISIBILI (stesse posizioni, stesse cifre, testi tradotti in italiano):
+{comps}
+
+FOTOGRAFIA: {spec.get('photography')}
+DETTAGLI DISTINTIVI DA REPLICARE: {sigs}
+
+SOSTITUZIONI OBBLIGATORIE (unica cosa che cambia):
+- il brand originale ({replace}) diventa "{brand}", con un logo nuovo e coerente al settore
+- tutti i testi in italiano naturale, prezzi in euro, nessuna parola inglese nei menu
+- il logo del nuovo brand è visibile nell'intestazione
+- foto nuove, stesso soggetto e stessa luce del riferimento
+- nessuna parola segnaposto tipo "Photo", "Image", "Lorem": ogni etichetta è testo reale in italiano
+- città, indirizzi e prefissi telefonici italiani (mai città estere del riferimento)
+- nessun marchio o certificazione di terzi (Michelin, TripAdvisor, loghi di brand reali)
+- nessun riferimento, nome o marchio dell'originale deve rimanere visibile
+
+{DESKTOP_RENDER_RULES}"""
 
 
 # ---------------------------------------------------------------- gateway
@@ -125,8 +165,8 @@ def fidelity(candidate: str, reference: str) -> tuple[float, str]:
     return score, hint
 
 
-def verify(path: str, reference: str, threshold: float) -> dict:
-    screen = screen_qa.validate_screen(path)
+def verify(path: str, reference: str, threshold: float, kind: str = "phone") -> dict:
+    screen = screen_qa.validate_screen(path, kind)
     fid, fid_hint = fidelity(path, reference)
     issues = list(screen["issues"])
     if fid < threshold:
@@ -149,10 +189,19 @@ def main() -> int:
     ap.add_argument("--workers", type=int, default=3)
     ap.add_argument("--fidelity", type=float, default=0.45)
     ap.add_argument("--limit", type=int, default=0)
+    ap.add_argument("--kind", default="phone", choices=["phone", "desktop", "both"])
     ap.add_argument("--dry-run", action="store_true")
     args = ap.parse_args()
 
+    def _kind_of(fname: str) -> str:
+        try:
+            return json.load(open(f"{REF}/specs/{fname}")).get("_kind", "phone")
+        except Exception:
+            return "phone"
+
     specs = sorted(f for f in os.listdir(f"{REF}/specs") if f.startswith(f"{args.slug}__"))
+    if args.kind != "both":
+        specs = [f for f in specs if _kind_of(f) == args.kind]
     if args.limit:
         specs = specs[: args.limit]
     if not specs:
@@ -176,9 +225,10 @@ def main() -> int:
         idx, sf = idx_spec
         spec = json.load(open(f"{REF}/specs/{sf}"))
         ref_img = f"{REF}/img/{args.slug}/{spec['_source']}"
-        name = f"{idx}-{spec.get('screen_function', 'screen')}.png"
+        kind = spec.get("_kind", "phone")
+        name = f"{'d' if kind == 'desktop' else ''}{idx}-{spec.get('screen_function', 'screen')}.png"
         target = os.path.join(out_dir, name)
-        prompt = build_prompt(spec, args.brand, args.sector)
+        prompt = build_prompt(spec, args.brand, args.sector, kind)
         if args.dry_run:
             print(f"\n--- {name}\n{prompt[:900]}…")
             return True
@@ -197,7 +247,7 @@ def main() -> int:
                 return False
             probe = target if attempt == 0 else os.path.join(rej_dir, f"try{attempt}-{name}")
             open(probe, "wb").write(png)
-            res = verify(probe, ref_img, args.fidelity)
+            res = verify(probe, ref_img, args.fidelity, kind)
             if res["pass"]:
                 if probe != target:
                     os.replace(probe, target)
@@ -209,7 +259,7 @@ def main() -> int:
             if probe == target and os.path.exists(target):
                 os.replace(target, os.path.join(rej_dir, f"try{attempt + 1}-{name}"))
             if attempt < args.retries:
-                prompt = build_prompt(spec, args.brand, args.sector) + f"\nCORREZIONI OBBLIGATORIE: {res['retry_hint']}."
+                prompt = build_prompt(spec, args.brand, args.sector, kind) + f"\nCORREZIONI OBBLIGATORIE: {res['retry_hint']}."
             else:
                 report.append({"screen": name, "status": "rejected", "issues": res["issues"]})
         print(f"  → {name} scartato: non entra nel catalogo")
